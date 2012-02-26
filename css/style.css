@@ -79,15 +79,18 @@ SLABBY
 .slabby{
     position: absolute;
     top: 50%;
+    left: 50%;
     width: 9999px;
     overflow: hidden;
     display: block;
     height: 250px;
     clear: both;
-    margin-top:-125.5px;}
+    margin-top:-125.5px;
+    margin-left:-125.5px;}
 
 .slab{
     display: block;
     float: left;
     width: 250px;
-    height: 250px;}
+    height: 250px;
+    margin-right: 10px;}
