@@ -64,37 +64,35 @@ table{
    border-spacing:0;
 }
 
-/*------------------------------------*\
-   MAIN
-\*------------------------------------*/
-/* GO! */
-
 
 /**************************************
 SLABBY
 */
 #home{
-    overflow: hidden;}
+    overflow: hidden; }
 
 .slabby{
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 9999px;
     overflow: hidden;
     display: block;
     height: 250px;
     clear: both;
     margin-top:-125.5px;
-    margin-left:-125.5px;}
+    margin-left:-125.5px; }
 
 .slab{
     display: block;
     float: left;
     width: 250px;
     height: 250px;
-    margin-right: 10px;}
+    margin-right: 10px; }
 
+
+/**************************************
+SLIDER
+*/
 #slider{
     position: absolute;
     top: 50%;
@@ -102,3 +100,9 @@ SLABBY
     margin-top: 300px;
     width: 70%;
     height: 7px; }
+
+
+#knob{
+    position: relative;
+    height: 5px;
+    width: 0px; }
