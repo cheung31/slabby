@@ -94,3 +94,11 @@ SLABBY
     width: 250px;
     height: 250px;
     margin-right: 10px;}
+
+#slider{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 300px;
+    width: 70%;
+    height: 7px; }
