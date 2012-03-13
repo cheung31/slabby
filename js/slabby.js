@@ -5,7 +5,9 @@ $(document).ready(function(){
 
 var slabby = {
     pageSetup: function(){
+        slabby.page = 0;
         slabby.$slab = $('ul.slabby:visible');
+        slabby.$slabs = $('li', slabby.$slab);
         slabby.$slider = null;
         slabby.$knob = null;
 
@@ -34,13 +36,12 @@ var slabby = {
     setupKnob: function(){
         var $knob,
             knob_width,
-            $slabs,
             slabs_width;
 
         // set knob width based on num slabs
         $knob = $('#knob');
 
-        $slabs = $('li.slab');
+        $slabs = slabby.$slabs;
         slabs_width = $slabs.length * $slabs.eq(0).width();
         
         knob_width = (slabby.$slider.width() * $slabs.eq(0).width()) / slabs_width;
@@ -50,20 +51,33 @@ var slabby = {
         slabby.$knob = $knob;
     },
 
-
-    setupKeyboard: function(){
+    setupKeyboard: function(){ 
         $(document).keydown(function(e){
             console.log('keypress: ' + e.which);
-            if (e.which == 39)
-                slabby.jumpPage(1);
-            else if (e.which == 37)
-                slabby.jumpPage(-1);
+            if (e.which == 39){
+                slabby.page += 1;
+            } else if (e.which == 37){
+                slabby.page -= 1;
+            }
+            slabby.jumpPage(slabby.page);
         });
     },
 
 
-    jumpPage: function(increment){
+    jumpPage: function(page){
+        var i,
+            $centered,
+            new_margin;
+        $centered = $('li.centered');
+        $centered.removeClass('centered');
 
+        console.log(page);
+        $new_centered = slabby.$slabs.eq(page);
+        $new_centered.addClass('centered');
+       
+        new_margin = 275 * -1 * (page+1);
+        console.log(new_margin);
+        slabby.$slab.css('margin-left', new_margin);
     },
 
 
