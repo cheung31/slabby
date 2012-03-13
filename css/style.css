@@ -98,11 +98,11 @@ SLIDER
     top: 50%;
     left: 50%;
     margin-top: 300px;
-    width: 70%;
+    width: 700px;
     height: 7px; }
 
 
 #knob{
     position: relative;
-    height: 5px;
+    height: 7px;
     width: 0px; }
