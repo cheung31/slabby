@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 var slabby = {
     pageSetup: function(){
-        slabby.$slab = $('.slabby:visible');
+        slabby.$slab = $('ul.slabby:visible');
         slabby.$slider = null;
         slabby.$knob = null;
 
@@ -52,6 +52,17 @@ var slabby = {
 
 
     setupKeyboard: function(){
+        $(document).keydown(function(e){
+            console.log('keypress: ' + e.which);
+            if (e.which == 39)
+                slabby.jumpPage(1);
+            else if (e.which == 37)
+                slabby.jumpPage(-1);
+        });
+    },
+
+
+    jumpPage: function(increment){
 
     },
 

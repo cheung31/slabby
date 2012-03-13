@@ -90,7 +90,7 @@ SLABBY
     display: block;
     clear: both;
     margin-top:-125.5px;
-    margin-left:-125.5px;
+    margin-left:-275px;
     width: 99999px;}
 
 .slab{
@@ -98,10 +98,13 @@ SLABBY
     float: left;
     width: 250px;
     height: 250px;
-    margin-right: 10px; }
+    margin: 0 10px; }
+
+.slab.centered{
+    margin: 0 145px; }
 
 .slab.focused{
-    margin-left: -190px;
+    margin-left: -180px;
     margin-top: -211px;
     width: 612px;
     height: 612px;
