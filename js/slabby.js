@@ -2,6 +2,7 @@ $(document).ready(function(){
     slabby.pageSetup();
 });
 
+
 var slabby = {
     pageSetup: function(){
         slabby.$slab = $('.slabby:visible');

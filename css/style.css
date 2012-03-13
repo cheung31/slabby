@@ -71,16 +71,27 @@ SLABBY
 #home{
     overflow: hidden; }
 
+
+#focused_slab{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 612px;
+    height: 612px;
+    margin-left: -313px;
+    margin-top: -335px; }
+    
+
 .slabby{
     position: absolute;
     top: 50%;
     left: 50%;
     overflow: hidden;
     display: block;
-    height: 250px;
     clear: both;
     margin-top:-125.5px;
-    margin-left:-125.5px; }
+    margin-left:-125.5px;
+    width: 99999px;}
 
 .slab{
     display: block;
@@ -88,6 +99,13 @@ SLABBY
     width: 250px;
     height: 250px;
     margin-right: 10px; }
+
+.slab.focused{
+    margin-left: -190px;
+    margin-top: -211px;
+    width: 612px;
+    height: 612px;
+    z-index: 10px; }
 
 
 /**************************************
@@ -97,7 +115,7 @@ SLIDER
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: 300px;
+    margin-top: 310px;
     width: 700px;
     height: 7px; }
 
