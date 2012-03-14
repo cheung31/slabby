@@ -34,6 +34,7 @@ footer,header,hgroup,menu,nav,section{
 }
 body{
    line-height:1;
+   font-family: Helvetica;
 }
 ol,ul{
    list-style:none;
@@ -109,6 +110,12 @@ SLABBY
     width: 612px;
     height: 612px;
     z-index: 10px; }
+
+.slab p{
+    height: 100%;
+    text-align: center;
+    line-height: 250px;
+    font-size: 50px; }
 
 
 /**************************************

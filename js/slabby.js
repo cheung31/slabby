@@ -98,7 +98,7 @@ var slabby = {
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '145px',
                                    'margin-right': '145px'},
-                                  250);
+                                  200);
             $new_centered.addClass('centered');
         }
     },
