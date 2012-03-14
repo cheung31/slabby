@@ -53,20 +53,27 @@ var slabby = {
 
     setupKeyboard: function(){ 
         $(document).keydown(function(e){
-            console.log('keypress: ' + e.which);
             if (e.which == 39){
-                slabby._jumping = true;
-                slabby.page += 1;
-                slabby.jumpPage(slabby.page);
+                if(slabby.page < slabby.$slabs.length-1) {
+                    slabby._jumping = true;
+                    slabby.page += 1;
+                    slabby.jumpPage(slabby.page);
+                } else {
+                    slabby._jumping = false;
+                }
             } else if (e.which == 37 && slabby.page > 0){
                 slabby._jumping = true;
                 slabby.page -= 1;
-                slabby.jumpPage(slabby.page);
+                if(slabby.page>=0)
+                    slabby.jumpPage(slabby.page);
+            } else {
+                slabby._jumping = false;
             }
         });
         $(document).keyup(function(e){
             if (e.which == 39 || e.which == 37)
                 slabby._jumping = false;
+                console.log(slabby.page);
                 slabby.focusSlab(slabby.page);
         });
     },
