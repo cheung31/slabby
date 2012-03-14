@@ -10,6 +10,7 @@ var slabby = {
         slabby.$slabs = $('li', slabby.$slab);
         slabby.$slider = null;
         slabby.$knob = null;
+        slabby._queued_pages = []
 
         slabby.setupSlider();
         slabby.setupKnob();
@@ -55,11 +56,19 @@ var slabby = {
         $(document).keydown(function(e){
             console.log('keypress: ' + e.which);
             if (e.which == 39){
+                slabby._jumping = true;
                 slabby.page += 1;
+                slabby.jumpPage(slabby.page);
             } else if (e.which == 37 && slabby.page > 0){
+                slabby._jumping = true;
                 slabby.page -= 1;
+                slabby.jumpPage(slabby.page);
             }
-            slabby.jumpPage(slabby.page);
+        });
+        $(document).keyup(function(e){
+            if (e.which == 39 || e.which == 37)
+                slabby._jumping = false;
+                slabby.focusSlab(slabby.page);
         });
     },
 
@@ -73,18 +82,25 @@ var slabby = {
         if (new_margin <= -272){
             $centered = $('li.centered');
             $centered.animate({'margin-left': '10px',
-                                   'margin-right': '10px'},
-                                  888);
+                               'margin-right': '10px'},
+                               100,
+                               'linear');
             $centered.removeClass('centered');
 
-            console.log(page);
+            slabby.$slab.animate({'margin-left': new_margin+'px'},
+                                 100,
+                                 'linear');
+        }
+    },
+
+
+    focusSlab: function(page){
+        if (!slabby._jumping){
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '145px',
                                    'margin-right': '145px'},
-                                  888);
+                                  250);
             $new_centered.addClass('centered');
-            slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 888);
         }
     },
 
