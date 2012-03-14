@@ -73,7 +73,6 @@ var slabby = {
         $(document).keyup(function(e){
             if (e.which == 39 || e.which == 37)
                 slabby._jumping = false;
-                console.log(slabby.page);
                 slabby.focusSlab(slabby.page);
         });
     },
