@@ -88,12 +88,12 @@ var slabby = {
             $centered = $('li.centered');
             $centered.animate({'margin-left': '10px',
                                'margin-right': '10px'},
-                               100,
+                               75,
                                'linear');
             $centered.removeClass('centered');
 
             slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 100,
+                                 75,
                                  'linear');
         }
     },
@@ -104,7 +104,7 @@ var slabby = {
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '145px',
                                    'margin-right': '145px'},
-                                  200);
+                                  125);
             $new_centered.addClass('centered');
         }
     },
