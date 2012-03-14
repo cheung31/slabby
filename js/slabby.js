@@ -56,7 +56,7 @@ var slabby = {
             console.log('keypress: ' + e.which);
             if (e.which == 39){
                 slabby.page += 1;
-            } else if (e.which == 37 && slabby.page >= 0){
+            } else if (e.which == 37 && slabby.page > 0){
                 slabby.page -= 1;
             }
             slabby.jumpPage(slabby.page);
