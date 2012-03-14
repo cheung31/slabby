@@ -69,15 +69,22 @@ var slabby = {
             $centered,
             new_margin;
        
-        new_margin = 272 * -1 * (page+1);
+        new_margin = -272 * (page+1);
         if (new_margin <= -272){
             $centered = $('li.centered');
+            $centered.animate({'margin-left': '10px',
+                                   'margin-right': '10px'},
+                                  888);
             $centered.removeClass('centered');
 
             console.log(page);
             $new_centered = slabby.$slabs.eq(page);
+            $new_centered.animate({'margin-left': '145px',
+                                   'margin-right': '145px'},
+                                  888);
             $new_centered.addClass('centered');
-            slabby.$slab.css('margin-left', new_margin);
+            slabby.$slab.animate({'margin-left': new_margin+'px'},
+                                 888);
         }
     },
 
