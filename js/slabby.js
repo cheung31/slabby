@@ -56,7 +56,7 @@ var slabby = {
             console.log('keypress: ' + e.which);
             if (e.which == 39){
                 slabby.page += 1;
-            } else if (e.which == 37){
+            } else if (e.which == 37 && slabby.page >= 0){
                 slabby.page -= 1;
             }
             slabby.jumpPage(slabby.page);
@@ -68,16 +68,17 @@ var slabby = {
         var i,
             $centered,
             new_margin;
-        $centered = $('li.centered');
-        $centered.removeClass('centered');
-
-        console.log(page);
-        $new_centered = slabby.$slabs.eq(page);
-        $new_centered.addClass('centered');
        
         new_margin = 272 * -1 * (page+1);
-        console.log(new_margin);
-        slabby.$slab.css('margin-left', new_margin);
+        if (new_margin <= -272){
+            $centered = $('li.centered');
+            $centered.removeClass('centered');
+
+            console.log(page);
+            $new_centered = slabby.$slabs.eq(page);
+            $new_centered.addClass('centered');
+            slabby.$slab.css('margin-left', new_margin);
+        }
     },
 
 
