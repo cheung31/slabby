@@ -112,10 +112,14 @@ SLABBY
     z-index: 10px; }
 
 .slab p{
+    color: #AAA;
     height: 100%;
     text-align: center;
     line-height: 250px;
-    font-size: 50px; }
+    font-size: 70px; }
+
+.slab.centered p {
+    color: #222; }
 
 
 /**************************************
