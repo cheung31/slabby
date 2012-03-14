@@ -10,7 +10,6 @@ var slabby = {
         slabby.$slabs = $('li', slabby.$slab);
         slabby.$slider = null;
         slabby.$knob = null;
-        slabby._queued_pages = []
 
         slabby.setupSlider();
         slabby.setupKnob();
