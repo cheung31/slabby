@@ -75,7 +75,7 @@ var slabby = {
         $new_centered = slabby.$slabs.eq(page);
         $new_centered.addClass('centered');
        
-        new_margin = 275 * -1 * (page+1);
+        new_margin = 272 * -1 * (page+1);
         console.log(new_margin);
         slabby.$slab.css('margin-left', new_margin);
     },
