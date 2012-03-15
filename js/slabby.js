@@ -2,7 +2,6 @@ $(document).ready(function(){
     slabby.pageSetup();
 });
 
-
 var slabby = {
     pageSetup: function(){
         slabby.page = 0;
@@ -49,6 +48,9 @@ var slabby = {
         $knob._dragging = false;
 
         slabby.$knob = $knob;
+        console.log(slabby.$slider.width() - $knob.width());
+        slabby.$knob.knob_increment = (slabby.$slider.width()-$knob.width()) / ($slabs.length-1);
+        console.log(slabby.$knob.knob_increment);
     },
 
     setupKeyboard: function(){ 
@@ -57,7 +59,7 @@ var slabby = {
                 if(slabby.page < slabby.$slabs.length-1) {
                     slabby._jumping = true;
                     slabby.page += 1;
-                    slabby.jumpPage(slabby.page);
+                    slabby.jumpPage(slabby.page, 1);
                 } else {
                     slabby._jumping = false;
                 }
@@ -65,7 +67,7 @@ var slabby = {
                 slabby._jumping = true;
                 slabby.page -= 1;
                 if(slabby.page>=0)
-                    slabby.jumpPage(slabby.page);
+                    slabby.jumpPage(slabby.page, 0);
             } else {
                 slabby._jumping = false;
             }
@@ -78,7 +80,7 @@ var slabby = {
     },
 
 
-    jumpPage: function(page){
+    jumpPage: function(page, forward){
         var i,
             $centered,
             new_margin;
@@ -87,15 +89,18 @@ var slabby = {
         if (new_margin <= -272){
             $centered = $('li.centered');
             $centered.animate({'margin-left': '10px',
-                               'margin-right': '10px'},
-                               75,
-                               'linear');
+                              'margin-right': '10px'},
+                              75,
+                              'linear');
             $centered.removeClass('centered');
 
             slabby.$slab.animate({'margin-left': new_margin+'px'},
                                  75,
                                  'linear');
         }
+
+        // shift knob relative to page
+        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 75, 'linear');
     },
 
 
