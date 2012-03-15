@@ -9,6 +9,7 @@ var slabby = {
         slabby.$slabs = $('li', slabby.$slab);
         slabby.$slider = null;
         slabby.$knob = null;
+        slabby.$focused_slab = $('#focused_slab');
 
         slabby.setupSlider();
         slabby.setupKnob();
@@ -19,6 +20,8 @@ var slabby = {
             slabby.$slider = null;
             slabby.setupSlider();
         });
+
+        slabby.focusSlab(0);
     },
 
 
@@ -48,9 +51,7 @@ var slabby = {
         $knob._dragging = false;
 
         slabby.$knob = $knob;
-        console.log(slabby.$slider.width() - $knob.width());
         slabby.$knob.knob_increment = (slabby.$slider.width()-$knob.width()) / ($slabs.length-1);
-        console.log(slabby.$knob.knob_increment);
     },
 
     setupKeyboard: function(){ 
@@ -111,6 +112,8 @@ var slabby = {
                                    'margin-right': '145px'},
                                   110);
             $new_centered.addClass('centered');
+
+            //slabby.$focused_slab.
         }
     },
 
