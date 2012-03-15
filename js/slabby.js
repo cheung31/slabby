@@ -13,7 +13,7 @@ var slabby = {
         slabby.setupSlider();
         slabby.setupKnob();
         slabby.setupKeyboard();
-        slabby.setupMouse();
+        //slabby.setupMouse();
 
         $(window).resize(function(){
             slabby.$slider = null;
