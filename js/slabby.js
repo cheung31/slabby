@@ -145,9 +145,10 @@ var slabby = {
                                     'margin-top': '-211px'},
                                    200,
                                    'linear');
-            $('.full_photo', $focused_frame).show().css('opacity','1').animate({'z-index': '10'},
-                                                                                200,
-                                                                                'linear');
+            $('.full_photo', $focused_frame).animate({'z-index': '10',
+                                                      'opacity': '1'},
+                                                     200,
+                                                     'linear');
             $('.thumb', $focused_frame).hide();
         }
     },
