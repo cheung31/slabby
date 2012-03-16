@@ -163,6 +163,8 @@ var slabby = {
             slabby.$slabs[i].onclick = (function(index) {
                 return function() {
                     var forward;
+                    if (index == slabby.page)
+                        return;
                     slabby._jumping = true;
                     if (index > slabby.page)
                         forward = 1;
