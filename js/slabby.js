@@ -14,6 +14,7 @@ var slabby = {
         slabby.setupSlider();
         slabby.setupKnob();
         slabby.setupKeyboard();
+        slabby.setupPaging();
         //slabby.setupMouse();
         //slabby.loadContent();
 
@@ -85,12 +86,16 @@ var slabby = {
         $(document).keyup(function(e){
             if (e.which == 39 || e.which == 37)
                 slabby._jumping = false;
-                slabby.focusSlab(slabby.page);
+            slabby.focusSlab(slabby.page);
         });
     },
 
 
     jumpPage: function(page, forward){
+        console.log('\njumping: ' + slabby._jumping);
+        console.log('current: ' + slabby.page);
+        console.log('page: ' + page);
+        console.log('forward: ' + forward);
         var i,
             $centered,
             $focused_frame,
@@ -127,6 +132,7 @@ var slabby = {
 
         // shift knob relative to page
         slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 300, 'linear');
+        slabby._jumping = false;
     },
 
 
@@ -152,6 +158,25 @@ var slabby = {
                                                                                 300,
                                                                                 'linear');
             $('.thumb', $focused_frame).hide();
+        }
+    },
+
+
+    setupPaging: function(){
+        for(var i=0; i < slabby.$slabs.length; i++) {
+            slabby.$slabs[i].onclick = (function(index) {
+                return function() {
+                    var forward;
+                    slabby._jumping = true;
+                    if (index > slabby.page)
+                        forward = 1;
+                    else if (index < slabby.page)
+                        forward = 0;
+                    slabby.page = index;
+                    slabby.jumpPage(index, forward);
+                    slabby.focusSlab(slabby.page);
+                };
+            })(i);
         }
     },
 
