@@ -191,7 +191,9 @@ SLABBY
     display: block; }
 
 .slab.centered .thumb{
-    display: none; }
+    display: none;
+    top: 210px;
+    left: 190px; }
 
 
 

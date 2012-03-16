@@ -111,9 +111,9 @@ var slabby = {
             $('.full_photo', $focused_frame).animate({'z-index': '0',
                                                      'opacity': '0'},
                                                     200,
-                                                    'linear');
+                                                    'linear',
+                                                    function() { $centered.removeClass('centered'); });
             $('.thumb', $focused_frame).show();
-            $centered.removeClass('centered');
 
             // Shift slab strip
             slabby.$slab.animate({'margin-left': new_margin+'px'},
@@ -136,8 +136,8 @@ var slabby = {
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '160px',
                                    'margin-right': '145px'},
-                                  20);
-            $new_centered.addClass('centered');
+                                  20,
+                                  function() { $new_centered.addClass('centered'); });
 
             $focused_frame = $('.focused_frame', $new_centered);
             $focused_frame.animate({'width': '612px',
