@@ -22,7 +22,7 @@ var slabby = {
             slabby.setupSlider();
         });
 
-        slabby.focusSlab(0);
+        //slabby.focusSlab(0);
     },
 
 
@@ -100,8 +100,8 @@ var slabby = {
         if (new_margin <= -272){
             $centered = $('.centered');
             $centered.animate({'margin-left': '10px',
-                              'margin-right': '10px'},
-                              150,
+                               'margin-right': '10px'},
+                              300,
                               'linear');
 
             // If forward, shrink and blur
@@ -110,22 +110,23 @@ var slabby = {
                                     'height': '250px',
                                     'margin-left': '0px',
                                     'margin-top': '0px'},
-                                   150,
+                                   300,
                                    'linear');
-            $('.full_photo', $focused_frame).hide().animate({'z-index': '0'},
-                                                            150,
-                                                            'linear');
+            $('.full_photo', $focused_frame).animate({'z-index': '0',
+                                                     'opacity': '0'},
+                                                    300,
+                                                    'linear');
             $('.thumb', $focused_frame).show();
             $centered.removeClass('centered');
 
             // Shift slab strip
             slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 150,
+                                 300,
                                  'linear');
         }
 
         // shift knob relative to page
-        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 150, 'linear');
+        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 300, 'linear');
     },
 
 
@@ -135,9 +136,9 @@ var slabby = {
 
         if (!slabby._jumping){
             $new_centered = slabby.$slabs.eq(page);
-            $new_centered.animate({'margin-left': '145px',
-                                   'margin-right': '145px'},
-                                  65);
+            $new_centered.animate({'margin-left': '170px',
+                                   'margin-right': '170px'},
+                                  34);
             $new_centered.addClass('centered');
 
             $focused_frame = $('.focused_frame', $new_centered);
@@ -145,10 +146,11 @@ var slabby = {
                                     'height': '612px',
                                     'margin-left': '-188px',
                                     'margin-top': '-211px'},
-                                   150,
+                                   300,
                                    'linear');
-            $('.full_photo', $focused_frame).show().animate({'z-index': '10'},
-                                                            150,
+            $('.full_photo', $focused_frame).show().animate({'z-index': '10',
+                                                             'opacity': '1'},
+                                                            300,
                                                             'linear');
             $('.thumb', $focused_frame).hide();
         }
