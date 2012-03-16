@@ -119,7 +119,7 @@ SLABBY
     width: 99999px;}
 
 .slab{
-   /*border: 1px solid black;*/
+   border: 1px solid blue;
     display: block;
     float: left;
     width: 250px;
@@ -127,7 +127,7 @@ SLABBY
     margin: 0 10px; }
 
 .slab.centered{
-    margin: 0 170px; }
+    margin: 0 145px 0 160px; }
 
 .slab.focused{
     margin-left: -180px;
@@ -166,7 +166,7 @@ SLABBY
     box-shadow: 0 0 50px 1px #111; }
 
 .full_photo{
-    /*border: 1px solid green;*/
+    border: 1px solid green;
     position: absolute;
     display: none;
     opacity: 0; }
@@ -184,10 +184,10 @@ SLABBY
         width: 100%; }
 
 .thumb{
-    /*border: 1px solid red;*/
+    border: 1px solid red;
     position: absolute;
-    width: 268px;
-    height: 268px;
+    width: 250px;
+    height: 250px;
     display: block; }
 
 .slab.centered .thumb{

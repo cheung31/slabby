@@ -102,7 +102,7 @@ var slabby = {
             $centered = $('.centered');
             $centered.animate({'margin-left': '10px',
                                'margin-right': '10px'},
-                              300,
+                              200,
                               'linear');
 
             // If forward, shrink and blur
@@ -111,23 +111,23 @@ var slabby = {
                                     'height': '250px',
                                     'margin-left': '0px',
                                     'margin-top': '0px'},
-                                   300,
+                                   200,
                                    'linear');
             $('.full_photo', $focused_frame).animate({'z-index': '0',
                                                      'opacity': '0'},
-                                                    300,
+                                                    200,
                                                     'linear');
             $('.thumb', $focused_frame).show();
             $centered.removeClass('centered');
 
             // Shift slab strip
             slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 300,
+                                 200,
                                  'linear');
         }
 
         // shift knob relative to page
-        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 300, 'linear');
+        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 200, 'linear');
         slabby._jumping = false;
     },
 
@@ -138,8 +138,8 @@ var slabby = {
 
         if (!slabby._jumping){
             $new_centered = slabby.$slabs.eq(page);
-            $new_centered.animate({'margin-left': '170px',
-                                   'margin-right': '170px'},
+            $new_centered.animate({'margin-left': '160px',
+                                   'margin-right': '145px'},
                                   20);
             $new_centered.addClass('centered');
 
@@ -148,10 +148,10 @@ var slabby = {
                                     'height': '612px',
                                     'margin-left': '-188px',
                                     'margin-top': '-211px'},
-                                   300,
+                                   200,
                                    'linear');
             $('.full_photo', $focused_frame).show().css('opacity','1').animate({'z-index': '10'},
-                                                                                300,
+                                                                                200,
                                                                                 'linear');
             $('.thumb', $focused_frame).hide();
         }
