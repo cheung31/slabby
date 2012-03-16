@@ -168,8 +168,8 @@ SLABBY
 .full_photo{
     /*border: 1px solid green;*/
     position: absolute;
-    display: none;
-    opacity: 0; }
+    display: block;
+    opacity: 1; }
 
 
 .slab.centered .full_photo{
