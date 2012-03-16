@@ -102,8 +102,8 @@ var slabby = {
 
             // If forward, shrink and blur
             $focused_frame = $('.focused_frame', $centered);
-            $focused_frame.animate({'width': '250px',
-                                    'height': '250px',
+            $focused_frame.animate({'width': '252px',
+                                    'height': '252px',
                                     'margin-left': '0px',
                                     'margin-top': '0px'},
                                    200,

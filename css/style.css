@@ -122,8 +122,8 @@ SLABBY
    /*border: 1px solid blue;*/
     display: block;
     float: left;
-    width: 250px;
-    height: 250px;
+    width: 252px;
+    height: 252px;
     margin: 0 10px; }
 
 .slab.centered{
@@ -186,8 +186,8 @@ SLABBY
 .thumb{
     /*border: 1px solid red;*/
     position: absolute;
-    width: 250px;
-    height: 250px;
+    width: 252px;
+    height: 252px;
     display: block; }
 
 .slab.centered .thumb{
