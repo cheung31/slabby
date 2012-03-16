@@ -83,11 +83,6 @@ var slabby = {
                 slabby._jumping = false;
             }
         });
-        $(document).keyup(function(e){
-            if (e.which == 39 || e.which == 37)
-                slabby._jumping = false;
-            slabby.focusSlab(slabby.page);
-        });
     },
 
 
@@ -125,10 +120,11 @@ var slabby = {
                                  200,
                                  'linear');
         }
+        slabby._jumping = false;
+        slabby.focusSlab(slabby.page);
 
         // shift knob relative to page
         slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 200, 'linear');
-        slabby._jumping = false;
     },
 
 
@@ -172,7 +168,6 @@ var slabby = {
                         forward = 0;
                     slabby.page = index;
                     slabby.jumpPage(index, forward);
-                    slabby.focusSlab(slabby.page);
                 };
             })(i);
         }
