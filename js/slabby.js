@@ -86,7 +86,7 @@ var slabby = {
     },
 
 
-    jumpPage: function(page, forward){
+    jumpPage: function(page){
         var i,
             $centered,
             $focused_frame,
@@ -100,7 +100,6 @@ var slabby = {
                               200,
                               'linear');
 
-            // If forward, shrink and blur
             $focused_frame = $('.focused_frame', $centered);
             $focused_frame.animate({'width': '252px',
                                     'height': '252px',
@@ -158,16 +157,11 @@ var slabby = {
         for(var i=0; i < slabby.$slabs.length; i++){
             slabby.$slabs[i].onclick = (function(index){
                 return function() {
-                    var forward;
                     if (index == slabby.page)
                         return;
                     slabby._jumping = true;
-                    if (index > slabby.page)
-                        forward = 1;
-                    else if (index < slabby.page)
-                        forward = 0;
                     slabby.page = index;
-                    slabby.jumpPage(index, forward);
+                    slabby.jumpPage(index);
                 };
             })(i);
         }
