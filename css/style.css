@@ -84,11 +84,18 @@ SLABBY
         inset -700px 0 1000px -500px #CCC;
     z-index: 20; }
 
-#sections{
+#nav_links{
+    color: #BBB;
+    font-weight: bold;
+    font-size: 28px;
+    text-transform: lowercase;
     position: absolute;
     left: 260px;
     text-align: right;
-    top: 29px; }
+    top: 100px; }
+
+    #nav_links .selected {
+        color: #222; }
 
 #focused_slab{
     position: absolute;
@@ -100,7 +107,7 @@ SLABBY
     margin-top: -335px; }
     
 .slabby{
-   border: 1px solid black;
+   /*border: 1px solid black;*/
     position: absolute;
     top: 50%;
     left: 50%;
@@ -111,7 +118,7 @@ SLABBY
     width: 99999px;}
 
 .slab{
-   border: 1px solid black;
+   /*border: 1px solid black;*/
     display: block;
     float: left;
     width: 250px;
@@ -158,7 +165,7 @@ SLABBY
     box-shadow: 0 0 50px 1px #111; }
 
 .full_photo{
-    border: 1px solid green;
+    /*border: 1px solid green;*/
     position: absolute;
     display: none;
     opacity: 0; }
@@ -176,7 +183,7 @@ SLABBY
         width: 100%; }
 
 .thumb{
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     position: absolute;
     width: 268px;
     height: 268px;
