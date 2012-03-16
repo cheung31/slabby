@@ -87,15 +87,22 @@ SLABBY
 #nav_links{
     position: relative;
     left: -275px;
-    top: 50px;
+    top: 40px;
     color: #BBB;
-    font-weight: bold;
     font-size: 28px;
     text-transform: lowercase;
     text-align: right;
-    width: 250px; }
+    width: 250px;
+    letter-spacing: -1px; }
+
+    #nav_links a {
+        color: #BBB; }
+
+    #nav_links a:hover {
+        color: #777; }
 
     #nav_links .selected {
+        font-weight: bold;
         color: #222; }
 
 #focused_slab{
