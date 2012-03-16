@@ -119,7 +119,7 @@ SLABBY
     margin: 0 10px; }
 
 .slab.centered{
-    margin: 0 145px; }
+    margin: 0 170px; }
 
 .slab.focused{
     margin-left: -180px;
@@ -158,24 +158,28 @@ SLABBY
     box-shadow: 0 0 50px 1px #111; }
 
 .full_photo{
+    border: 1px solid green;
     position: absolute;
-    display: none; }
+    display: none;
+    opacity: 0; }
 
 
 .slab.centered .full_photo{
     width: 100%;
     height: 100%;
     top: 0;
-    left: 0; }
+    left: 0;
+    opacity: 1; }
 
     .full_photo svg {
         height: 100%;
         width: 100%; }
 
 .thumb{
+    border: 1px solid red;
     position: absolute;
-    width: 250px;
-    height: 250px;
+    width: 268px;
+    height: 268px;
     display: block; }
 
 .slab.centered .thumb{
@@ -187,7 +191,7 @@ SLABBY
 SLIDER
 */
 #slider{
-   border: 1px solid black;
+    background-color: #BBB;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -197,7 +201,7 @@ SLIDER
 
 
 #knob{
-   border: 1px solid black;
+    background-color: #222;
     position: relative;
     height: 7px;
     width: 0px; }
