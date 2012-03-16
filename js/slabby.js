@@ -1,12 +1,12 @@
 $(document).ready(function(){
-    slabby.pageSetup();
+    slabby.setup();
 });
 
 var slabby = {
-    pageSetup: function(){
+    setup: function(){
         slabby.page = 0;
-        slabby.$slab = $('ul.slabby:visible');
-        slabby.$slabs = $('li', slabby.$slab);
+        slabby.$slab = $('.slabby:visible');
+        slabby.$slabs = $('.slab', slabby.$slab);
         slabby.$slider = null;
         slabby.$knob = null;
         slabby.$focused_slab = $('#focused_slab');
@@ -15,6 +15,7 @@ var slabby = {
         slabby.setupKnob();
         slabby.setupKeyboard();
         //slabby.setupMouse();
+        //slabby.loadContent();
 
         $(window).resize(function(){
             slabby.$slider = null;
@@ -25,6 +26,15 @@ var slabby = {
     },
 
 
+    loadContent: function(){
+        return;
+    },
+
+
+    updateSlabs: function(data){
+        return;
+    },
+
     setupSlider: function(){
         var $slider;
 
@@ -33,7 +43,6 @@ var slabby = {
         $slider.css('margin-left', (-1*($slider.width()/2))+'px');
         slabby.$slider = $slider;
     },
-
 
     setupKnob: function(){
         var $knob,
@@ -84,36 +93,64 @@ var slabby = {
     jumpPage: function(page, forward){
         var i,
             $centered,
+            $focused_frame,
             new_margin;
        
         new_margin = -272 * (page+1);
         if (new_margin <= -272){
-            $centered = $('li.centered');
+            $centered = $('.centered');
             $centered.animate({'margin-left': '10px',
                               'margin-right': '10px'},
-                              65,
+                              150,
                               'linear');
+
+            // If forward, shrink and blur
+            $focused_frame = $('.focused_frame', $centered);
+            $focused_frame.animate({'width': '250px',
+                                    'height': '250px',
+                                    'margin-left': '0px',
+                                    'margin-top': '0px'},
+                                   150,
+                                   'linear');
+            $('.full_photo', $focused_frame).hide().animate({'z-index': '0'},
+                                                            150,
+                                                            'linear');
+            $('.thumb', $focused_frame).show();
             $centered.removeClass('centered');
 
+            // Shift slab strip
             slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 65,
+                                 150,
                                  'linear');
         }
 
         // shift knob relative to page
-        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 65, 'linear');
+        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 150, 'linear');
     },
 
 
     focusSlab: function(page){
+        var $new_centered,
+            $focused_frame;
+
         if (!slabby._jumping){
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '145px',
                                    'margin-right': '145px'},
-                                  110);
+                                  65);
             $new_centered.addClass('centered');
 
-            //slabby.$focused_slab.
+            $focused_frame = $('.focused_frame', $new_centered);
+            $focused_frame.animate({'width': '612px',
+                                    'height': '612px',
+                                    'margin-left': '-188px',
+                                    'margin-top': '-211px'},
+                                   150,
+                                   'linear');
+            $('.full_photo', $focused_frame).show().animate({'z-index': '10'},
+                                                            150,
+                                                            'linear');
+            $('.thumb', $focused_frame).hide();
         }
     },
 
