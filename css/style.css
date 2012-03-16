@@ -85,14 +85,15 @@ SLABBY
     z-index: 20; }
 
 #nav_links{
+    position: relative;
+    left: -275px;
+    top: 50px;
     color: #BBB;
     font-weight: bold;
     font-size: 28px;
     text-transform: lowercase;
-    position: absolute;
-    left: 260px;
     text-align: right;
-    top: 100px; }
+    width: 250px; }
 
     #nav_links .selected {
         color: #222; }
@@ -212,3 +213,9 @@ SLIDER
     position: relative;
     height: 7px;
     width: 0px; }
+
+
+/**********************************
+TUNES
+*
+    

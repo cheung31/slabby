@@ -140,7 +140,7 @@ var slabby = {
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '170px',
                                    'margin-right': '170px'},
-                                  34);
+                                  20);
             $new_centered.addClass('centered');
 
             $focused_frame = $('.focused_frame', $new_centered);
@@ -159,8 +159,8 @@ var slabby = {
 
 
     setupPaging: function(){
-        for(var i=0; i < slabby.$slabs.length; i++) {
-            slabby.$slabs[i].onclick = (function(index) {
+        for(var i=0; i < slabby.$slabs.length; i++){
+            slabby.$slabs[i].onclick = (function(index){
                 return function() {
                     var forward;
                     if (index == slabby.page)
