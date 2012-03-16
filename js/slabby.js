@@ -154,8 +154,6 @@ var slabby = {
                                                                                 300,
                                                                                 'linear');
             $('.thumb', $focused_frame).hide();
-<<<<<<< HEAD
-=======
         }
     },
 
@@ -175,7 +173,6 @@ var slabby = {
                     slabby.focusSlab(slabby.page);
                 };
             })(i);
->>>>>>> slabby-paging
         }
     },
 
