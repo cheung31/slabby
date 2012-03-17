@@ -87,9 +87,9 @@ SLABBY
 #nav_links{
     position: relative;
     left: -350px;
-    top: 0px;
+    top: -18px;
     color: #AAA;
-    font-size: 28px;
+    font-size: 24px;
     text-transform: lowercase;
     text-align: right;
     width: 250px;

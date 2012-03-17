@@ -94,10 +94,15 @@ var slabby = {
        
         new_margin = -272 * (page+1);
         if (new_margin <= -272){
+            // Shift slab strip
+            slabby.$slab.animate({'margin-left': new_margin+'px'},
+                                 200,
+                                 'linear');
+
             $centered = $('.centered');
             $centered.animate({'margin-left': '10px',
                                'margin-right': '10px'},
-                              200,
+                              20,
                               'linear');
 
             $focused_frame = $('.focused_frame', $centered);
@@ -112,12 +117,6 @@ var slabby = {
                                                     200,
                                                     'linear',
                                                     function() { $centered.removeClass('centered'); });
-            $('.thumb', $focused_frame).show();
-
-            // Shift slab strip
-            slabby.$slab.animate({'margin-left': new_margin+'px'},
-                                 200,
-                                 'linear');
         }
         slabby._jumping = false;
         slabby.focusSlab(slabby.page);
@@ -135,8 +134,7 @@ var slabby = {
             $new_centered = slabby.$slabs.eq(page);
             $new_centered.animate({'margin-left': '160px',
                                    'margin-right': '145px'},
-                                  20,
-                                  function() { $new_centered.addClass('centered'); });
+                                  20);
 
             $focused_frame = $('.focused_frame', $new_centered);
             $focused_frame.animate({'width': '612px',
@@ -147,9 +145,9 @@ var slabby = {
                                    'linear');
             $('.full_photo', $focused_frame).animate({'z-index': '10',
                                                       'opacity': '1'},
-                                                     200,
-                                                     'linear');
-            $('.thumb', $focused_frame).hide();
+                                                     20,
+                                                     'linear',
+                                                     function() { $new_centered.addClass('centered'); });
         }
     },
 
