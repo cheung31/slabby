@@ -1,91 +1,126 @@
 $(document).ready(function(){
-    slabby.setup();
+    var i,
+        $slabbies;
+    $slabbies = $('#photos, #tunes, #tweets');
+    for (var i=0; i < $slabbies.length; i++) {
+        new Slabby($slabbies.eq(i)).setup();
+    }
 });
 
-var slabby = {
-    setup: function(){
-        slabby.page = 0;
-        slabby.$slab = $('.slabby:visible');
-        slabby.$slabs = $('.slab', slabby.$slab);
-        slabby.$slider = null;
-        slabby.$knob = null;
-        slabby.$focused_slab = $('#focused_slab');
+function Slabby(slabby_div) {
+    this.$slabby_div = $(slabby_div);
+    this.page = 0;
+    this.$slab = $('.slabby:visible', this.$slabby_div);
+    this.$slabs = $('.slab', this.$slab);
+    this.$slider = $('#slider', this.$slabby_div);
+    this.$knob = $('#knob', this.$slider);
+    this.$focused_slab = $('#focused_slab', this.$slabby_div);
+};
 
-        slabby.setupSlider();
-        slabby.setupKnob();
-        slabby.setupKeyboard();
-        slabby.setupPaging();
-        //slabby.setupMouse();
-        //slabby.loadContent();
+Slabby.prototype = {
+    setup:  function(){
+        var _slabby = this;
+        this.setupSlider();
+        this.setupKnob();
+        this.setupKeyboard();
+        this.setupPaging();
 
         $(window).resize(function(){
-            slabby.$slider = null;
-            slabby.setupSlider();
+            _slabby.$slider = $('#slider', _slabby.$slabby_div);
+            _slabby.setupSlider();
         });
-
-        //slabby.focusSlab(0);
-    },
-
-
-    loadContent: function(){
-        return;
-    },
-
-
-    updateSlabs: function(data){
-        return;
     },
 
     setupSlider: function(){
-        var $slider;
-
         // center slider
-        $slider = $('#slider');
-        $slider.css('margin-left', (-1*($slider.width()/2))+'px');
-        slabby.$slider = $slider;
+        this.$slider.css('margin-left', (-1*(this.$slider.width()/2))+'px');
     },
 
+
     setupKnob: function(){
-        var $knob,
-            knob_width,
+        var knob_width,
             slabs_width;
 
         // set knob width based on num slabs
-        $knob = $('#knob');
-
-        $slabs = slabby.$slabs;
-        slabs_width = $slabs.length * $slabs.eq(0).width();
+        slabs_width = this.$slabs.length * this.$slabs.eq(0).width();
         
-        knob_width = (slabby.$slider.width() * $slabs.eq(0).width()) / slabs_width;
-        $knob.css('width', knob_width);
-        $knob._dragging = false;
+        knob_width = (this.$slider.width() * this.$slabs.eq(0).width()) / slabs_width;
+        this.$knob.css('width', knob_width);
+        this.$knob._dragging = false;
 
-        slabby.$knob = $knob;
-        slabby.$knob.knob_increment = (slabby.$slider.width()-$knob.width()) / ($slabs.length-1);
+        this.$knob.knob_increment = (this.$slider.width()-this.$knob.width()) / (this.$slabs.length-1);
     },
 
-    setupKeyboard: function(){ 
+    setupKeyboard: function() {
+        var _slabby = this;
         $(document).keydown(function(e){
             if (e.which == 39){
-                if(slabby.page < slabby.$slabs.length-1) {
-                    slabby._jumping = true;
-                    slabby.page += 1;
-                    slabby.jumpPage(slabby.page, 1);
+                if(_slabby.page < _slabby.$slabs.length-1) {
+                    _slabby._jumping = true;
+                    _slabby.page += 1;
+                    _slabby.jumpPage(_slabby.page, 1);
                 } else {
-                    slabby._jumping = false;
+                    _slabby._jumping = false;
                 }
-            } else if (e.which == 37 && slabby.page > 0){
-                slabby._jumping = true;
-                slabby.page -= 1;
-                if(slabby.page>=0)
-                    slabby.jumpPage(slabby.page, 0);
+            } else if (e.which == 37 && _slabby.page > 0){
+                _slabby._jumping = true;
+                _slabby.page -= 1;
+                if(_slabby.page>=0)
+                    _slabby.jumpPage(_slabby.page, 0);
             } else {
-                slabby._jumping = false;
+                _slabby._jumping = false;
             }
         });
     },
 
+    setupMouse: function(){
+        var _slabby = this;
+        // setup draggable knob
+        this.$knob.mousedown(function(e){
+            //console.log('mousedown');
+            _slabby.$knob._dragging = true;
+            _slabby.$knob._mouseOffset = [e.pageX, e.pageY];
+        });
+        $(window).mousemove(function(e){
+            var d,
+                knob_left,
+                knob_min_left,
+                knob_max_left;
+            if (!_slabby.$knob._dragging)
+                return;
 
+            knob_min_left = _slabby.$slider.offset().left;
+            knob_max_left = _slabby.$slider.width() - _slabby.$knob.width();
+
+            d = e.pageX - _slabby.$knob._mouseOffset[0];
+            knob_left = parseInt(_slabby.$knob.css('left')) || 0;
+            if (knob_left >= 0 && knob_left <= knob_max_left) {
+                if (knob_left + d > 0 && knob_left <= knob_max_left)
+                    _slabby.$knob.css('left', d);
+            } else {
+                return;
+            }
+        });
+        $(window).mouseup(function(e){
+            //console.log('mouseup');
+            _slabby.$knob._dragging = false;
+        });
+    },
+
+    setupPaging: function(){
+        for(var i=0; i < this.$slabs.length; i++){
+            this.$slabs[i].onclick = (function(index){
+                return function() {
+                    if (index == this.page)
+                        return;
+                    this._jumping = true;
+                    this.page = index;
+                    this.jumpPage(index);
+                };
+            })(i);
+        }
+    },
+    
     jumpPage: function(page){
         var i,
             $centered,
@@ -95,7 +130,7 @@ var slabby = {
         new_margin = -272 * (page+1);
         if (new_margin <= -272){
             // Shift slab strip
-            slabby.$slab.animate({'margin-left': new_margin+'px'},
+            this.$slab.animate({'margin-left': new_margin+'px'},
                                  200,
                                  'linear');
 
@@ -118,20 +153,19 @@ var slabby = {
                                                     'linear',
                                                     function() { $centered.removeClass('centered'); });
         }
-        slabby._jumping = false;
-        slabby.focusSlab(slabby.page);
+        this._jumping = false;
+        this.focusSlab(this.page);
 
         // shift knob relative to page
-        slabby.$knob.animate({'left': slabby.$knob.knob_increment * slabby.page+'px'}, 200, 'linear');
+        this.$knob.animate({'left': this.$knob.knob_increment * this.page+'px'}, 200, 'linear');
     },
-
 
     focusSlab: function(page){
         var $new_centered,
             $focused_frame;
 
-        if (!slabby._jumping){
-            $new_centered = slabby.$slabs.eq(page);
+        if (!this._jumping){
+            $new_centered = this.$slabs.eq(page);
             $new_centered.animate({'margin-left': '160px',
                                    'margin-right': '145px'},
                                   20);
@@ -149,54 +183,5 @@ var slabby = {
                                                      'linear',
                                                      function() { $new_centered.addClass('centered'); });
         }
-    },
-
-
-    setupPaging: function(){
-        for(var i=0; i < slabby.$slabs.length; i++){
-            slabby.$slabs[i].onclick = (function(index){
-                return function() {
-                    if (index == slabby.page)
-                        return;
-                    slabby._jumping = true;
-                    slabby.page = index;
-                    slabby.jumpPage(index);
-                };
-            })(i);
-        }
-    },
-
-
-    setupMouse: function(){
-        // setup draggable knob
-        slabby.$knob.mousedown(function(e){
-            //console.log('mousedown');
-            slabby.$knob._dragging = true;
-            slabby.$knob._mouseOffset = [e.pageX, e.pageY];
-        });
-        $(window).mousemove(function(e){
-            var d,
-                knob_left,
-                knob_min_left,
-                knob_max_left;
-            if (!slabby.$knob._dragging)
-                return;
-
-            knob_min_left = slabby.$slider.offset().left;
-            knob_max_left = slabby.$slider.width() - slabby.$knob.width();
-
-            d = e.pageX - slabby.$knob._mouseOffset[0];
-            knob_left = parseInt(slabby.$knob.css('left')) || 0;
-            if (knob_left >= 0 && knob_left <= knob_max_left) {
-                if (knob_left + d > 0 && knob_left <= knob_max_left)
-                    slabby.$knob.css('left', d);
-            } else {
-                return;
-            }
-        });
-        $(window).mouseup(function(e){
-            //console.log('mouseup');
-            slabby.$knob._dragging = false;
-        });
     }
 };
