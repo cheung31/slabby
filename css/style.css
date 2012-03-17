@@ -95,17 +95,13 @@ SLABBY
     width: 250px;
     letter-spacing: -1px; }
 
-    #nav_links li {
-        padding-right: 20px;
-        border-right: 3px solid #BBB; }
-
     #nav_links #title {
         color: #000;
-        font-size: 32px;
-        height: 50px;
-        line-height: 50px; }
+        font-size: 28px;
+        margin-bottom: 20px; }
 
     #nav_links a {
+        font-size: 18px;
         color: #AAA; }
 
     #nav_links a:hover {
@@ -114,9 +110,6 @@ SLABBY
     #nav_links .selected {
         font-weight: bold;
         color: #333; }
-
-    #nav_links li.selected {
-        border-right: 3px solid #222; }
 
 #focused_slab{
     position: absolute;
