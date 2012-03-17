@@ -8,12 +8,12 @@ $(document).ready(function(){
 });
 
 function Slabby(slabby_div) {
-    this.$slabby_div = $(slabby_div);
+    this.$slabby_div = $(slabby_div)
     this.page = 0;
-    this.$slab = $('.slabby:visible', this.$slabby_div);
+    this.$slab = $('.slabby', this.$slabby_div);
     this.$slabs = $('.slab', this.$slab);
-    this.$slider = $('#slider', this.$slabby_div);
-    this.$knob = $('#knob', this.$slider);
+    this.$slider = $('.slider', this.$slabby_div);
+    this.$knob = $('.knob', this.$slider);
     this.$focused_slab = $('#focused_slab', this.$slabby_div);
 };
 
@@ -26,7 +26,7 @@ Slabby.prototype = {
         this.setupPaging();
 
         $(window).resize(function(){
-            _slabby.$slider = $('#slider', _slabby.$slabby_div);
+            _slabby.$slider = $('.slider', _slabby.$slabby_div);
             _slabby.setupSlider();
         });
     },
@@ -54,6 +54,9 @@ Slabby.prototype = {
     setupKeyboard: function() {
         var _slabby = this;
         $(document).keydown(function(e){
+            if(!_slabby.isActive())
+                return;
+
             if (e.which == 39){
                 if(_slabby.page < _slabby.$slabs.length-1) {
                     _slabby._jumping = true;
@@ -108,17 +111,26 @@ Slabby.prototype = {
     },
 
     setupPaging: function(){
+        var _slabby = this;
         for(var i=0; i < this.$slabs.length; i++){
             this.$slabs[i].onclick = (function(index){
                 return function() {
-                    if (index == this.page)
+                    if(!_slabby.isActive())
                         return;
-                    this._jumping = true;
-                    this.page = index;
-                    this.jumpPage(index);
+                    if (index == _slabby.page)
+                        return;
+                    _slabby._jumping = true;
+                    _slabby.page = index;
+                    _slabby.jumpPage(index);
                 };
             })(i);
         }
+    },
+
+    isActive: function(){
+        if(this.$slabby_div.hasClass('active'))
+            return true;
+        return false;
     },
     
     jumpPage: function(page){

@@ -68,6 +68,10 @@ table{
 /**************************************
 SLABBY
 */
+
+.inactive {
+    display: none; }
+
 #container {
     position: absolute;
     width: 100%;
@@ -213,7 +217,7 @@ SLABBY
 /**************************************
 SLIDER
 */
-#slider{
+.slider{
     background-color: #BBB;
     position: absolute;
     top: 50%;
@@ -223,7 +227,7 @@ SLIDER
     height: 7px; }
 
 
-#knob{
+.knob{
     background-color: #222;
     position: relative;
     height: 7px;
