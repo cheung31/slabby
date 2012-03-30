@@ -206,7 +206,8 @@ SLABBY
     position: absolute;
     width: 252px;
     height: 252px;
-    display: block; }
+    display: block;
+    opacity: 0.8; }
 
 .slab.centered .thumb{
     display: none;
