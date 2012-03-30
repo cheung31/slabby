@@ -236,6 +236,7 @@ Slabby.prototype = {
         var _slabby = this;
         _slabby.$slabby_div.fadeIn(500, function () {
             _slabby.$slabby_div.addClass('active');
+            _slabby.jumpPage(_slabby.page);
         });
     }
 };
