@@ -1,9 +1,15 @@
-$(document).ready(function(){
+_s = [];
+
+$(document).ready(function () {
     var i,
-        $slabbies;
-    $slabbies = $('#photos, #tunes, #tweets');
-    for (var i=0; i < $slabbies.length; i++) {
-        new Slabby($slabbies.eq(i)).setup();
+        $slabbies,
+        slab;
+    _s = [];
+    $slabbies = $('#photos, #tunes, #projects, #tweets');
+    for (i=0; i < $slabbies.length; i++) {
+        slab = new Slabby($slabbies.eq(i));
+        _s.push(slab);
+        slab.setup();
     }
 });
 
@@ -18,26 +24,26 @@ function Slabby(slabby_div) {
 };
 
 Slabby.prototype = {
-    setup:  function(){
+    setup:  function () {
         var _slabby = this;
         this.setupSlider();
         this.setupKnob();
         this.setupKeyboard();
         this.setupPaging();
 
-        $(window).resize(function(){
+        $(window).resize(function () {
             _slabby.$slider = $('.slider', _slabby.$slabby_div);
             _slabby.setupSlider();
         });
     },
 
-    setupSlider: function(){
+    setupSlider: function () {
         // center slider
         this.$slider.css('margin-left', (-1*(this.$slider.width()/2))+'px');
     },
 
 
-    setupKnob: function(){
+    setupKnob: function () {
         var knob_width,
             slabs_width;
 
@@ -51,13 +57,13 @@ Slabby.prototype = {
         this.$knob.knob_increment = (this.$slider.width()-this.$knob.width()) / (this.$slabs.length-1);
     },
 
-    setupKeyboard: function() {
+    setupKeyboard: function () {
         var _slabby = this;
-        $(document).keydown(function(e){
+        $(document).keydown(function (e) {
             if(!_slabby.isActive())
                 return;
 
-            if (e.which == 39){
+            if (e.which == 39) {
                 if(_slabby.page < _slabby.$slabs.length-1) {
                     _slabby._jumping = true;
                     _slabby.page += 1;
@@ -65,7 +71,7 @@ Slabby.prototype = {
                 } else {
                     _slabby._jumping = false;
                 }
-            } else if (e.which == 37 && _slabby.page > 0){
+            } else if (e.which == 37 && _slabby.page > 0) {
                 _slabby._jumping = true;
                 _slabby.page -= 1;
                 if(_slabby.page>=0)
@@ -76,15 +82,15 @@ Slabby.prototype = {
         });
     },
 
-    setupMouse: function(){
+    setupMouse: function () {
         var _slabby = this;
         // setup draggable knob
-        this.$knob.mousedown(function(e){
+        this.$knob.mousedown(function (e) {
             //console.log('mousedown');
             _slabby.$knob._dragging = true;
             _slabby.$knob._mouseOffset = [e.pageX, e.pageY];
         });
-        $(window).mousemove(function(e){
+        $(window).mousemove(function (e) {
             var d,
                 knob_left,
                 knob_min_left,
@@ -104,17 +110,19 @@ Slabby.prototype = {
                 return;
             }
         });
-        $(window).mouseup(function(e){
+        $(window).mouseup(function (e) {
             //console.log('mouseup');
             _slabby.$knob._dragging = false;
         });
     },
 
-    setupPaging: function(){
-        var _slabby = this;
-        for(var i=0; i < this.$slabs.length; i++){
-            this.$slabs[i].onclick = (function(index){
-                return function() {
+    setupPaging: function () {
+        var i,
+            _slabby;
+        _slabby = this;
+        for(i=0; i < this.$slabs.length; i++) {
+            this.$slabs[i].onclick = (function (index) {
+                return function () {
                     if(!_slabby.isActive())
                         return;
                     if (index == _slabby.page)
@@ -127,20 +135,20 @@ Slabby.prototype = {
         }
     },
 
-    isActive: function(){
+    isActive: function () {
         if(this.$slabby_div.hasClass('active'))
             return true;
         return false;
     },
     
-    jumpPage: function(page){
+    jumpPage: function (page) {
         var i,
             $centered,
             $focused_frame,
             new_margin;
        
         new_margin = -272 * (page+1);
-        if (new_margin <= -272){
+        if (new_margin <= -272) {
             // Shift slab strip
             this.$slab.animate({'margin-left': new_margin+'px'},
                                  200,
@@ -163,7 +171,7 @@ Slabby.prototype = {
                                                      'opacity': '0'},
                                                     200,
                                                     'linear',
-                                                    function() { $centered.removeClass('centered'); });
+                                                    function () { $centered.removeClass('centered'); });
         }
         this._jumping = false;
         this.focusSlab(this.page);
@@ -172,11 +180,11 @@ Slabby.prototype = {
         this.$knob.animate({'left': this.$knob.knob_increment * this.page+'px'}, 200, 'linear');
     },
 
-    focusSlab: function(page){
+    focusSlab: function (page) {
         var $new_centered,
             $focused_frame;
 
-        if (!this._jumping){
+        if (!this._jumping) {
             $new_centered = this.$slabs.eq(page);
             $new_centered.animate({'margin-left': '160px',
                                    'margin-right': '145px'},
@@ -193,7 +201,21 @@ Slabby.prototype = {
                                                       'opacity': '1'},
                                                      20,
                                                      'linear',
-                                                     function() { $new_centered.addClass('centered'); });
+                                                     function () { $new_centered.addClass('centered'); });
         }
+    },
+
+    deactivate: function () {
+        var _slabby = this;
+        _slabby.$slabby_div.fadeOut(500, function () {
+            _slabby.$slabby_div.addClass('inactive');
+        });
+    },
+
+    activate: function () {
+        var _slabby = this;
+        _slabby.$slabby_div.fadeIn(500, function () {
+            _slabby.$slabby_div.addClass('active');
+        });
     }
 };
