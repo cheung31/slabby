@@ -1,15 +1,35 @@
-_s = [];
+_s = {};
 
 $(document).ready(function () {
     var i,
         $slabbies,
-        slab;
-    _s = [];
+        slab,
+        $nav_links,
+        $current_link,
+        $target_link;
+
     $slabbies = $('#photos, #tunes, #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
-        _s.push(slab);
+        _s[slab.$slabby_div.attr('id')] = slab;
         slab.setup();
+    }
+
+    $nav_links = $('a', '#nav_links');
+    for (i=0; i < $nav_links.length; i++) {
+        $nav_links.eq(i).click(function(e){
+            e.preventDefault();
+
+            $current_link = $('a', '.selected');
+            $current_link.parent().removeClass('selected');
+            if (_s[$current_link.attr('href').substring(2)] !== undefined)
+                _s[$current_link.attr('href').substring(2)].deactivate();
+
+            $target_link = $(e.delegateTarget);
+            $target_link.parent().addClass('selected');
+            if (_s[$target_link.attr('href').substring(2)] !== undefined)
+                _s[$target_link.attr('href').substring(2)].activate();
+        });
     }
 });
 
@@ -120,7 +140,7 @@ Slabby.prototype = {
         var i,
             _slabby;
         _slabby = this;
-        for(i=0; i < this.$slabs.length; i++) {
+        for (i=0; i < this.$slabs.length; i++) {
             this.$slabs[i].onclick = (function (index) {
                 return function () {
                     if(!_slabby.isActive())
@@ -208,7 +228,7 @@ Slabby.prototype = {
     deactivate: function () {
         var _slabby = this;
         _slabby.$slabby_div.fadeOut(500, function () {
-            _slabby.$slabby_div.addClass('inactive');
+            _slabby.$slabby_div.removeClass('active').addClass('inactive');
         });
     },
 

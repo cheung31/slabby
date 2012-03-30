@@ -105,13 +105,14 @@ SLABBY
         margin-bottom: 20px; }
 
     #nav_links a {
+        text-decoration: none;
         font-size: 18px;
         color: #AAA; }
 
     #nav_links a:hover {
         color: #777; }
 
-    #nav_links .selected {
+    #nav_links .selected a {
         font-weight: bold;
         color: #333; }
 
