@@ -1,4 +1,4 @@
-_s = {};
+var _s = {};
 
 $(document).ready(function () {
     var i,
