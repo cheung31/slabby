@@ -187,8 +187,7 @@ Slabby.prototype = {
                                     'margin-top': '0px'},
                                    200,
                                    'linear');
-            $('.full_photo', $focused_frame).animate({'z-index': '0',
-                                                     'opacity': '0'},
+            $('.full_photo', $focused_frame).animate({'z-index': '0'},
                                                     200,
                                                     'linear',
                                                     function () { $centered.removeClass('centered'); });
@@ -217,8 +216,7 @@ Slabby.prototype = {
                                     'margin-top': '-211px'},
                                    200,
                                    'linear');
-            $('.full_photo', $focused_frame).animate({'z-index': '10',
-                                                      'opacity': '1'},
+            $('.full_photo', $focused_frame).animate({'z-index': '10'},
                                                      20,
                                                      'linear',
                                                      function () { $new_centered.addClass('centered'); });
