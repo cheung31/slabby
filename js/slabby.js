@@ -8,7 +8,9 @@ $(document).ready(function () {
         $current_link,
         $target_link;
 
-    $slabbies = $('#photos, #tunes, #projects, #tweets');
+    Slabby.prototype.setupTunes();
+
+    $slabbies = $('#photos,  #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
@@ -33,6 +35,16 @@ $(document).ready(function () {
     }
 });
 
+
+////////////////////////
+// Slab
+function Slab(image_url) {
+    this.image_url = image_url;
+}
+
+
+////////////////////////
+// Slabby
 function Slabby(slabby_div) {
     this.$slabby_div = $(slabby_div)
     this.page = 0;
@@ -55,6 +67,54 @@ Slabby.prototype = {
             _slabby.$slider = $('.slider', _slabby.$slabby_div);
             _slabby.setupSlider();
         });
+    },
+
+    setupTunes: function () {
+        var i,
+            slabs = [],
+            slab,
+            recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=b25b959554ed76058ac220b7b2e0a026&format=json',
+            recent_tracks,
+            album_art_url,
+            _slabby = this;
+
+        $.ajax(recent_tracks_url, {
+             type: 'GET',
+             success: function (data) {
+                 recent_tracks = data.recenttracks.track;
+                 for (i=0; i < recent_tracks.length; i++) {
+                     album_art_url = recent_tracks[i]['image'][3]['#text'];
+                     if (album_art_url) {
+                         slabs.push(new Slab(album_art_url));
+                     }
+                 }
+
+                 _slabby.buildSlabs(slabs);
+                 slab = new Slabby($('#tunes'));
+                 _s[slab.$slabby_div.attr('id')] = slab;
+                 slab.setup();
+             }
+        });
+    },
+
+    buildSlabs: function (slabs) {
+        var i,
+            _slabby = this;
+
+        console.log(slabs.length);
+        for (i=0; i < slabs.length; i++) {
+           _slabby.appendSlab(slabs[i]);
+        }
+    },
+
+    appendSlab: function (slab) {
+        var _slabby = this;
+
+        var html = '<div class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
+        html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
+        html += '</div></div></div>';
+
+        $('.slabby', _slabby.$slabby_div).append(html);
     },
 
     setupSlider: function () {
