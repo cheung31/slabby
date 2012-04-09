@@ -89,9 +89,9 @@ Slabby.prototype = {
                      }
                  }
 
-                 _slabby.buildSlabs(slabs);
                  slab = new Slabby($('#tunes'));
                  _s[slab.$slabby_div.attr('id')] = slab;
+                 _slabby.buildSlabs(slabs);
                  slab.setup();
              }
         });
@@ -101,7 +101,6 @@ Slabby.prototype = {
         var i,
             _slabby = this;
 
-        console.log(slabs.length);
         for (i=0; i < slabs.length; i++) {
            _slabby.appendSlab(slabs[i]);
         }
@@ -114,7 +113,7 @@ Slabby.prototype = {
         html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
         html += '</div></div></div>';
 
-        $('.slabby', _slabby.$slabby_div).append(html);
+        $('.slabby', '#tunes').append(html);
     },
 
     setupSlider: function () {
