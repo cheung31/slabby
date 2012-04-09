@@ -31,6 +31,8 @@ $(document).ready(function () {
             $target_link.parent().addClass('selected');
             if (_s[$target_link.attr('href').substring(2)] !== undefined)
                 _s[$target_link.attr('href').substring(2)].activate();
+
+            $('title').html('recently. ' + $target_link.attr('href').substring(2) + '.');
         });
     }
 });
