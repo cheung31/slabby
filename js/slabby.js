@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     Slabby.prototype.setupTunes();
 
-    $slabbies = $('#photos,  #projects, #tweets');
+    $slabbies = $('#photos, #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
@@ -89,9 +89,9 @@ Slabby.prototype = {
                      }
                  }
 
+                 _slabby.buildSlabs(slabs);
                  slab = new Slabby($('#tunes'));
                  _s[slab.$slabby_div.attr('id')] = slab;
-                 _slabby.buildSlabs(slabs);
                  slab.setup();
              }
         });
