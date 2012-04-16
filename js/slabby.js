@@ -21,13 +21,15 @@ $(document).ready(function () {
     for (i=0; i < $nav_links.length; i++) {
         $nav_links.eq(i).click(function(e){
             e.preventDefault();
+            $target_link = $(e.delegateTarget);
+            if ($target_link.parent().hasClass('selected'))
+                return;
 
             $current_link = $('a', '.selected');
             $current_link.parent().removeClass('selected');
             if (_s[$current_link.attr('href').substring(2)] !== undefined)
                 _s[$current_link.attr('href').substring(2)].deactivate();
 
-            $target_link = $(e.delegateTarget);
             $target_link.parent().addClass('selected');
             if (_s[$target_link.attr('href').substring(2)] !== undefined)
                 _s[$target_link.attr('href').substring(2)].activate();
