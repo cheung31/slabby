@@ -80,7 +80,6 @@ SLABBY
     z-index: 20; }
 
 #nav_links{
-    z-index: 100;
     position: absolute;
     left: 0;
     top: 15px;
