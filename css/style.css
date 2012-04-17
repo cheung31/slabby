@@ -251,3 +251,11 @@ SLIDER
     height: 7px;
     width: 0px; }
 
+
+footer {
+    font-size: 12px;
+    display: block;
+    position: absolute;
+    clear: both;
+    bottom: 30px;
+    right: 30px; }
