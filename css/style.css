@@ -183,11 +183,19 @@ SLABBY
     opacity: .4;
     z-index: 15;
     top: 20px;
-    left: 545px; }
+    left: 545px;
+    border-top: 1px solid #FFF;
+    border-left: 1px solid #FFF;
+    border-right: 1px solid #888;
+    border-bottom: 1px solid #888; }
 
 .ext_link:hover {
     background-color: #222;
-    opacity: .9; }
+    opacity: .9;
+    border-top: 1px solid #AAA;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #555;
+    border-bottom: 1px solid #555; }
 
 .slab.centered .focused_frame{
     margin-left: -188px;
