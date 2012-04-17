@@ -173,6 +173,18 @@ SLABBY
     height: 250px;
     z-index: 0; }
 
+.ext_link {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background: #222 url('images/link-icon.png') no-repeat right top;
+    background-color: black;
+    opacity: .75;
+    z-index: 15;
+    top: 25px;
+    left: 530px; }
+
 .slab.centered .focused_frame{
     margin-left: -188px;
     margin-top: -211px;
