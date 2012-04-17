@@ -109,6 +109,7 @@ SLABBY
         color: #333; }
 
 .vignette {
+    pointer-events: none;
     opacity: 0.2;
     height: 100%;
     width: 253px;
