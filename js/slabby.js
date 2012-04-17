@@ -253,10 +253,9 @@ Slabby.prototype = {
             $('.full_photo', $focused_frame).animate({'z-index': '0'},
                                                     200,
                                                     'linear',
-                                                    function () { 
-                                                        $centered.removeClass('centered'); 
-                                                        if (callback)
-                                                            callback();
+                                                    function () {
+                                                        $centered.removeClass('centered');
+                                                        $('.ext_link', $focused_frame).hide();
                                                     });
         }
         this._jumping = false;
@@ -264,6 +263,9 @@ Slabby.prototype = {
 
         // shift knob relative to page
         this.$knob.animate({'left': this.$knob.knob_increment * this.page+'px'}, 200, 'linear');
+
+        if (callback)
+            callback();
     },
 
     focusSlab: function (page) {
@@ -286,14 +288,16 @@ Slabby.prototype = {
             $('.full_photo', $focused_frame).animate({'z-index': '10'},
                                                      20,
                                                      'linear',
-                                                     function () { $new_centered.addClass('centered'); });
+                                                     function () {
+                                                         $new_centered.addClass('centered');
+                                                         $('.ext_link', $focused_frame).css({'display': 'block'});
+                                                     });
         }
     },
 
     deactivate: function () {
         var _slabby = this;
         _slabby.$slabby_div.fadeOut(500, function () {
-            $('.ext_link', _slabby.$slabby_div).hide();
             _slabby.$slabby_div.removeClass('active').addClass('inactive');
         });
     },
@@ -302,9 +306,7 @@ Slabby.prototype = {
         var _slabby = this;
         _slabby.$slabby_div.fadeIn(500, function () {
             _slabby.$slabby_div.addClass('active');
-            _slabby.jumpPage(_slabby.page, function () {
-                $('.ext_link', _slabby.$slabby_div).css({'display': 'block'});
-            });
+            _slabby.jumpPage(_slabby.page);
         });
     }
 };
