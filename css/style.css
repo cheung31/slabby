@@ -77,21 +77,13 @@ SLABBY
     width: 100%;
     height: 100%;
     overflow: hidden;
-    -moz-box-shadow:
-        inset 700px 0 1000px -500px #CCC,
-        inset -700px 0 1000px -500px #CCC;
-    -webkit-box-shadow:
-        inset 700px 0 1000px -500px #CCC,
-        inset -700px 0 1000px -500px #CCC;
-    box-shadow:
-        inset 700px 0 1000px -500px #CCC,
-        inset -700px 0 1000px -500px #CCC;
     z-index: 20; }
 
 #nav_links{
-    position: relative;
-    left: -350px;
-    top: 0px;
+    z-index: 100;
+    position: absolute;
+    left: 0;
+    top: 15px;
     color: #AAA;
     font-size: 24px;
     text-transform: lowercase;
@@ -115,6 +107,21 @@ SLABBY
     #nav_links .selected a {
         font-weight: bold;
         color: #333; }
+
+.vignette {
+    opacity: 0.2;
+    height: 100%;
+    width: 253px;
+    display: block;
+    position: absolute; }
+
+#vignette-left {
+    left: 0;
+    background: url('../images/vignette.png') repeat-y left center; }
+
+#vignette-right {
+    right: 0;
+    background: url('../images/vignette.png') repeat-y right center; }
 
 #focused_slab{
     position: absolute;
@@ -152,7 +159,7 @@ SLABBY
     margin-top: -211px;
     width: 612px;
     height: 612px;
-    z-index: 10px; }
+    z-index: 10; }
 
 .slab p{
     color: #AAA;
