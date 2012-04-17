@@ -150,7 +150,7 @@ Slabby.prototype = {
                 if(_slabby.page < _slabby.$slabs.length-1) {
                     _slabby._jumping = true;
                     _slabby.page += 1;
-                    _slabby.jumpPage(_slabby.page, 1);
+                    _slabby.jumpPage(_slabby.page);
                 } else {
                     _slabby._jumping = false;
                 }
@@ -158,7 +158,7 @@ Slabby.prototype = {
                 _slabby._jumping = true;
                 _slabby.page -= 1;
                 if(_slabby.page>=0)
-                    _slabby.jumpPage(_slabby.page, 0);
+                    _slabby.jumpPage(_slabby.page);
             } else {
                 _slabby._jumping = false;
             }
@@ -224,7 +224,7 @@ Slabby.prototype = {
         return false;
     },
     
-    jumpPage: function (page) {
+    jumpPage: function (page, callback) {
         var i,
             $centered,
             $focused_frame,
@@ -253,7 +253,11 @@ Slabby.prototype = {
             $('.full_photo', $focused_frame).animate({'z-index': '0'},
                                                     200,
                                                     'linear',
-                                                    function () { $centered.removeClass('centered'); });
+                                                    function () { 
+                                                        $centered.removeClass('centered'); 
+                                                        if (callback)
+                                                            callback();
+                                                    });
         }
         this._jumping = false;
         this.focusSlab(this.page);
@@ -289,6 +293,7 @@ Slabby.prototype = {
     deactivate: function () {
         var _slabby = this;
         _slabby.$slabby_div.fadeOut(500, function () {
+            $('.ext_link', _slabby.$slabby_div).hide();
             _slabby.$slabby_div.removeClass('active').addClass('inactive');
         });
     },
@@ -297,7 +302,9 @@ Slabby.prototype = {
         var _slabby = this;
         _slabby.$slabby_div.fadeIn(500, function () {
             _slabby.$slabby_div.addClass('active');
-            _slabby.jumpPage(_slabby.page);
+            _slabby.jumpPage(_slabby.page, function () {
+                $('.ext_link', _slabby.$slabby_div).css({'display': 'block'});
+            });
         });
     }
 };
