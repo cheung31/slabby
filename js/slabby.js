@@ -84,6 +84,7 @@ Slabby.prototype = {
 
         $.ajax(recent_tracks_url, {
              type: 'GET',
+             dataType: 'json',
              success: function (data) {
                  recent_tracks = data.recenttracks.track;
                  for (i=0; i < recent_tracks.length; i++) {
