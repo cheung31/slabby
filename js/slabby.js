@@ -343,9 +343,9 @@ Slabby.prototype = {
         }
         this._jumping = false;
         this.focusSlab(this.page);
-        var image_id = $('.centered', '.active').attr('id');
-        if (image_id)
-            _s['_router'].navigate('/'+ this.$slabby_div.attr('id') + '/' + image_id);
+        //var image_id = $('.centered', '.active').attr('id');
+        //if (image_id)
+        //    _s['_router'].navigate('/'+ this.$slabby_div.attr('id') + '/' + image_id);
 
         // shift knob relative to page
         this.$knob.animate({'left': this.$knob.knob_increment * this.page+'px'}, 200, 'linear');
