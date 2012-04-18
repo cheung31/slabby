@@ -39,9 +39,6 @@ $(document).ready(function () {
         $target_link,
         _router;
 
-    _router = new _s._router;
-    Backbone.history.start();
-
     Slabby.setupTunes();
     $slabbies = $('#photos, #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
@@ -49,6 +46,9 @@ $(document).ready(function () {
         _s[slab.$slabby_div.attr('id')] = slab;
         slab.setup();
     }
+
+    _router = new _s._router;
+    Backbone.history.start();
 });
 
 
