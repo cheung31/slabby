@@ -5,33 +5,14 @@ var _s = {
         },
 
         defaultRoute: function (target_action) {
-            var $current_link,
-                $target_link,
-                current_action;
-
-            $('.active').removeClass('active').addClass('inactive').hide();
-            target_action = target_action ? target_action : 'photos';
-            console.log(target_action);
-
-            $current_link = $('a', '.selected');
-            current_action = $current_link.attr('href').substring(2);
-            console.log(current_action);
-            $target_link = $('a[href$='+target_action+']', '#nav_links');
-            
-
-            $current_link.parent().removeClass('selected');
-            console.log(_s[current_action]);
-            if (_s[current_action] !== undefined && current_action != target_action) {
-                _s[current_action].deactivate();
+            if (target_action == 'tunes') {
+                Slabby.setupTunes(function () {
+                    Slabby.showSlab(target_action);
+                });
             }
-
-            $target_link.parent().addClass('selected');
-            console.log(_s[target_action]);
-            if (_s[target_action] !== undefined) {
-                _s[target_action].activate();
+            else {
+                Slabby.showSlab(target_action);
             }
-
-            $('title').html('recently. ' + target_action + '.');
         }
     })
 };
@@ -45,7 +26,6 @@ $(document).ready(function () {
         $target_link,
         _router;
 
-    Slabby.setupTunes();
     $slabbies = $('#photos, #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
@@ -77,7 +57,36 @@ function Slabby(slabby_div) {
     this.$focused_slab = $('#focused_slab', this.$slabby_div);
 };
 
-Slabby.setupTunes = function () {
+Slabby.showSlab = function (target_action) {
+        var $current_link,
+            $target_link,
+            current_action;
+        $('.active').removeClass('active').addClass('inactive').hide();
+        target_action = target_action ? target_action : 'photos';
+        console.log(target_action);
+
+        $current_link = $('a', '.selected');
+        current_action = $current_link.attr('href').substring(2);
+        console.log(current_action);
+        $target_link = $('a[href$='+target_action+']', '#nav_links');
+        
+
+        $current_link.parent().removeClass('selected');
+        console.log(_s[current_action]);
+        if (_s[current_action] !== undefined && current_action != target_action) {
+            _s[current_action].deactivate();
+        }
+
+        $target_link.parent().addClass('selected');
+        console.log(_s[target_action]);
+        if (_s[target_action] !== undefined) {
+            _s[target_action].activate();
+        }
+
+        $('title').html('recently. ' + target_action + '.');
+    };
+
+Slabby.setupTunes = function (callback) {
         var i,
             slabs = [],
             slab,
@@ -101,6 +110,9 @@ Slabby.setupTunes = function () {
                  slab = new Slabby($('#tunes'));
                  _s[slab.$slabby_div.attr('id')] = slab;
                  slab.setup();
+                 if (callback) {
+                     callback();
+                 }
              }
         });
     };
