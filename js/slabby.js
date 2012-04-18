@@ -62,22 +62,20 @@ Slabby.showSlab = function (target_action) {
             $target_link,
             current_action;
         target_action = target_action ? target_action : 'photos';
-        console.log(target_action);
+        $target_link = $('a[href$='+target_action+']', '#nav_links');
 
         $current_link = $('a', '.selected');
-        current_action = $current_link.attr('href').substring(2);
-        console.log(current_action);
-        $target_link = $('a[href$='+target_action+']', '#nav_links');
-        
+        if ($current_link.length) {
+            current_action = $current_link.attr('href').substring(2);
+            
 
-        $current_link.parent().removeClass('selected');
-        console.log(_s[current_action]);
-        if (_s[current_action] !== undefined && current_action != target_action) {
-            _s[current_action].deactivate();
+            $current_link.parent().removeClass('selected');
+            if (_s[current_action] !== undefined && current_action != target_action) {
+                _s[current_action].deactivate();
+            }
         }
 
         $target_link.parent().addClass('selected');
-        console.log(_s[target_action]);
         if (_s[target_action] !== undefined) {
             _s[target_action].activate();
         }
