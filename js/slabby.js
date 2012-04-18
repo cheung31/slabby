@@ -117,7 +117,7 @@ Slabby.setupPhotos = function (callback) {
                 }
             }
 
-            Slabby.buildSlabs(slabs, Slabby.appendPhotoSlab);
+            Slabby.buildSlabs(slabs, 'photos');
             slab = new Slabby($('#photos'));
             _s[slab.$slabby_div.attr('id')] = slab;
             slab.setup();
@@ -154,7 +154,7 @@ Slabby.setupTunes = function (callback) {
                 }
             }
 
-            Slabby.buildSlabs(slabs, Slabby.appendTuneSlab);
+            Slabby.buildSlabs(slabs, 'tunes');
             slab = new Slabby($('#tunes'));
             _s[slab.$slabby_div.attr('id')] = slab;
             slab.setup();
@@ -165,28 +165,21 @@ Slabby.setupTunes = function (callback) {
     });
 };
 
-Slabby.buildSlabs = function (slabs, appendSlab) {
+Slabby.buildSlabs = function (slabs, slabby_name) {
     var i;
     for (i=0; i < slabs.length; i++) {
-       appendSlab(slabs[i]);
+       Slabby.appendSlab(slabs[i], slabby_name);
     }
 };
 
-Slabby.appendTuneSlab = function (slab) {
-    var html = '<div class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
-    html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
-    html += '</div></div></div>';
-    $('.slabby', '#tunes').append(html);
-};
-
-Slabby.appendPhotoSlab = function (slab) {
+Slabby.appendSlab = function (slab, slabby_name) {
     var html = '<div ';
     if (slab.id)
         html += 'id="' + slab.id + '" ';
     html += 'class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
     html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
     html += '</div></div></div>';
-    $('.slabby', '#photos').append(html);
+    $('.slabby', '#'+slabby_name).append(html);
 };
 
 Slabby.prototype = {
