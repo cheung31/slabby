@@ -1,5 +1,5 @@
 var _s = {
-    _router : Backbone.Router.extend({
+    Router : Backbone.Router.extend({
         routes: {
             '*actions': 'defaultRoute'
         },
@@ -7,6 +7,11 @@ var _s = {
         defaultRoute: function (target_action) {
             if (target_action == 'tunes') {
                 Slabby.setupTunes(function () {
+                    Slabby.showSlab(target_action);
+                });
+            }
+            else if (target_action == 'photos') {
+                Slabby.setupPhotos(function () {
                     Slabby.showSlab(target_action);
                 });
             }
@@ -26,22 +31,24 @@ $(document).ready(function () {
         $target_link,
         _router;
 
-    $slabbies = $('#photos, #projects, #tweets');
+    $slabbies = $('#projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
         slab.setup();
     }
 
-    _router = new _s._router;
+    _s['_router'] = new _s.Router;
     Backbone.history.start();
 });
 
 
 ////////////////////////
 // Slab
-function Slab(image_url) {
+function Slab(image_url, id) {
     this.image_url = image_url;
+    if (id)
+        this.id = id;
 }
 
 
@@ -83,57 +90,104 @@ Slabby.showSlab = function (target_action) {
         $('title').html('recently. ' + target_action + '.');
     };
 
-Slabby.setupTunes = function (callback) {
-        var i,
-            slabs = [],
-            slab,
-            recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=b25b959554ed76058ac220b7b2e0a026&format=json',
-            recent_tracks,
-            album_art_url;
+Slabby.setupPhotos = function (callback) {
+    var i,
+        slabs = [],
+        slab,
+        recent_photos_url = 'https://api.instagram.com/v1/users/13865411/media/recent/?access_token=13865411.8167e48.b43836f60d6d4d53a28b996418e31d17',
+        recent_photos;
 
-        if (_s['tunes']){
-            if (callback)
+    if (_s['photos']) {
+        if (callback)
+            callback();
+        return;
+    }
+
+    $.ajax(recent_photos_url, {
+        type: 'GET',
+        dataType: 'jsonp',
+        success: function (response) {
+            recent_photos = response.data;
+            for (i=0; i < recent_photos.length; i++) {
+                var image_url = recent_photos[i]['images']['standard_resolution']['url'];
+                var image_id = recent_photos[i]['id'];
+                if (image_url) {
+                    slabs.push(new Slab(image_url,
+                                        image_id));
+                }
+            }
+
+            Slabby.buildSlabs(slabs, Slabby.appendPhotoSlab);
+            slab = new Slabby($('#photos'));
+            _s[slab.$slabby_div.attr('id')] = slab;
+            slab.setup();
+            if (callback) {
                 callback();
-            return;
+            }
         }
+    });
+};
 
-        $.ajax(recent_tracks_url, {
-             type: 'GET',
-             dataType: 'json',
-             success: function (data) {
-                 recent_tracks = data.recenttracks.track;
-                 for (i=0; i < recent_tracks.length; i++) {
-                     album_art_url = recent_tracks[i]['image'][3]['#text'];
-                     if (album_art_url) {
-                         slabs.push(new Slab(album_art_url));
-                     }
-                 }
+Slabby.setupTunes = function (callback) {
+    var i,
+        slabs = [],
+        slab,
+        recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=b25b959554ed76058ac220b7b2e0a026&format=json',
+        recent_tracks,
+        album_art_url;
 
-                 Slabby.buildSlabs(slabs);
-                 slab = new Slabby($('#tunes'));
-                 _s[slab.$slabby_div.attr('id')] = slab;
-                 slab.setup();
-                 if (callback) {
-                     callback();
-                 }
-             }
-        });
-    };
+    if (_s['tunes']) {
+        if (callback)
+            callback();
+        return;
+    }
 
-Slabby.buildSlabs = function (slabs) {
-        var i;
-        for (i=0; i < slabs.length; i++) {
-           Slabby.appendSlab(slabs[i]);
-        }
-    };
+    $.ajax(recent_tracks_url, {
+         type: 'GET',
+         dataType: 'json',
+         success: function (data) {
+            recent_tracks = data.recenttracks.track;
+            for (i=0; i < recent_tracks.length; i++) {
+                album_art_url = recent_tracks[i]['image'][3]['#text'];
+                if (album_art_url) {
+                    slabs.push(new Slab(album_art_url));
+                }
+            }
 
-Slabby.appendSlab = function (slab) {
-        var html = '<div class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
-        html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
-        html += '</div></div></div>';
+            Slabby.buildSlabs(slabs, Slabby.appendTuneSlab);
+            slab = new Slabby($('#tunes'));
+            _s[slab.$slabby_div.attr('id')] = slab;
+            slab.setup();
+            if (callback) {
+                callback();
+            }
+         }
+    });
+};
 
-        $('.slabby', '#tunes').append(html);
-    };
+Slabby.buildSlabs = function (slabs, appendSlab) {
+    var i;
+    for (i=0; i < slabs.length; i++) {
+       appendSlab(slabs[i]);
+    }
+};
+
+Slabby.appendTuneSlab = function (slab) {
+    var html = '<div class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
+    html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
+    html += '</div></div></div>';
+    $('.slabby', '#tunes').append(html);
+};
+
+Slabby.appendPhotoSlab = function (slab) {
+    var html = '<div ';
+    if (slab.id)
+        html += 'id="' + slab.id + '" ';
+    html += 'class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
+    html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
+    html += '</div></div></div>';
+    $('.slabby', '#photos').append(html);
+};
 
 Slabby.prototype = {
     setup:  function () {
@@ -289,6 +343,9 @@ Slabby.prototype = {
         }
         this._jumping = false;
         this.focusSlab(this.page);
+        var image_id = $('.centered', '.active').attr('id');
+        if (image_id)
+            _s['_router'].navigate(this.$slabby_div.attr('id') + '/' + image_id);
 
         // shift knob relative to page
         this.$knob.animate({'left': this.$knob.knob_increment * this.page+'px'}, 200, 'linear');
