@@ -10,7 +10,7 @@ var _s = {
                     Slabby.showSlab(target_action);
                 });
             }
-            else if (target_action == 'photos') {
+            else if (target_action == 'photos' || target_action == '') {
                 Slabby.setupPhotos(function () {
                     Slabby.showSlab(target_action);
                 });
