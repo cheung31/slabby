@@ -8,22 +8,28 @@ var _s = {
             var $current_link,
                 $target_link,
                 current_action;
+
+            $('.active').removeClass('active').addClass('inactive').hide();
             target_action = target_action ? target_action : 'photos';
+            console.log(target_action);
 
             $current_link = $('a', '.selected');
             current_action = $current_link.attr('href').substring(2);
+            console.log(current_action);
             $target_link = $('a[href$='+target_action+']', '#nav_links');
             
-            if ($target_link.parent().hasClass('selected'))
-                return;
 
             $current_link.parent().removeClass('selected');
-            if (_s[current_action] !== undefined)
+            console.log(_s[current_action]);
+            if (_s[current_action] !== undefined && current_action != target_action) {
                 _s[current_action].deactivate();
+            }
 
             $target_link.parent().addClass('selected');
-            if (_s[target_action] !== undefined)
+            console.log(_s[target_action]);
+            if (_s[target_action] !== undefined) {
                 _s[target_action].activate();
+            }
 
             $('title').html('recently. ' + target_action + '.');
         }
