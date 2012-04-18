@@ -1,4 +1,34 @@
-var _s = {};
+var _s = {
+    _router : Backbone.Router.extend({
+        routes: {
+            '*actions': 'defaultRoute'
+        },
+
+        defaultRoute: function (target_action) {
+            var $current_link,
+                $target_link,
+                current_action;
+            target_action = target_action ? target_action : 'photos';
+
+            $current_link = $('a', '.selected');
+            current_action = $current_link.attr('href').substring(2);
+            $target_link = $('a[href$='+target_action+']', '#nav_links');
+            
+            if ($target_link.parent().hasClass('selected'))
+                return;
+
+            $current_link.parent().removeClass('selected');
+            if (_s[current_action] !== undefined)
+                _s[current_action].deactivate();
+
+            $target_link.parent().addClass('selected');
+            if (_s[target_action] !== undefined)
+                _s[target_action].activate();
+
+            $('title').html('recently. ' + target_action + '.');
+        }
+    })
+};
 
 $(document).ready(function () {
     var i,
@@ -6,36 +36,18 @@ $(document).ready(function () {
         slab,
         $nav_links,
         $current_link,
-        $target_link;
+        $target_link,
+        _router;
 
-    Slabby.prototype.setupTunes();
+    _router = new _s._router;
+    Backbone.history.start();
 
+    Slabby.setupTunes();
     $slabbies = $('#photos, #projects, #tweets');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
         slab.setup();
-    }
-
-    $nav_links = $('a', '#nav_links');
-    for (i=0; i < $nav_links.length; i++) {
-        $nav_links.eq(i).click(function(e){
-            e.preventDefault();
-            $target_link = $(e.delegateTarget);
-            if ($target_link.parent().hasClass('selected'))
-                return;
-
-            $current_link = $('a', '.selected');
-            $current_link.parent().removeClass('selected');
-            if (_s[$current_link.attr('href').substring(2)] !== undefined)
-                _s[$current_link.attr('href').substring(2)].deactivate();
-
-            $target_link.parent().addClass('selected');
-            if (_s[$target_link.attr('href').substring(2)] !== undefined)
-                _s[$target_link.attr('href').substring(2)].activate();
-
-            $('title').html('recently. ' + $target_link.attr('href').substring(2) + '.');
-        });
     }
 });
 
@@ -59,28 +71,13 @@ function Slabby(slabby_div) {
     this.$focused_slab = $('#focused_slab', this.$slabby_div);
 };
 
-Slabby.prototype = {
-    setup:  function () {
-        var _slabby = this;
-        this.setupSlider();
-        this.setupKnob();
-        this.setupKeyboard();
-        this.setupPaging();
-
-        $(window).resize(function () {
-            _slabby.$slider = $('.slider', _slabby.$slabby_div);
-            _slabby.setupSlider();
-        });
-    },
-
-    setupTunes: function () {
+Slabby.setupTunes = function () {
         var i,
             slabs = [],
             slab,
             recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=b25b959554ed76058ac220b7b2e0a026&format=json',
             recent_tracks,
-            album_art_url,
-            _slabby = this;
+            album_art_url;
 
         $.ajax(recent_tracks_url, {
              type: 'GET',
@@ -94,31 +91,41 @@ Slabby.prototype = {
                      }
                  }
 
-                 _slabby.buildSlabs(slabs);
+                 Slabby.buildSlabs(slabs);
                  slab = new Slabby($('#tunes'));
                  _s[slab.$slabby_div.attr('id')] = slab;
                  slab.setup();
              }
         });
-    },
+    };
 
-    buildSlabs: function (slabs) {
-        var i,
-            _slabby = this;
-
+Slabby.buildSlabs = function (slabs) {
+        var i;
         for (i=0; i < slabs.length; i++) {
-           _slabby.appendSlab(slabs[i]);
+           Slabby.appendSlab(slabs[i]);
         }
-    },
+    };
 
-    appendSlab: function (slab) {
-        var _slabby = this;
-
+Slabby.appendSlab = function (slab) {
         var html = '<div class="slab" style=""><div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
         html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
         html += '</div></div></div>';
 
         $('.slabby', '#tunes').append(html);
+    };
+
+Slabby.prototype = {
+    setup:  function () {
+        var _slabby = this;
+        this.setupSlider();
+        this.setupKnob();
+        this.setupKeyboard();
+        this.setupPaging();
+
+        $(window).resize(function () {
+            _slabby.$slider = $('.slider', _slabby.$slabby_div);
+            _slabby.setupSlider();
+        });
     },
 
     setupSlider: function () {
