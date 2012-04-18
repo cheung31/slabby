@@ -61,7 +61,6 @@ Slabby.showSlab = function (target_action) {
         var $current_link,
             $target_link,
             current_action;
-        $('.active').removeClass('active').addClass('inactive').hide();
         target_action = target_action ? target_action : 'photos';
         console.log(target_action);
 
