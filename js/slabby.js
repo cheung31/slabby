@@ -94,6 +94,12 @@ Slabby.setupTunes = function (callback) {
             recent_tracks,
             album_art_url;
 
+        if (_s['tunes']){
+            if (callback)
+                callback();
+            return;
+        }
+
         $.ajax(recent_tracks_url, {
              type: 'GET',
              dataType: 'json',
