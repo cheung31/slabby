@@ -88,7 +88,8 @@ SLABBY
     text-transform: lowercase;
     text-align: right;
     width: 250px;
-    letter-spacing: -1px; }
+    letter-spacing: -1px;
+    z-index: 100; }
 
     #nav_links #title {
         color: #000;
@@ -113,7 +114,8 @@ SLABBY
     height: 100%;
     width: 253px;
     display: block;
-    position: absolute; }
+    position: absolute;
+    z-index: 20; }
 
 #vignette-left {
     left: 0;
