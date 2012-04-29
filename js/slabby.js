@@ -31,7 +31,7 @@ $(document).ready(function () {
         $target_link,
         _router;
 
-    $slabbies = $('#projects, #tweets');
+    $slabbies = $('#projects, #tweets', '#about');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
@@ -246,6 +246,7 @@ Slabby.prototype = {
         // setup draggable knob
         this.$knob.mousedown(function (e) {
             //console.log('mousedown');
+            _slabby.zoomOutFocused();
             _slabby.$knob._dragging = true;
             _slabby.$knob._mouseOffset = [e.pageX, e.pageY];
         });
@@ -313,26 +314,7 @@ Slabby.prototype = {
                                  200,
                                  'linear');
 
-            $centered = $('.centered');
-            $centered.animate({'margin-left': '10px',
-                               'margin-right': '10px'},
-                              20,
-                              'linear');
-
-            $focused_frame = $('.focused_frame', $centered);
-            $focused_frame.animate({'width': '252px',
-                                    'height': '252px',
-                                    'margin-left': '0px',
-                                    'margin-top': '0px'},
-                                   200,
-                                   'linear');
-            $('.full_photo', $focused_frame).animate({'z-index': '0'},
-                                                    200,
-                                                    'linear',
-                                                    function () {
-                                                        $centered.removeClass('centered');
-                                                        $('.ext_link', $focused_frame).hide();
-                                                    });
+            this.zoomOutFocused();
         }
         this._jumping = false;
         this.focusSlab(this.page);
@@ -372,6 +354,31 @@ Slabby.prototype = {
                                                          $('.ext_link', $focused_frame).css({'display': 'block'});
                                                      });
         }
+    },
+
+    zoomOutFocused: function () {
+        var $centered;
+
+        $centered = $('.centered');
+        $centered.animate({'margin-left': '10px',
+                           'margin-right': '10px'},
+                          20,
+                          'linear');
+
+        $focused_frame = $('.focused_frame', $centered);
+        $focused_frame.animate({'width': '252px',
+                                'height': '252px',
+                                'margin-left': '0px',
+                                'margin-top': '0px'},
+                               200,
+                               'linear');
+        $('.full_photo', $focused_frame).animate({'z-index': '0'},
+                                                200,
+                                                'linear',
+                                                function () {
+                                                    $centered.removeClass('centered');
+                                                    $('.ext_link', $focused_frame).hide();
+                                                });
     },
 
     deactivate: function () {
