@@ -306,8 +306,8 @@ Slabby.prototype = {
             $focused_frame,
             new_margin;
        
-        new_margin = -272 * (page+1);
-        if (new_margin <= -272) {
+        new_margin = -283 * (page+1);
+        if (new_margin <= -283) {
             // Shift slab strip
             this.$slab.animate({'margin-left': new_margin+'px'},
                                  200,
