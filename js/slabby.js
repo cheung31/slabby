@@ -31,7 +31,7 @@ $(document).ready(function () {
         $target_link,
         _router;
 
-    $slabbies = $('#projects, #tweets', '#about');
+    $slabbies = $('#projects, #tweets, #about');
     for (i=0; i < $slabbies.length; i++) {
         slab = new Slabby($slabbies.eq(i));
         _s[slab.$slabby_div.attr('id')] = slab;
@@ -307,8 +307,8 @@ Slabby.prototype = {
             $focused_frame,
             new_margin;
        
-        new_margin = -283 * (page+1);
-        if (new_margin <= -283) {
+        new_margin = -272 * (page+1) - 10;
+        if (new_margin <= -272) {
             // Shift slab strip
             this.$slab.animate({'margin-left': new_margin+'px'},
                                  200,
