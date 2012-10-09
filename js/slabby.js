@@ -132,7 +132,7 @@ Slabby.setupTunes = function (callback) {
     var i,
         slabs = [],
         slab,
-        recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=b25b959554ed76058ac220b7b2e0a026&format=json',
+        recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=cheung31&api_key=9bea97674bc0b61b9d6807055313155e&format=json',
         recent_tracks,
         album_art_url;
 
