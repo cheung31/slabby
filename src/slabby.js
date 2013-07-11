@@ -1,3 +1,43 @@
+define(['jquery', 'backbone'],
+function($, Backbone) {
+    var Slabby = function(el, opts) {
+        this.el = el;
+        this.$el = el;
+        this._streams = opts.streams || [];
+        this._router = opts.router || this._setupRouter();
+    };
+
+    Slabby.prototype._setupRouter = function() {
+        var router = new Backbone.Router.extend({
+            routes: {
+            }
+        });
+        return router;
+    };
+
+    Slabby.prototype.addStream = function(stream) {
+        this._streams.push(stream);
+
+        var self = this;
+        function startStream() {
+            self.$el.append(stream.start());
+        });
+        if (this._streams.length == 1) {
+            this._router.route('*all', 'default', startStream);
+        }
+        this._router.route('/'+stream.name, stream.name, startStream);
+    };
+
+    Slabby.prototype.start = function() {
+        Backbone.history.start();
+    });
+});
+
+
+
+
+
+
 var _s = {
     Router : Backbone.Router.extend({
         routes: {
