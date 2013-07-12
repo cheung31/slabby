@@ -2,11 +2,12 @@ define(['jquery', 'slabby/stream', 'slabby/slab'],
 function($, Stream, Slab) {
     var ProjectsStream = function(name, opts) {
         Stream.apply(this, arguments);
+        this.name = name;
         this._items = [];
     };
-    $.extend(ProjectStream.prototype, Stream.prototype);
+    $.extend(ProjectsStream.prototype, Stream.prototype);
 
-    ProjectsStream.prototype.start() = function() {
+    ProjectsStream.prototype.start = function() {
         this.started = true;
         var projects = [
             {
@@ -29,7 +30,7 @@ function($, Stream, Slab) {
         }
         // Emit readable
         self.trigger('readable');
-    });
+    };
 
     return ProjectsStream;
 });

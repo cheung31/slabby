@@ -2,6 +2,7 @@ define(['jquery', 'slabby/stream', 'slabby/slab'],
 function($, Stream, Slab) {
     var LastFmStream = function(name, opts) {
         Stream.apply(this, arguments);
+        this.name = name;
         this._items = [];
         this.api_key = opts.api_key;
         this.user = opts.user;

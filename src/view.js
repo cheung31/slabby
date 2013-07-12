@@ -1,21 +1,20 @@
-define(['jquery', 'hgn!slabby/templates/slabby.mustache'],
+define(['jquery', 'hgn!slabby/templates/slabby'],
 function($, SlabbyViewTemplate) {
     var View = function(el, stream, opts) {
-        this.$el = $(el);
+        this.$containerEl = $(el);
         this.active = opts.active || false;
         this.renderDelay = opts.renderDelay || 0;
         this._stream = stream;
+        this._rendered = false;
 
         this.page = 0;
         this.count = 0;
-        this.$slab = $('.slabby', this.$el);
-        this.$slider = $('.slider', this.$el);
-        this.$knob = $('.knob', this.$slider);
         this._jumping = false;
 
-        this.setupSlider();
-
         var self = this;
+        if (this.active && !this._rendered) {
+            self.render();
+        }
         this._stream.on('readable', function() {
             self.render();
         });
@@ -31,7 +30,7 @@ function($, SlabbyViewTemplate) {
         this.setupKnob();
     };
 
-    View.prototype.setupKnob = function () {
+    View.prototype.setupKnob = function() {
         var knob_width,
             slabs_width;
 
@@ -44,39 +43,40 @@ function($, SlabbyViewTemplate) {
         this.$knob._dragging = false;
 
         this.$knob.knob_increment = (this.$slider.width()-this.$knob.width()) / ($slabs.length-1);
-    },
+    };
 
-    View.prototype.render() = function() {
-        var $viewEl = $(SlabbyViewTemplate({ name: this._stream.name }));
-        var $slabbyEl = $viewEl.find('slabby');
-        this.$el.append($ViewEl);
+    View.prototype.render = function() {
+        if (!this._rendered) {
+            this.$el = $(SlabbyViewTemplate({ name: this._stream.name }));
+            this.$slab = $('.slabby', this.$el);
+            this.$slider = $('.slider', this.$el);
+            this.$knob = $('.knob', this.$slider);
+            this.$containerEl.append(this.$el);
+            this.setupSlider();
+            this._rendered = true;
+        }
 
         // LOAD CONTENT
         if (this.active && !this._stream.started) {
             this._stream.start();
             this.activate();
         }
-        while (var slab = this._stream.read()) {
-            this.count++;
-            if (this.renderDelay) {
-                setTimeout(function() { $slabbyEl.append(slab.render()); }, this.renderDelay);
-            } else {
-                var $slabEl = slab.render();
-                $slabbyEl.append($slabEl);
-                this.setupSlider();
+        while (slab = this._stream.read()) {
+            var $slabEl = slab.render();
+            this.$slab.append($slabEl);
+            this.setupSlider();
 
-                // Attach jump handler on slab
-                $slabEl.on('click', function(e) {
-                    (function(index) {
-                        if (!this.isActive() || index == this.page) {
-                            return;
-                        }
-                        this._jumping = true;
-                        this.page = index;
-                        this.jumpPage(index);
-                    })(this.count - 1);
-                });
-            }
+            // Attach jump handler on slab
+            $slabEl.on('click', function(e) {
+                (function(index) {
+                    if (!this.isActive() || index == this.page) {
+                        return;
+                    }
+                    this._jumping = true;
+                    this.page = index;
+                    this.jumpPage(index);
+                })(this.count - 1);
+            });
         }
     };
 
@@ -174,9 +174,10 @@ function($, SlabbyViewTemplate) {
     };
 
     View.prototype.activate = function () {
+        var self = this;
         this.$el.fadeIn(500, function () {
-            this.$slabby_div.addClass('active');
-            this.jumpPage(this.page);
+            self.$el.addClass('active');
+            self.jumpPage(self.page);
         });
     };
 
