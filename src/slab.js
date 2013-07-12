@@ -3,5 +3,10 @@ define([], function() {
         this._image_url = image_url;
         this._image_id = image_id;
     });
+
+    Slab.prototype.render = function() {
+
+    };
+
     return Slab;
 });

@@ -13,6 +13,7 @@
         "requirejs-text": "~2.0.5",
         "hogan": "latest",
         "requirejs-hogan-plugin": "git://github.com/millermedeiros/requirejs-hogan-plugin.git#~0.2.1",
-        "jquery-throttle-debounce": "git@github.com:cowboy/jquery-throttle-debounce.git"
+        "jquery-throttle-debounce": "git@github.com:cowboy/jquery-throttle-debounce.git",
+        "eventEmitter": "*"
     }
 }
