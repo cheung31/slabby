@@ -1,5 +1,5 @@
-define(['jquery', 'backbone'],
-function($, Backbone) {
+define(['jquery', 'backbone', 'slabby/view'],
+function($, Backbone, View) {
     var Slabby = function(el, opts) {
         this.$el = $(el);
         this._streams = opts.streams || [];
@@ -10,11 +10,14 @@ function($, Backbone) {
     };
 
     Slabby.prototype._setupRouter = function() {
-        var router = new Backbone.Router.extend({
+        var router = Backbone.Router.extend({
             routes: {
-            }
+                '': 'defaultAction'
+            },
+
+            defaultAction: function() {}
         });
-        return router;
+        return new router;
     };
 
     Slabby.prototype.addStream = function(stream) {
@@ -25,12 +28,12 @@ function($, Backbone) {
 
         var self = this;
         function startStream() {
-            var active = this._views.length ? false : true;
+            var active = self._views.length ? false : true;
             var view = new View(self.$el, stream, {
                 active: active,
                 renderDelay: self.renderDelay
             });
-            this._views.push(view);
+            self._views.push(view);
         };
         this._router.route('/'+stream.name, stream.name, startStream);
     };
@@ -47,12 +50,13 @@ function($, Backbone) {
 
         // Focused slab
         this.$focusedSlab = $('<div id="focused_slab"></div>');
-        this.$el.append($focusedSlab);
+        this.$el.append(this.$focusedSlab);
 
         // This is kind of gross
+        var self = this;
         $(window).resize(function (e) {
-            for (var i=0; i < this._views.length; i++) {
-                var view = this._views[i];
+            for (var i=0; i < self._views.length; i++) {
+                var view = self._views[i];
                 view.setupSlider();
             }
         });
@@ -62,7 +66,7 @@ function($, Backbone) {
         Backbone.history.start();
     };
 
-    Slabby.prototoype.getActiveView = function() {
+    Slabby.prototype.getActiveView = function() {
         for (var i=0; i < this._views.length; i++) {
             if (this._views[i].isActive()) {
                 return this._views[i];
@@ -70,8 +74,9 @@ function($, Backbone) {
         }
     };
 
-    Slabby.prototype.setupKeyboard: function () {
-        var activeView = this.getActiveView();
+    Slabby.prototype.setupKeyboard = function () {
+        var self = this;
+        var activeView = self.getActiveView();
         $(document).keydown($.throttle(200, function (e) {
             if (e.which == 39) {
                 if(activeView.page < activeView.getSlabs().length-1) {

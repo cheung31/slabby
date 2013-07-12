@@ -10,7 +10,7 @@ define([], function() {
     var Slab = function(image_url, image_id, opts) {
         this._image_url = image_url;
         this._image_id = image_id;
-    });
+    };
 
     Slab.prototype.render = function() {
         var $slabEl = $('<div class="slab"></div>');
@@ -18,11 +18,11 @@ define([], function() {
             $slabEl.attr('id', this.id);
         }
 
-        var html = '<div class="focused_frame"><img class="full_photo" src="' + slab.image_url + '">';
+        var html = '<div class="focused_frame"><img class="full_photo" src="' + this._image_url + '">';
         if (cssFiltersSupported()) {
-            html += '<div class="thumb"><div class="css-blur" style="background-image:url(' + slab.image_url + ');"</div>';
+            html += '<div class="thumb"><div class="css-blur" style="background-image:url(' + this._image_url + ');"></div>';
         } else {
-            html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + slab.image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
+            html += '<div class="thumb"><svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"><defs xmlns="http://www.w3.org/2000/svg"><filter id="gaussian_blur"><feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur></filter></defs><image x="7" y="7" width="235" height="235" xlink:href="' + this._image_url + '" style="filter:url(#gaussian_blur)"></image></svg>';
         }
         html += '</div></div>';
 

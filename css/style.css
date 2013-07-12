@@ -68,7 +68,12 @@ table{
 /**************************************
 SLABBY
 */
-
+.css-blur {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    filter: blur(5px);
+}
 .inactive {
     display: none; }
 
@@ -79,7 +84,7 @@ SLABBY
     overflow: hidden;
     z-index: 20; }
 
-.slabby {
+#slabby {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -247,6 +252,13 @@ SLABBY
     height: 252px;
     display: block;
     opacity: 0.8; }
+
+.thumb > div.css-blur {
+    width: 100%;
+    height: 100%;
+    background-size: 235px;
+    background-repeat: no-repeat;
+}
 
 .slab.centered .thumb{
     display: none;

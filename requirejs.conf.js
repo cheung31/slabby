@@ -10,6 +10,10 @@ require.config({
         'jquery-throttle-debounce': 'lib/jquery-throttle-debounce/jquery.ba-throttle-debounce',
         eventEmitter: 'lib/eventEmitter/EventEmitter'
     },
+    packages: [{
+        name: 'slabby',
+        location: './src'
+    }],
     shim: {
         jquery: {
             exports: '$'
@@ -17,5 +21,6 @@ require.config({
         'jquery-throttle-debounce': {
             deps: ['jquery']
         }
-    }
+    },
+    urlArgs: 'cb=' + Math.random()
 });
