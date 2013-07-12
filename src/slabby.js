@@ -1,7 +1,8 @@
 define(['jquery', 'backbone', 'slabby/view'],
 function($, Backbone, View) {
-    var Slabby = function(el, opts) {
+    var Slabby = function(el, title, opts) {
         this.$el = $(el);
+        this.title = title;
         this._streams = opts.streams || [];
         this._views = [];
         this._router = opts.router || this._setupRouter();
