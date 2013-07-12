@@ -8,87 +8,7 @@
 
     <body>
         <div id="container">
-            <ul id="nav_links">
-                <li id="title"><span>R</span>e<span>c</span>ently.</li>
-                <li><a href='#/photos'>Photos</a></li>
-                <li><a href="#/projects">Projects</a></li>
-                <li><a href="#/tunes">Tunes</a></li>
-                <!--<li><a href="#/tweets">Tweets</a></li>-->
-                <!--<li><a href="#/about">About</a></li>-->
-            </ul>
-            <div id="focused_slab">
-            </div>
-
-            <div id="photos" class="inactive">
-                <div class="slabby"></div>
-                <div class="slider">
-                    <div class="knob"></div>
-                </div>
-            </div>
-
-            <div id="projects" class="inactive">
-                <div class="slabby">
-                    <div class="slab">
-                        <div class="focused_frame">
-                            <a href="http://gridit.ca" class="ext_link" target="_blank"></a>
-                            <img class="full_photo" src="http://slabby.ryancheung.com/images/gridit.png"/>
-                            <div class="thumb">
-                                <svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
-                                    <defs xmlns="http://www.w3.org/2000/svg">
-                                        <filter id="gaussian_blur">
-                                            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
-                                        </filter>
-                                    </defs>
-                                    <image x="7" y="7" width="235" height="235" xlink:href="http://slabby.ryancheung.com/images/gridit.png" style="filter:url(#gaussian_blur)"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slab">
-                        <div class="focused_frame">
-                            <a href="http://ryancheung.com/tablets" class="ext_link" target="_blank"></a>
-                            <img class="full_photo" src="http://slabby.ryancheung.com/images/tablets.png"/>
-                            <div class="thumb">
-                                <svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
-                                    <defs xmlns="http://www.w3.org/2000/svg">
-                                        <filter id="gaussian_blur">
-                                            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
-                                        </filter>
-                                    </defs>
-                                    <image x="7" y="7" width="235" height="235" xlink:href="http://slabby.ryancheung.com/images/tablets.png" style="filter:url(#gaussian_blur)"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slab">
-                        <div class="focused_frame">
-                            <a href="http://ryancheung.com/games" class="ext_link" target="_blank"></a>
-                            <img class="full_photo" src="http://slabby.ryancheung.com/images/ctrl-games.png"/>
-                            <div class="thumb">
-                                <svg xmlns:svg="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
-                                    <defs xmlns="http://www.w3.org/2000/svg">
-                                        <filter id="gaussian_blur">
-                                            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
-                                        </filter>
-                                    </defs>
-                                    <image x="7" y="7" width="235" height="235" xlink:href="http://slabby.ryancheung.com/images/ctrl-games.png" style="filter:url(#gaussian_blur)"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider">
-                    <div class="knob"></div>
-                </div>
-            </div>
-
-
-            <div id="tunes" class="inactive">
-                <div class="slabby"></div>
-                <div class="slider">
-                    <div class="knob"></div>
-                </div>
-            </div>
+            <div id="slabby"></div>
 
             <div id="vignette-left" class="vignette"></div>
             <div id="vignette-right" class="vignette"></div>
@@ -99,5 +19,8 @@
         <![endif]-->
         <script src="lib/requirejs/require.js"></script>
         <script src="requirejs.conf.js"></script>
+        <script>
+            require(['slabby'], function(Slabby) {});
+        </script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 define(['slabby', 'slabby/streams/instagram', 'slabby/streams/projects', 'slabby/streams/lastfm'],
 function(Slabby, InstagramStream, ProjectsStream, LastFmStream) {
-    var containerEl = document.getElementById('#container');
+    var containerEl = document.getElementById('#slabby');
     var slabby = new Slabby(containerEl, {
         renderDelay: 250
     });
