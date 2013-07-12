@@ -34,6 +34,16 @@ function($, Backbone, View) {
                 active: active,
                 renderDelay: self.renderDelay
             });
+
+            var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
+            if (active) {
+                $navItemEl.addClass('selected');
+            }
+            self.$navEl.append($navItemEl);
+
+            if (stream.started) {
+                return;
+            }
             self._views.push(view);
         };
         this._router.route('/'+stream.name, stream.name, startStream);
@@ -41,12 +51,12 @@ function($, Backbone, View) {
 
     Slabby.prototype.render = function() {
         // Navigation
-        var $navEl = $('<ul id="nav_links"></ul');
-        this.$el.append($navEl); 
+        this.$navEl = $('<ul id="nav_links"></ul');
+        this.$el.append(this.$navEl); 
 
         // Title
         var $titleEl = $('<li id="title">' + this.title + '</li>');
-        $navEl.append($titleEl);
+        this.$navEl.append($titleEl);
         $('title').html(this.title);
 
         // Focused slab
