@@ -79,6 +79,12 @@ SLABBY
     overflow: hidden;
     z-index: 20; }
 
+.slabby {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 #nav_links{
     position: absolute;
     left: 0;
