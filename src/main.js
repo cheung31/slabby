@@ -1,7 +1,9 @@
 define(['slabby', 'slabby/streams/instagram', 'slabby/streams/projects', 'slabby/streams/lastfm'],
 function(Slabby, InstagramStream, ProjectsStream, LastFmStream) {
     var containerEl = document.getElementById('#container');
-    var slabby = new Slabby(containerEl);
+    var slabby = new Slabby(containerEl, {
+        renderDelay: 250
+    });
     slabby.addStream(
         new InstagramStream('photos', {
             access_token: '13865411.8167e48.b43836f60d6d4d53a28b996418e31d17'
