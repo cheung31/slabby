@@ -10,7 +10,7 @@ function($, EventEmitter) {
     Stream.prototype.start = function() {};
 
     Stream.prototype.read = function() {
-        return this._items.pop();
+        return this._items.shift();
     };
 
     return Stream;
