@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'slabby/view'],
+define(['jquery', 'backbone', 'slabby/view', 'jquery-throttle-debounce'],
 function($, Backbone, View) {
     var Slabby = function(el, title, opts) {
         this.$el = $(el);
@@ -8,6 +8,7 @@ function($, Backbone, View) {
         this._router = opts.router || this._setupRouter();
         this.renderDelay = opts.renderDelay;
         this.render();
+        this.setupKeyboard();
     };
 
     Slabby.prototype._setupRouter = function() {
@@ -34,6 +35,7 @@ function($, Backbone, View) {
                 active: active,
                 renderDelay: self.renderDelay
             });
+            self._views.push(view);
 
             var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
             if (active) {
@@ -44,7 +46,6 @@ function($, Backbone, View) {
             if (stream.started) {
                 return;
             }
-            self._views.push(view);
         };
         this._router.route('/'+stream.name, stream.name, startStream);
     };
@@ -87,8 +88,8 @@ function($, Backbone, View) {
 
     Slabby.prototype.setupKeyboard = function () {
         var self = this;
-        var activeView = self.getActiveView();
         $(document).keydown($.throttle(200, function (e) {
+            var activeView = self.getActiveView();
             if (e.which == 39) {
                 if(activeView.page < activeView.getSlabs().length-1) {
                     activeView._jumping = true;
@@ -97,7 +98,7 @@ function($, Backbone, View) {
                 } else {
                     activeView._jumping = false;
                 }
-            } else if (e.which == 37 && _slabby.page > 0) {
+            } else if (e.which == 37 && activeView.page > 0) {
                 activeView._jumping = true;
                 activeView.page -= 1;
                 if(activeView.page>=0)
