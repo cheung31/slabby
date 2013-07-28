@@ -7,7 +7,7 @@ function($, Stream, Slab) {
     };
     $.extend(ProjectsStream.prototype, Stream.prototype);
 
-    ProjectsStream.prototype.start = function() {
+    ProjectsStream.prototype._startStream = function() {
         var projects = [
             {
                 name: 'gridit',

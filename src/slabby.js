@@ -18,11 +18,7 @@ function($, Backbone, View) {
     Slabby.prototype.addStream = function(stream) {
         this._streams.push(stream);
 
-        var active = Object.keys(this._views).length ? false : true;
         var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
-        if (active && !this.$navEl.find('.selected').length) {
-            $navItemEl.addClass('selected');
-        }
         this.$navEl.append($navItemEl);
 
         var self = this;
@@ -33,7 +29,6 @@ function($, Backbone, View) {
                 return;
             }
             var view = new View(self.$el, stream, {
-                active: active,
                 renderDelay: self.renderDelay
             });
             self.showStream(stream, view);

@@ -2,7 +2,7 @@ define(['jquery', 'hgn!slabby/templates/slabby'],
 function($, SlabbyViewTemplate) {
     var View = function(el, stream, opts) {
         this.$containerEl = $(el);
-        this.active = opts.active || false;
+        this.renderImmediately = opts.renderImmediately || true;
         this.renderDelay = opts.renderDelay || 0;
         this._stream = stream;
         this._rendered = false;
@@ -12,7 +12,7 @@ function($, SlabbyViewTemplate) {
         this._jumping = false;
 
         var self = this;
-        if (this.active && !this._rendered) {
+        if (this.renderImmediately) {
             self.render();
         }
         this._stream.on('readable', function() {
@@ -59,7 +59,8 @@ function($, SlabbyViewTemplate) {
         }
 
         // LOAD CONTENT
-        if (this.active && !this._stream.started) {
+        if (this.renderImmediately && !this._stream.started) {
+            // if not renderImmediately, wait until stream emits 'readable'
             this._stream.start();
         }
         while (slab = this._stream.read()) {
@@ -100,7 +101,6 @@ function($, SlabbyViewTemplate) {
             this.$slab.animate({'margin-left': new_margin+'px'},
                                  200,
                                  'linear');
-
             this.zoomOutFocused();
         }
         this._jumping = false;
