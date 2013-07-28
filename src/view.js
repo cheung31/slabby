@@ -46,6 +46,7 @@ function($, SlabbyViewTemplate) {
     };
 
     View.prototype.render = function() {
+        var self = this;
         if (!this._rendered) {
             this.$el = $(SlabbyViewTemplate({ name: this._stream.name }));
             this.$slab = $('.slabby', this.$el);
@@ -64,18 +65,19 @@ function($, SlabbyViewTemplate) {
         while (slab = this._stream.read()) {
             var $slabEl = slab.render();
             this.$slab.append($slabEl);
+            this.count++;
+            $slabEl.attr('data-slab-index', this.count-1);
             this.setupSlider();
 
             // Attach jump handler on slab
             $slabEl.on('click', function(e) {
-                (function(index) {
-                    if (!this.isActive() || index == this.page) {
-                        return;
-                    }
-                    this._jumping = true;
-                    this.page = index;
-                    this.jumpPage(index);
-                })(this.count - 1);
+                var index = parseInt($(e.currentTarget).attr('data-slab-index'));
+                if (!self.isActive() || index == self.page) {
+                    return;
+                }
+                self._jumping = true;
+                self.page = index;
+                self.jumpPage(index);
             });
         }
     };
