@@ -10,7 +10,6 @@ function($, Stream, Slab) {
     $.extend(InstagramStream.prototype, Stream.prototype);
 
     InstagramStream.prototype.start = function() {
-        this.started = true;
         var recent_photos_url = 'https://api.instagram.com/v1/users/' + this.user_id + '/media/recent/?access_token=' + this.access_token;
 
         var self = this;

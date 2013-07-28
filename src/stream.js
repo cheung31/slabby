@@ -4,6 +4,11 @@ function($, EventEmitter) {
         EventEmitter.call(this);
         this.started = false;
         this._items = [];
+        var self = this;
+        this.on('readable', function() {
+            console.log ('>>> start stream: ' + name);
+            self.started = true;
+        });
     };
     $.extend(Stream.prototype, EventEmitter.prototype);
 

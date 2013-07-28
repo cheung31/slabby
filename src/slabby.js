@@ -27,15 +27,25 @@ function($, Backbone, View) {
 
         var self = this;
         function startStream(stream) {
+            if (stream.started) {
+                var view;
+                for (var i=0; i < self._views.length; i++) {
+                    if (self._views[i]._stream.name != stream.name) {
+                        continue;
+                    }
+                    view = self._views[i];
+                    break;
+                }
+                console.log('<<<', view._stream.name);
+                self.showStream(stream, view);
+                return;
+            }
             var view = new View(self.$el, stream, {
                 active: active,
                 renderDelay: self.renderDelay
             });
+            self.showStream(stream, view);
             self._views.push(view);
-
-            if (stream.started) {
-                return;
-            }
         };
 
         // Immediately start the first stream that is added
@@ -44,6 +54,32 @@ function($, Backbone, View) {
         }
         // Add a route for each additional stream
         this._router.route(stream.name, stream.name, function() { startStream(stream) });
+    };
+
+
+    Slabby.prototype.showStream = function (stream, view) {
+        var $current_link,
+            $target_link;
+        $target_link = $('a[href$='+stream.name+']', '#nav_links');
+
+        $current_link = $('a', '.selected');
+        if ($current_link.length) {
+            $current_link.parent().removeClass('selected');
+        }
+        $target_link.parent().addClass('selected');
+
+        // Deactivate active view
+        var activeView = this.getActiveView();
+        if (activeView) {
+            activeView.deactivate();
+        }
+        // Activate target view
+        if (stream.started) {
+            view.activate();
+        }
+
+        // Update title
+        $('title').html('recently. ' + stream.name + '.');
     };
 
     Slabby.prototype.render = function() {
@@ -107,34 +143,3 @@ function($, Backbone, View) {
 
     return Slabby;
 });
-
-
-/*
-Slabby.showSlab = function (target_action) {
-        var $current_link,
-            $target_link,
-            current_action;
-        target_action = target_action ? target_action : 'photos';
-        $target_link = $('a[href$='+target_action+']', '#nav_links');
-
-        $current_link = $('a', '.selected');
-        if ($current_link.length) {
-            current_action = $current_link.attr('href').substring(2);
-            
-
-            $current_link.parent().removeClass('selected');
-            if (_s[current_action] !== undefined && current_action != target_action) {
-                _s[current_action].deactivate();
-            }
-        }
-
-        $target_link.parent().addClass('selected');
-        if (_s[target_action] !== undefined) {
-            _s[target_action].activate();
-        }
-
-        $('title').html('recently. ' + target_action + '.');
-    };
-
-};
-*/

@@ -17,6 +17,7 @@ function($, SlabbyViewTemplate) {
         }
         this._stream.on('readable', function() {
             self.render();
+            self.activate();
         });
     };
 
@@ -60,7 +61,6 @@ function($, SlabbyViewTemplate) {
         // LOAD CONTENT
         if (this.active && !this._stream.started) {
             this._stream.start();
-            this.activate();
         }
         while (slab = this._stream.read()) {
             var $slabEl = slab.render();
@@ -170,15 +170,16 @@ function($, SlabbyViewTemplate) {
 
 
     View.prototype.deactivate = function () {
+        var self = this;
         this.$el.fadeOut(500, function () {
-            $el.removeClass('active').addClass('inactive');
+            self.$el.removeClass('active').addClass('inactive');
         });
     };
 
     View.prototype.activate = function () {
         var self = this;
         this.$el.fadeIn(500, function () {
-            self.$el.addClass('active');
+            self.$el.removeClass('inactive').addClass('active');
             self.jumpPage(self.page);
         });
     };
