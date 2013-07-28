@@ -9,11 +9,13 @@
     },
     "scripts": {
         "postinstall": "./node_modules/bower/bin/bower install",
-        "start": "./node_modules/http-server/bin/http-server"
+        "start": "./node_modules/http-server/bin/http-server",
+        "build": "./node_modules/requirejs/bin/r.js -o ./build_profile.js"
     },
     "devDependencies": {
         "bower": "0.9.2",
-        "http-server": "*"
+        "http-server": "*",
+        "requirejs": "*"
     },
     "license": "MIT"
 }
