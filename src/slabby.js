@@ -4,7 +4,7 @@ function($, Backbone, View) {
         this.$el = $(el);
         this.title = title;
         this._streams = opts.streams || [];
-        this._views = [];
+        this._views = {};
         this._router = opts.router || this._setupRouter();
         this.renderDelay = opts.renderDelay;
         this.render();
@@ -18,7 +18,7 @@ function($, Backbone, View) {
     Slabby.prototype.addStream = function(stream) {
         this._streams.push(stream);
 
-        var active = this._views.length ? false : true;
+        var active = Object.keys(this._views).length ? false : true;
         var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
         if (active && !this.$navEl.find('.selected').length) {
             $navItemEl.addClass('selected');
@@ -28,15 +28,7 @@ function($, Backbone, View) {
         var self = this;
         function startStream(stream) {
             if (stream.started) {
-                var view;
-                for (var i=0; i < self._views.length; i++) {
-                    if (self._views[i]._stream.name != stream.name) {
-                        continue;
-                    }
-                    view = self._views[i];
-                    break;
-                }
-                console.log('<<<', view._stream.name);
+                var view = self._views[stream.name];
                 self.showStream(stream, view);
                 return;
             }
@@ -45,7 +37,7 @@ function($, Backbone, View) {
                 renderDelay: self.renderDelay
             });
             self.showStream(stream, view);
-            self._views.push(view);
+            self._views[stream.name] = view;
         };
 
         // Immediately start the first stream that is added
@@ -99,8 +91,8 @@ function($, Backbone, View) {
         // This is kind of gross
         var self = this;
         $(window).resize(function (e) {
-            for (var i=0; i < self._views.length; i++) {
-                var view = self._views[i];
+            for (var streamName in self._views) {
+                var view = self._views[streamName];
                 view.setupSlider();
             }
         });
@@ -111,9 +103,9 @@ function($, Backbone, View) {
     };
 
     Slabby.prototype.getActiveView = function() {
-        for (var i=0; i < this._views.length; i++) {
-            if (this._views[i].isActive()) {
-                return this._views[i];
+        for (var streamName in this._views) {
+            if (this._views[streamName].isActive()) {
+                return this._views[streamName];
             }
         }
     };
