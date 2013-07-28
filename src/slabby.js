@@ -28,20 +28,20 @@ function($, Backbone, View) {
             this._router.route('*all', 'default', startStream);
         }
 
+        var active = this._views.length ? false : true;
+        var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
+        if (active && !this.$navEl.find('.selected').length) {
+            $navItemEl.addClass('selected');
+        }
+        this.$navEl.append($navItemEl);
+
         var self = this;
         function startStream() {
-            var active = self._views.length ? false : true;
             var view = new View(self.$el, stream, {
                 active: active,
                 renderDelay: self.renderDelay
             });
             self._views.push(view);
-
-            var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
-            if (active) {
-                $navItemEl.addClass('selected');
-            }
-            self.$navEl.append($navItemEl);
 
             if (stream.started) {
                 return;
