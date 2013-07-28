@@ -29,7 +29,7 @@ function($, Stream, Slab) {
             );
         }
         // Emit readable
-        self.trigger('readable');
+        this.trigger('readable');
     };
 
     return ProjectsStream;

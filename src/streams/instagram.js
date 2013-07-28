@@ -18,7 +18,7 @@ function($, Stream, Slab) {
             type: 'GET',
             dataType: 'jsonp',
             success: function (response) {
-                recent_photos = response.data;
+                var recent_photos = response.data;
                 for (i=0; i < recent_photos.length; i++) {
                     var image_url = recent_photos[i]['images']['standard_resolution']['url'];
                     var image_id = recent_photos[i]['id'];

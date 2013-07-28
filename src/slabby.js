@@ -12,21 +12,11 @@ function($, Backbone, View) {
     };
 
     Slabby.prototype._setupRouter = function() {
-        var router = Backbone.Router.extend({
-            routes: {
-                '': 'defaultAction'
-            },
-
-            defaultAction: function() {}
-        });
-        return new router;
+        return new Backbone.Router;
     };
 
     Slabby.prototype.addStream = function(stream) {
         this._streams.push(stream);
-        if (this._streams.length == 1) {
-            this._router.route('*all', 'default', startStream);
-        }
 
         var active = this._views.length ? false : true;
         var $navItemEl = $('<li><a href="#/' + stream.name + '">' + stream.name + '</a></li>');
@@ -36,7 +26,7 @@ function($, Backbone, View) {
         this.$navEl.append($navItemEl);
 
         var self = this;
-        function startStream() {
+        function startStream(stream) {
             var view = new View(self.$el, stream, {
                 active: active,
                 renderDelay: self.renderDelay
@@ -47,7 +37,13 @@ function($, Backbone, View) {
                 return;
             }
         };
-        this._router.route('/'+stream.name, stream.name, startStream);
+
+        // Immediately start the first stream that is added
+        if (this._streams.length == 1) {
+            this._router.route('', 'blah', function() { startStream(self._streams[0]) });
+        }
+        // Add a route for each additional stream
+        this._router.route(stream.name, stream.name, function() { startStream(stream) });
     };
 
     Slabby.prototype.render = function() {

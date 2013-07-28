@@ -18,12 +18,12 @@ function($, Stream, Slab) {
             type: 'GET',
             dataType: 'jsonp',
             success: function (response) {
-                recent_photos = response.data;
+                var recent_tracks = response.recenttracks.track;
                 for (i=0; i < recent_tracks.length; i++) {
                     album_art_url = recent_tracks[i]['image'][3]['#text'];
                     if (album_art_url) {
                         album_art_url = album_art_url.replace('300x300','_');
-                        slabs.push(new Slab(album_art_url));
+                        self._items.push(new Slab(album_art_url));
                     }
                 }
                 // Emit readable
