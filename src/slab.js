@@ -10,6 +10,7 @@ define([], function() {
     var Slab = function(image_url, image_id, opts) {
         this._image_url = image_url;
         this._image_id = image_id;
+        this._link = opts.link;
     };
 
     Slab.prototype.render = function() {
@@ -19,6 +20,9 @@ define([], function() {
         }
 
         var html = '<div class="focused_frame"><img class="full_photo" src="' + this._image_url + '">';
+        if (this._link) {
+            html += '<a href="' + this._link + '" class="ext_link" target="_blank"></a>';
+        }
         if (cssFiltersSupported()) {
             html += '<div class="thumb"><div class="css-blur" style="background-image:url(' + this._image_url + ');"></div>';
         } else {

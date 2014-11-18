@@ -11,20 +11,26 @@ function($, Stream, Slab) {
         var projects = [
             {
                 name: 'gridit',
-                image_url: 'http://slabby.ryancheung.com/images/gridit.png'
+                image_url: 'http://slabby.ryancheung.com/images/gridit.png',
+                link: 'http://gridit.ca'
             },
             {
                 name: 'tablets',
-                image_url: 'http://slabby.ryancheung.com/images/tablets.png'
+                image_url: 'http://slabby.ryancheung.com/images/tablets.png',
+                link: 'http://ryancheung.com/tablets'
             },
             {
                 name: 'ctrl-games',
-                image_url: 'http://slabby.ryancheung.com/images/ctrl-games.png'
+                image_url: 'http://slabby.ryancheung.com/images/ctrl-games.png',
+                link: 'http://ryancheung.com/games'
             }
         ];
         for (var i=0; i < projects.length; i++) {
+            var project = projects[i];
             this._items.push(
-                new Slab(projects[i]['image_url'], projects[i]['name'])
+                new Slab(project['image_url'], project['name'], {
+                    link: project['link']
+                })
             );
         }
         // Emit readable
