@@ -14,7 +14,7 @@
   pragmasOnSave: {
     excludeHogan: true
   },
-  preserveLicenseComments: true,
+  preserveLicenseComments: false,
   optimize: 'uglify2',
   uglify2: {
     compress: {
