@@ -7,7 +7,7 @@ function(Slabby, InstagramStream, ProjectsStream, LastFmStream) {
     });
     slabby.addStream(
         new InstagramStream('photos', {
-            access_token: '13865411.8167e48.b43836f60d6d4d53a28b996418e31d17',
+            access_token: '13865411.8167e48.88955f4431174c14b048b89086e301de',
             user_id: '13865411'
         })
     );
