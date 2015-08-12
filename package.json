@@ -1,21 +1,28 @@
 {
-    "name": "slabby",
-    "version": "0.1.0",
-    "author": "Ryan Cheung",
-    "description": "cover flow slabs for your social feeds",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/cheung31/slabby.git"
-    },
-    "scripts": {
-        "postinstall": "./node_modules/bower/bin/bower install",
-        "start": "./node_modules/http-server/bin/http-server",
-        "build": "./node_modules/requirejs/bin/r.js -o ./build_profile.js"
-    },
-    "devDependencies": {
-        "bower": "0.9.2",
-        "http-server": "*",
-        "requirejs": "*"
-    },
-    "license": "MIT"
+  "name": "slabby",
+  "version": "0.1.0",
+  "author": "Ryan Cheung",
+  "description": "cover flow slabs for your social feeds",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cheung31/slabby.git"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install",
+    "start": "./node_modules/http-server/bin/http-server",
+    "build": "./node_modules/requirejs/bin/r.js -o ./build_profile.js"
+  },
+  "devDependencies": {
+    "backbone": "^1.2.1",
+    "bower": "^1.4.1",
+    "exports-loader": "^0.6.2",
+    "hogan.js": "^3.0.2",
+    "http-server": "*",
+    "imports-loader": "^0.6.4",
+    "loader-utils": "^0.2.11",
+    "mustache-loader": "^0.3.0",
+    "webpack": "^1.11.0"
+  },
+  "license": "MIT",
+  "dependencies": {}
 }

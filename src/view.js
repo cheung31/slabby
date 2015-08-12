@@ -1,4 +1,4 @@
-define(['jquery', 'hgn!slabby/templates/slabby'],
+define(['jquery', 'slabby/templates/slabby.mustache'],
 function($, SlabbyViewTemplate) {
     var View = function(el, stream, opts) {
         this.$containerEl = $(el);
