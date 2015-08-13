@@ -9,15 +9,14 @@
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
-    "start": "./node_modules/http-server/bin/http-server",
-    "build": "./node_modules/requirejs/bin/r.js -o ./build_profile.js"
+    "start": "webpack-dev-server",
+    "build": "webpack && gzip dist/bundle.js",
+    "build-prod": "webpack -p && gzip dist/bundle.js > dist/bundle.js.gz"
   },
   "devDependencies": {
-    "backbone": "^1.2.1",
     "bower": "^1.4.1",
     "exports-loader": "^0.6.2",
     "hogan.js": "^3.0.2",
-    "http-server": "*",
     "imports-loader": "^0.6.4",
     "loader-utils": "^0.2.11",
     "mustache-loader": "^0.3.0",

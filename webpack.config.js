@@ -36,8 +36,6 @@ module.exports = {
             'jquery': path.join(__dirname, 'lib/jquery/dist/jquery'),
             'text': path.join(__dirname, 'lib/requirejs-text/text'),
             'hgn': path.join(__dirname, 'lib/requirejs-hogan-plugin/hogan'),
-            'hogan': path.join(__dirname, 'lib/hogan/web/builds/2.0.0/hogan-2.0.0.amd'),
-            'underscore': path.join(__dirname, 'lib/underscore-amd/underscore'),
             'eventEmitter': path.join(__dirname, 'lib/eventEmitter/EventEmitter'),
             'slabby': path.join(__dirname, 'src')
         }

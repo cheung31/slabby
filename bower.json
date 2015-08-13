@@ -6,11 +6,8 @@
         "./src/main.js"
     ],
     "dependencies": {
-        "requirejs": "~2.1.5",
         "jquery": "latest",
-        "underscore-amd": "~1.3.3",
         "requirejs-text": "~2.0.5",
-        "hogan": "latest",
         "requirejs-hogan-plugin": "git://github.com/millermedeiros/requirejs-hogan-plugin.git#~0.2.1",
         "eventEmitter": "*"
     }
