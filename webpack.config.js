@@ -14,13 +14,6 @@ module.exports = {
         //    filename: 'common.js',
         //    chunks: [
         //    ]
-        //}),
-        // This replaces shim stuff in RequireJS. 
-        //new webpack.ProvidePlugin({
-        //    $: "jquery",
-        //    jQuery: "jquery",
-        //    "window.jQuery": "jquery",
-        //    "root.jQuery": "jquery"
         //})
     ],
     module: {
