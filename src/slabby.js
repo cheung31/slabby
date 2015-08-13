@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'slabby/view', 'jquery-throttle-debounce'],
-function($, Backbone, View) {
+define(['jquery', 'backbone', 'slabby/view', 'lodash.throttle'],
+function($, Backbone, View, throttle) {
     var Slabby = function(el, title, opts) {
         this.$el = $(el);
         this.title = title;
@@ -107,7 +107,7 @@ function($, Backbone, View) {
 
     Slabby.prototype.setupKeyboard = function () {
         var self = this;
-        $(document).keydown($.throttle(200, function (e) {
+        $(document).keydown(throttle(function (e) {
             var activeView = self.getActiveView();
             if (e.which == 39) {
                 if(activeView.page < activeView.getSlabs().length-1) {
@@ -125,7 +125,7 @@ function($, Backbone, View) {
             } else {
                 activeView._jumping = false;
             }
-        }));
+        }, 200));
     };
 
     return Slabby;
