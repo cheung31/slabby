@@ -1,4 +1,4 @@
-define([], function() {
+define(['jquery'], function($) {
 
     function cssFiltersSupported() {
         var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');

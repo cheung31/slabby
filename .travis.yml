@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- node
+- iojs
+branches:
+  only:
+  - master
+after_success:
+  - npm run build-prod
+  - git remote add deploy git@github.com:cheung31/slabby.git
+  - git push deploy production
+env:
+  global:
+    secure: B9dEZv4pVOll/bhAI/urHoDcmU2qneyXDoXdiyaS/Y0ZI1y6mY1DRF0FiW5+/HbaWrI0/KFmfFW+ItyTIeFX7TZ+AEAH1KAyDRj1aJ/+LvuiomgWvhi30BgjQVAyk+BArE76mmwiJQoosa0LSxfSgB4ArBHeIjye3Ketbo4wk9Y=
