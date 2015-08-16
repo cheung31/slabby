@@ -13,4 +13,4 @@ after_success:
 - git push deploy webpack
 env:
   global:
-    secure: RN7SkavfycyriS3aEk2lXAdUhc3S6fhm25yxFsHozVouLU14G2MGvNdSh6Qjix79WwXwup5d5F84AGwTPIqCBOKbQ7b149TpSr7Cv9Fj20OF8yRrdeg0Kift2N3LJgpkMfhU3EMElIAafHJ55pyN/C55kTgvzTdeZYQnrBvxlEI=
+    secure: glXs7lg0Mkua2uRbOmCDfT2NoUXfMNZ+kQFbjB80v1H9R5UOS1AUx2fYLk2Xb6i6/PMt3kG72gFYFseIMHdORP8N8B0icQw0QFA1B+0hDn0ZXobb2BH10RsgjSUvLlXXIHXY3tyOWX86GEKXXsWLq/RcmaaZjqm6Ysic6YyXRDA=
