@@ -10,11 +10,13 @@ env:
   GH_REF: github.com/cheung31/slabby.git
   GIT_EMAIL: cheung31@gmail.com
   GIT_NAME: Travis CI
-  secure: "CMZmMpgjT4j1MfVW1ja1wY5nDioZoDIDT1Rx5gEBu6FfxqYOxAcNvEjjkhYmePowF0tH0DlOVg7YA66T5xiDfBit8iyq7vI6rTlihP9yoPLlDtFrFxhGiZ8EgUSd9GYjylMZArpi6gQpY2v180Z1RZcEHfWCUGoeZf8BKWlDuDI="
+  global:
+    secure: W6qFqHxGDANXqLiqgy2tnomiGYX1nsvuh3CD5RJun1dzo4RmrNPjxvRT2Bxv0eHFg/HDpZdelMx1dOSvefHc/sHe//cahi9Y/ExgnlIdVRHYv3yMdfmjKyG9QNY8FV+mnplezPlWLf48G9qu1M53VFvKhlx/xsIT9hfQT9Gc9iI=
 after_success:
 - npm run build-prod
 - git config --global user.email cheung31@gmai.com && echo ${GIT_EMAIL}
 - git config --global user.name Travis CI && echo ${GIT_NAME}
 - git commit -am "Travis ${TRAVIS_BUILD_NUMBER}" && echo ${TRAVIS_BUILD_NUMBER}
-- git remote add deploy https://${GH_TOKEN}@github.com/cheung31/slabby.git && echo ${GH_TOKEN}
+- git remote add deploy https://${GH_TOKEN}@github.com/cheung31/slabby.git && echo
+  ${GH_TOKEN}
 - git push deploy production
