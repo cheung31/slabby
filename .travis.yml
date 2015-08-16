@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- node
-- iojs
+- "0.12"
+- "iojs"
 branches:
   only:
   - master
