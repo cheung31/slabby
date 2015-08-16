@@ -6,6 +6,12 @@ node_js:
 branches:
   only:
   - master
+env:
+  global:
+    GH_REF: github.com/cheung31/slabby.git
+    GIT_EMAIL: cheung31@gmail.com
+    GIT_NAME: Ryan Cheung
+    secure: "CMZmMpgjT4j1MfVW1ja1wY5nDioZoDIDT1Rx5gEBu6FfxqYOxAcNvEjjkhYmePowF0tH0DlOVg7YA66T5xiDfBit8iyq7vI6rTlihP9yoPLlDtFrFxhGiZ8EgUSd9GYjylMZArpi6gQpY2v180Z1RZcEHfWCUGoeZf8BKWlDuDI="
 after_success:
 - npm run build-prod
 - git config --global user.email ${GIT_EMAIL}
@@ -13,7 +19,3 @@ after_success:
 - git commit -m "Travis ${TRAVIS_BUILD_NUMBER}"
 - git remote add deploy https://${GH_TOKEN}@github.com/cheung31/slabby.git
 - git push deploy production
-env:
-  global:
-    GH_REF: github.com/cheung31/slabby.git
-    secure: "CMZmMpgjT4j1MfVW1ja1wY5nDioZoDIDT1Rx5gEBu6FfxqYOxAcNvEjjkhYmePowF0tH0DlOVg7YA66T5xiDfBit8iyq7vI6rTlihP9yoPLlDtFrFxhGiZ8EgUSd9GYjylMZArpi6gQpY2v180Z1RZcEHfWCUGoeZf8BKWlDuDI="
