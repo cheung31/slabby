@@ -7,5 +7,6 @@ branches:
   - webpack
 after_success:
   - npm run build-prod
+  - echo -e "Host webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - git remote add deploy ssh://cheung31@web187.webfaction.com/home/cheung31/webapps/git/repos/slabby.git
   - git push deploy webpack
