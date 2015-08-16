@@ -1,15 +1,16 @@
 sudo: false
 language: node_js
 node_js:
-- "0.12"
-- "iojs"
+- '0.12'
+- iojs
 branches:
   only:
   - master
 after_success:
-  - npm run build-prod
-  - git remote add deploy https://github.com/cheung31/slabby.git
-  - git push deploy production
+- npm run build-prod
+- git remote add deploy https://github.com/cheung31/slabby.git
+- git push deploy production
 env:
   global:
-    secure: B9dEZv4pVOll/bhAI/urHoDcmU2qneyXDoXdiyaS/Y0ZI1y6mY1DRF0FiW5+/HbaWrI0/KFmfFW+ItyTIeFX7TZ+AEAH1KAyDRj1aJ/+LvuiomgWvhi30BgjQVAyk+BArE76mmwiJQoosa0LSxfSgB4ArBHeIjye3Ketbo4wk9Y=
+    GH_REF: github.com/cheung31/slabby.git
+    secure: "CMZmMpgjT4j1MfVW1ja1wY5nDioZoDIDT1Rx5gEBu6FfxqYOxAcNvEjjkhYmePowF0tH0DlOVg7YA66T5xiDfBit8iyq7vI6rTlihP9yoPLlDtFrFxhGiZ8EgUSd9GYjylMZArpi6gQpY2v180Z1RZcEHfWCUGoeZf8BKWlDuDI="
