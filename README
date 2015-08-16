@@ -1,9 +1,7 @@
-==================================================
+#Slabby
+[![Build Status](https://travis-ci.org/cheung31/slabby.svg?branch=master)](https://travis-ci.org/cheung31/slabby)
+by Ryan Cheung
 
-Slabby
-by Ryan Cheung, 2012
+### Inspiration
+An Instagram interface that is inspired by Mike Matas' mikematas.com and mycookingdiary.com
 
-An Instagram interface that is inspired by
-Mike Matas' mikematas.com and mycookingdiary.com
-
-==================================================
