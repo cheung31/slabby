@@ -9,9 +9,8 @@ branches:
 env:
   GH_REF: github.com/cheung31/slabby.git
   GIT_EMAIL: cheung31@gmail.com
-  GIT_NAME: Travis CI
-  global:
-    secure: W6qFqHxGDANXqLiqgy2tnomiGYX1nsvuh3CD5RJun1dzo4RmrNPjxvRT2Bxv0eHFg/HDpZdelMx1dOSvefHc/sHe//cahi9Y/ExgnlIdVRHYv3yMdfmjKyG9QNY8FV+mnplezPlWLf48G9qu1M53VFvKhlx/xsIT9hfQT9Gc9iI=
+  GIT_NAME: "Travis CI"
+  secure: W6qFqHxGDANXqLiqgy2tnomiGYX1nsvuh3CD5RJun1dzo4RmrNPjxvRT2Bxv0eHFg/HDpZdelMx1dOSvefHc/sHe//cahi9Y/ExgnlIdVRHYv3yMdfmjKyG9QNY8FV+mnplezPlWLf48G9qu1M53VFvKhlx/xsIT9hfQT9Gc9iI=
 after_success:
 - npm run build-prod
 - git config --global user.email cheung31@gmai.com && echo ${GIT_EMAIL}
