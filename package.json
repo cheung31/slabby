@@ -11,9 +11,8 @@
     "test": "Add tests",
     "postinstall": "./node_modules/bower/bin/bower install",
     "start": "webpack-dev-server",
-    "build": "webpack && gzip dist/bundle.js",
-    "build-prod": "webpack -p && gzip dist/bundle.js > dist/bundle.js.gz && mv dist/bundle.js.gz dist/bundle.js",
-    "deploy": ""
+    "build": "webpack",
+    "build-prod": "webpack -p"
   },
   "devDependencies": {
     "bower": "^1.4.1",
