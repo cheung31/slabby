@@ -8,7 +8,10 @@ branches:
   - master
 after_success:
 - npm run build-prod
-- git remote add deploy https://github.com/cheung31/slabby.git
+- git config --global user.email ${GIT_EMAIL}
+- git config --global user.name ${GIT_NAME}
+- git commit -m "Travis ${TRAVIS_BUILD_NUMBER}"
+- git remote add deploy https://${GH_TOKEN}@github.com/cheung31/slabby.git
 - git push deploy production
 env:
   global:
