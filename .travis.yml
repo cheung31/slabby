@@ -8,7 +8,7 @@ branches:
   - master
 after_success:
   - npm run build-prod
-  - git remote add deploy git://github.com/cheung31/slabby.git
+  - git remote add deploy https://github.com/cheung31/slabby.git
   - git push deploy production
 env:
   global:
