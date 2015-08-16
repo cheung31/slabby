@@ -1,13 +1,16 @@
 sudo: false
 language: node_js
 node_js:
-- "0.12"
+- '0.12'
 - iojs
 branches:
   only:
   - webpack
 after_success:
-  - npm run build-prod
-  - echo -e "Host web187.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - git remote add deploy ssh://cheung31@web187.webfaction.com/home/cheung31/webapps/git/repos/slabby.git
-  - git push deploy webpack
+- npm run build-prod
+- echo -e "Host web187.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- git remote add deploy ssh://cheung31:${GIT_P}@web187.webfaction.com/home/cheung31/webapps/git/repos/slabby.git
+- git push deploy webpack
+env:
+  global:
+    secure: RN7SkavfycyriS3aEk2lXAdUhc3S6fhm25yxFsHozVouLU14G2MGvNdSh6Qjix79WwXwup5d5F84AGwTPIqCBOKbQ7b149TpSr7Cv9Fj20OF8yRrdeg0Kift2N3LJgpkMfhU3EMElIAafHJ55pyN/C55kTgvzTdeZYQnrBvxlEI=
