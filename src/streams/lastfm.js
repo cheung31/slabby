@@ -10,7 +10,7 @@ function($, Stream, Slab) {
     $.extend(LastFmStream.prototype, Stream.prototype);
 
     LastFmStream.prototype._startStream = function() {
-        var recent_tracks_url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + this.user + '&api_key=' + this.api_key + '&format=json';
+        var recent_tracks_url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + this.user + '&api_key=' + this.api_key + '&format=json';
 
         var self = this;
         $.ajax(recent_tracks_url, {
