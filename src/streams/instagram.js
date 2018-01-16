@@ -20,7 +20,6 @@ function($, Stream, Slab) {
                 var recent_photos = response.data;
                 for (i=0; i < recent_photos.length; i++) {
                     var image_url = recent_photos[i]['images']['standard_resolution']['url'];
-		    image_url = image_url.replace('s640x640/sh0.08/', '');
                     var image_id = recent_photos[i]['id'];
                     if (!image_url) {
                         continue;
