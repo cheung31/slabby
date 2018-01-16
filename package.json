@@ -12,7 +12,8 @@
     "postinstall": "./node_modules/bower/bin/bower install",
     "start": "webpack-dev-server",
     "build": "webpack",
-    "build-prod": "webpack -p"
+    "build-prod": "webpack -p",
+    "deploy": "now --static"
   },
   "devDependencies": {
     "bower": "^1.4.1",
