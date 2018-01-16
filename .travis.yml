@@ -8,6 +8,8 @@ branches:
 before_install:
 - echo -e "Host web615.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 after_success:
+- pwd
+- ls
 - chmod 600 travis_key
 - mv travis_key ~/.ssh/id_rsa
 - npm run build-prod
