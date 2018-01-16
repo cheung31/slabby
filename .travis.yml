@@ -1,0 +1,16 @@
+sudo: false
+language: node_js
+node_js:
+- '0.12'
+branches:
+  only:
+  - master
+after_success:
+- npm run build-prod
+- echo -e "Host web615.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- scp -r dist cheung31@web615.webfaction.com:~/webapps/random/dist
+- scp -r css cheung31@web615.webfaction.com:~/webapps/random/css
+- scp -r index.html cheung31@web615.webfaction.com:~/webapps/random/index.html
+env:
+  global:
+    secure: JFAHkF5NO6YeVLBW7AP1qlBJ6ivqEFVvammNAmMyC0Ws0AiurL8zWCeNn8iOAxa+bYb9UUZuIms4LZgn6HOjZsbx2Fxus9ynziXK12dFeRpvPBa4PFFYzr3KNJmFfTukPoiHjhZxrAHV5Sm7wRfNaeQVxY+ymdJxlxLsAcg4ReI=
