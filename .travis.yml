@@ -5,9 +5,12 @@ node_js:
 branches:
   only:
   - master
-after_success:
-- npm run build-prod
+before_install:
 - echo -e "Host web615.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+after_success:
+- chmod 600 travis_key
+- mv travis_key ~/.ssh/id_rsa
+- npm run build-prod
 - scp -r dist cheung31@web615.webfaction.com:~/webapps/random/dist
 - scp -r css cheung31@web615.webfaction.com:~/webapps/random/css
 - scp -r index.html cheung31@web615.webfaction.com:~/webapps/random/index.html
