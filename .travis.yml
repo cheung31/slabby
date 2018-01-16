@@ -5,13 +5,12 @@ node_js:
 branches:
   only:
   - master
-before_install:
-- echo -e "Host web615.webfaction.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 after_success:
 - pwd
 - ls
-- chmod 600 travis_key
-- mv travis_key ~/.ssh/id_rsa
+- openssl aes-256-cbc -K $encrypted_819d542461eb_key -iv $encrypted_819d542461eb_iv -in ".travis/github_deploy_key.enc" -out "$SSH_FILE" -d
+- chmod 600 "$SSH_FILE"
+- echo -e "Host web615.webfaction.com\n\tStrictHostKeyChecking no\n\tIdentityFile $SSH_FILE\n" >> ~/.ssh/config
 - npm run build-prod
 - scp -r dist cheung31@web615.webfaction.com:~/webapps/random/dist
 - scp -r css cheung31@web615.webfaction.com:~/webapps/random/css
