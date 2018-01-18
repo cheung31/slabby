@@ -231,6 +231,9 @@ SLABBY
     /*border: 1px solid green;*/
     position: absolute;
     display: block;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
     opacity: 0; }
 
 
@@ -239,6 +242,7 @@ SLABBY
     height: 100%;
     top: 0;
     left: 0;
+    background-color: #FEFEFE;
     opacity: 1; }
 
     .full_photo svg {
@@ -256,7 +260,9 @@ SLABBY
 .thumb > div.css-blur {
     width: 100%;
     height: 100%;
-    background-size: 235px;
+    background-size: contain;
+    background-position: center;
+    background-color: #FEFEFE;
     background-repeat: no-repeat;
 }
 

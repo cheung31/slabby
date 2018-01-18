@@ -20,7 +20,7 @@ define(['jquery'], function($) {
             $slabEl.attr('id', this.id);
         }
 
-        var html = '<div class="focused_frame"><img class="full_photo" src="' + this._image_url + '">';
+        var html = '<div class="focused_frame"><div class="full_photo" style="background-image: url(' + this._image_url + ')"></div>';
         if (this._link) {
             html += '<a href="' + this._link + '" class="ext_link" target="_blank"></a>';
         }
