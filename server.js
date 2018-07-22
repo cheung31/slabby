@@ -9,6 +9,11 @@ app.prepare()
     .then(() => {
         const server = express();
 
+        server.get('/:title', (req, res) => {
+            const queryParams = { title: req.params.title };
+            app.render(req, res, '/', queryParams);
+        });
+
         server.get('*', (req, res) => {
             return handle(req, res)
         });

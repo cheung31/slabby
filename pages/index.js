@@ -18,7 +18,6 @@ function getContentComponentFromTitle(title) {
 }
 
 const IndexPage = (props) => {
-    console.log(props.router.query);
     return (
         <Layout>
             {getContentComponentFromTitle(props.router.query.title)}
