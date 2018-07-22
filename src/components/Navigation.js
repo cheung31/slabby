@@ -1,11 +1,27 @@
+import Link from 'next/link'
+
+const NavigationLink = (props) => {
+    return (
+        <Link href={`/?slabby=${props.title}`} as={`/${props.title}`}>
+            <a>{props.title}</a>
+        </Link>
+    );
+};
+
 const Navigation = () => {
     return (
         <div className="navigation-links">
             <h1>recently.</h1>
             <ul>
-                <li className="selected"><a href="#/photos">photos</a></li>
-                <li><a href="#/projects">projects</a></li>
-                <li><a href="#/tunes">tunes</a></li>
+                <li className="selected">
+                    <NavigationLink title="photos" />
+                </li>
+                <li>
+                    <NavigationLink title="projects" />
+                </li>
+                <li>
+                    <NavigationLink title="tunes" />
+                </li>
             </ul>
             <style jsx>{`
             h1 {
