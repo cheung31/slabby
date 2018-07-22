@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 const NavigationLink = (props) => {
     return (
-        <Link href={`/?slabby=${props.title}`} as={`/${props.title}`}>
+        <Link href={`/?title=${props.title}`} as={`/${props.title}`}>
             <a>{props.title}</a>
         </Link>
     );
