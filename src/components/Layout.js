@@ -1,7 +1,10 @@
+import Navigation from './Navigation';
+
 const Layout = (props) => {
     const year = new Date().getFullYear();
     return (
         <div>
+            <Navigation />
             <div className="slabby">
                 { props.children }
             </div>
@@ -73,7 +76,7 @@ footer,header,hgroup,menu,nav,section{
 }
 body{
    line-height:1;
-   font-family: Helvetica;
+   font-family: Helvetica, Arial, sans-serif;
 }
 ol,ul{
    list-style:none;
