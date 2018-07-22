@@ -2,9 +2,24 @@ import Link from 'next/link'
 
 const NavigationLink = (props) => {
     return (
-        <Link href={`/?title=${props.title}`} as={`/${props.title}`}>
-            <a>{props.title}</a>
-        </Link>
+        <div>
+            <Link href={`/?title=${props.title}`} as={`/${props.title}`}>
+                <a>{props.title}</a>
+            </Link>
+            <style jsx>{`
+            a {
+        text-decoration: none;
+        font-size: 18px;
+        color: #AAA; }
+
+    a:hover {
+        color: #777; }
+
+    .selected a {
+        font-weight: bold;
+        color: #333; }
+            `}</style>
+        </div>
     );
 };
 
@@ -27,6 +42,7 @@ const Navigation = () => {
             h1 {
             color: #111;
      font-size: 28px;
+     font-weight: 400;
     margin-bottom: 20px;
             }
 
