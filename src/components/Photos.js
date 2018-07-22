@@ -1,6 +1,8 @@
+import Slabby from './Slabby';
+
 const Photos = () => {
     return (
-        <h1>photos.</h1>
+        <Slabby />
     );
 };
 
