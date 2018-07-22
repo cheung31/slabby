@@ -33,11 +33,11 @@ const Layout = (props) => {
 
     .vignette-left {
     left: 0;
-    background: url('../images/vignette.png') repeat-y left center; }
+    background: url('/static/images/vignette.png') repeat-y left center; }
 
     .vignette-right {
     right: 0;
-    background: url('../images/vignette.png') repeat-y right center; }
+    background: url('/static/images/vignette.png') repeat-y right center; }
 
             footer {
     font-size: 12px;
