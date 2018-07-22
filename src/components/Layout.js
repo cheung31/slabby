@@ -3,7 +3,7 @@ import Navigation from './Navigation';
 const Layout = (props) => {
     const year = new Date().getFullYear();
     return (
-        <div>
+        <div className="container">
             <Navigation />
             <div className="slabby">
                 { props.children }
@@ -14,6 +14,13 @@ const Layout = (props) => {
                 &copy; {year}, Ryan Cheung.
             </footer>
             <style jsx>{`
+            .container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 20; }
+
             .slabby{
    /*border: 1px solid black;*/
     position: absolute;
