@@ -31,9 +31,11 @@ function throwWithMomentumGesture(starts) {
                 targetRight, targetBottom,
                 parentRight, parentBottom,
                 speed,
+                type,
             } = point;
             console.log('~~', point);
             return {
+                type,
                 speed,
                 targetX,
                 targetY,
@@ -43,10 +45,11 @@ function throwWithMomentumGesture(starts) {
 }
 
 const ThrowWithMomentum = mapPropsStream((props) => {
-    const { handler: onStart, stream: starts } = createEventHandler();
+    const eventHandler = createEventHandler();
+    const { handler: onStart, stream: starts } = eventHandler;
     const points = throwWithMomentumGesture(starts);
-    return props.combineLatest(points, (props, { speed, targetX, targetY }) => {
-        if (speed <= 0.05) {
+    return props.combineLatest(points, (props, { type, speed, targetX, targetY }) => {
+        if (!type && speed <= 0.05) {
             targetX = Math.round(targetX / 252) * 252;
         }
         return {
