@@ -29,8 +29,7 @@ const Layout = (props) => {
     display: block;
     clear: both;
     margin-top:-125.5px;
-    margin-left:-282px;
-    width: 99999px;}
+    margin-left:-282px;}
 
     .vignette {
     pointer-events: none;
