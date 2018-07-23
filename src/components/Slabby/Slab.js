@@ -1,11 +1,12 @@
 const Slab = (props) => {
     return (
         <div className="slab"
-             style={{ width: props.slabWidth, height: props.slabHeight, backgroundColor: 'red' }}
+             style={{ width: props.slabWidth, height: props.slabHeight }}
         >
             <style jsx>{`
             .slab{
-   /*border: 1px solid blue;*/
+    background-color: rgba(200,200,200,0.2);
+    border: 1px solid rgba(200,200,200,0.3);
     display: block;
     float: left;
     width: 252px;

@@ -2,7 +2,10 @@ import Slabby from './Slabby';
 
 const Photos = () => {
     return (
-        <Slabby />
+        <Slabby
+            slabWidth={252}
+            slabHeight={252}
+        />
     );
 };
 
