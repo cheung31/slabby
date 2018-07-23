@@ -69,6 +69,8 @@ const spec = {
         onResize = resizeHandler(this.props);
         onResize();
         window.addEventListener('resize', onResize);
+
+        this.props.setOpacity(1);
     },
 
     componentWillUnmount() {
@@ -86,7 +88,7 @@ const Slabby = (props) => {
     const slabs = slabBuffer
         ? Array(slabBuffer)
             .fill(0)
-            .map((_, idx) => <Slab key={idx} slabWidth={slabWidth} slabHeight={slabHeight}/>)
+            .map((_, idx) => <Slab key={idx} slabWidth={slabWidth} slabHeight={slabHeight} />)
         : [];
 
     return (
@@ -94,6 +96,8 @@ const Slabby = (props) => {
             onMouseDown={props.onStart}
             onTouchStart={props.onStart}
             style={{
+                transition: 'opacity 1s ease-in',
+                opacity: props.opacity,
                 transform: `translate3d(${props.targetX}, 0px, 0px)`
             }}
         >
@@ -104,6 +108,7 @@ const Slabby = (props) => {
 
 export default compose(
     ThrowWithMomentum,
+    withState('opacity', 'setOpacity', 0),
     withState('slabBuffer', 'setSlabBuffer', 0),
     lifecycle(spec),
 )(Slabby);

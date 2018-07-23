@@ -23,7 +23,7 @@ const Slab = (props) => {
     height: 612px;
     z-index: 10; }
 
-.slab p{
+.slab p {
     color: #AAA;
     height: 100%;
     text-align: center;
