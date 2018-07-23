@@ -29,12 +29,14 @@ function throwWithMomentumGesture(starts) {
                 targetTop, targetLeft,
                 parentTop, parentLeft,
                 targetRight, targetBottom,
-                parentRight, parentBottom
+                parentRight, parentBottom,
+                speed,
             } = point;
             console.log('~~', point);
             return {
-                targetX: targetX + 'px',
-                targetY: targetY + 'px'
+                speed,
+                targetX,
+                targetY,
             };
         })
         .startWith({});
@@ -43,9 +45,18 @@ function throwWithMomentumGesture(starts) {
 const ThrowWithMomentum = mapPropsStream((props) => {
     const { handler: onStart, stream: starts } = createEventHandler();
     const points = throwWithMomentumGesture(starts);
-    return props.combineLatest(points, (props, { speed, targetX, targetY }) => ({
-        onStart, ...props, speed, targetX, targetY
-    }));
+    return props.combineLatest(points, (props, { speed, targetX, targetY }) => {
+        if (speed <= 0.05) {
+            targetX = Math.round(targetX / 252) * 252;
+        }
+        return {
+            onStart,
+            ...props,
+            speed,
+            targetX: targetX + 'px',
+            targetY: targetY + 'px',
+        };
+    });
 });
 
 const resizeHandler = (props) => {
@@ -70,10 +81,12 @@ const spec = {
         onResize();
         window.addEventListener('resize', onResize);
 
-        this.props.setOpacity(1);
+        setTimeout(() => this.props.setOpacity(1), 1);
     },
 
     componentWillUnmount() {
+        this.props.setOpacity(0);
+
         window.removeEventListener('resize', onResize);
     }
 };
@@ -83,12 +96,18 @@ const Slabby = (props) => {
         slabWidth,
         slabHeight,
         slabBuffer,
+        index,
     } = props;
 
     const slabs = slabBuffer
         ? Array(slabBuffer)
             .fill(0)
-            .map((_, idx) => <Slab key={idx} slabWidth={slabWidth} slabHeight={slabHeight} />)
+            .map((_, idx) =>
+                <Slab
+                    key={idx}
+                    focused={idx === index}
+                />
+            )
         : [];
 
     return (
@@ -96,6 +115,7 @@ const Slabby = (props) => {
             onMouseDown={props.onStart}
             onTouchStart={props.onStart}
             style={{
+                display: 'flex',
                 transition: 'opacity 1s ease-in',
                 opacity: props.opacity,
                 transform: `translate3d(${props.targetX}, 0px, 0px)`
@@ -108,6 +128,7 @@ const Slabby = (props) => {
 
 export default compose(
     ThrowWithMomentum,
+    withState('index', 'setIndex', 0),
     withState('opacity', 'setOpacity', 0),
     withState('slabBuffer', 'setSlabBuffer', 0),
     lifecycle(spec),
