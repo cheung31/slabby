@@ -6,7 +6,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "storybook": "expo start --web --config ./storybook/app.json",
+    "storybook:native": "expo start --config ./storybook/app.json"
   },
   "jest": {
     "preset": "jest-expo"
@@ -28,6 +30,12 @@
     "react-navigation": "^3.12.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@storybook/addon-actions": "^5.2.3",
+    "@storybook/addon-links": "^5.2.3",
+    "@storybook/addons": "^5.2.3",
+    "@storybook/react-native": "^5.2.3",
+    "babel-loader": "^8.0.6",
     "babel-preset-expo": "^7.0.0",
     "jest-expo": "^35.0.0"
   },
