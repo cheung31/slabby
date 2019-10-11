@@ -14,12 +14,13 @@ import CoverFlowView from "../../components/CoverFlowView";
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
+let horizontalDefaults = CoverFlowView.horizontalDefaults;
 storiesOf('CoverFlow', module)
   .addDecorator(withKnobs)
   .add('demo', () => <CoverFlowView
     spacing={number('spacing', 500)}
-    wingSpan={number('wingSpan', 350)}
-    rotation={number('rotation', 5)}
+    wingSpan={number('wingSpan', 337.5)}
+    rotation={number('rotation', 0)}
     midRotation={number('midRotation', 20)}
     scaleDown={number('scaleDown', 0.5)}
     scaleFurther={number('scaleFurther', 0.5)}

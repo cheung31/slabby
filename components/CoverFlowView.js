@@ -10,16 +10,17 @@ for (let i = 1; i <= 20; i++) {
 let CARD_SIZE = 612;
 
 function Item(props) {
+  let { itemSize, isHorizontal } = props;
   return (
     <View style={{
-      width: CARD_SIZE,
-      height: CARD_SIZE,
+      width: itemSize,
+      height: itemSize,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'red',
+      backgroundColor: '#CCC',
       borderWidth: 2,
       borderColor: '#fff',
-      borderRadius: 10
+      transform: [{ rotate: isHorizontal ? '0deg' : '-90deg' }]
     }}>
       <Text>{props.children}</Text>
     </View>
@@ -29,11 +30,10 @@ function Item(props) {
 function CoverFlowView(props) {
   let { width, height } = Dimensions.get('window');
   let isHorizontal = true;
-  /*
   if (height > width) {
     isHorizontal = false;
   }
-  */
+  let itemSize = !isHorizontal ? width : CARD_SIZE || props.itemSize;
 
   return (
     <View style={{
@@ -46,14 +46,24 @@ function CoverFlowView(props) {
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        spacing={CARD_SIZE * .3}
         onChange={(index) => console.log('Current item', index)}
         {...props}
       >
-        {items.map(i => <Item key={i}>{i}</Item>)}
+        {items.map(i => <Item key={i} itemSize={itemSize} isHorizontal={isHorizontal}>{i}</Item>)}
       </Coverflow>
     </View>
   );
 }
+
+CoverFlowView.horizontalDefaults = {
+  spacing: 500,
+  wingSpan: 337.5,
+  rotation: 0,
+  midRotation: 20,
+  scaleDown: 0.5,
+  scaleFurther: 0.5,
+  perspective: 800,
+  initialSelection: 0,
+};
 
 export default CoverFlowView;
