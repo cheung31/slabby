@@ -33,7 +33,8 @@ function CoverFlowView(props) {
   if (height > width) {
     isHorizontal = false;
   }
-  let itemSize = !isHorizontal ? width : CARD_SIZE || props.itemSize;
+  let targetSize = CARD_SIZE || props.itemSize;
+  let itemSize = !isHorizontal ? Math.min(width, targetSize) : Math.min(height, targetSize);
 
   return (
     <View style={{
