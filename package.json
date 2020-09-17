@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo Add tests || :",
-    "postinstall": "./node_modules/bower/bin/bower install",
+    "postinstall": "./node_modules/bower/bin/bower install --allow-root",
     "start": "webpack-dev-server",
     "build": "webpack",
     "build-prod": "webpack -p",
