@@ -3,9 +3,12 @@
 
 const { withExpo } = require('@expo/next-adapter')
 const withFonts = require('next-fonts')
+const withTM = require('next-transpile-modules')(['@ui-kitten/components']);
 
 module.exports = withExpo(
-  withFonts({
-    projectRoot: __dirname
-  })
+  withFonts(
+    withTM({
+      projectRoot: __dirname
+    })
+  )
 )
