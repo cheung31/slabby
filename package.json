@@ -1,0 +1,32 @@
+{
+  "name": "slabby",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "next": "10.1.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@storybook/addon-actions": "^6.2.7",
+    "@storybook/addon-essentials": "^6.2.7",
+    "@storybook/addon-links": "^6.2.7",
+    "@storybook/preset-typescript": "^3.0.0",
+    "@storybook/react": "^6.2.7",
+    "@types/node": "^14.14.37",
+    "@types/react": "^17.0.3",
+    "babel-loader": "^8.2.2",
+    "babel-preset-react-app": "^10.0.0",
+    "css-loader": "^5.2.1",
+    "style-loader": "^2.0.0",
+    "typescript": "^4.2.4"
+  }
+}
