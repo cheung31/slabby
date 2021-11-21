@@ -27,6 +27,7 @@ export interface paths {
           deleted_at?: parameters["rowFilter.things.deleted_at"];
           external_id?: parameters["rowFilter.things.external_id"];
           type?: parameters["rowFilter.things.type"];
+          external_source?: parameters["rowFilter.things.external_source"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -88,6 +89,7 @@ export interface paths {
           deleted_at?: parameters["rowFilter.things.deleted_at"];
           external_id?: parameters["rowFilter.things.external_id"];
           type?: parameters["rowFilter.things.type"];
+          external_source?: parameters["rowFilter.things.external_source"];
         };
         header: {
           /** Preference */
@@ -113,6 +115,7 @@ export interface paths {
           deleted_at?: parameters["rowFilter.things.deleted_at"];
           external_id?: parameters["rowFilter.things.external_id"];
           type?: parameters["rowFilter.things.type"];
+          external_source?: parameters["rowFilter.things.external_source"];
         };
         body: {
           /** things */
@@ -148,6 +151,7 @@ export interface definitions {
     deleted_at?: string;
     external_id?: string;
     type: string;
+    external_source: string;
   };
 }
 
@@ -185,6 +189,7 @@ export interface parameters {
   "rowFilter.things.deleted_at": string;
   "rowFilter.things.external_id": string;
   "rowFilter.things.type": string;
+  "rowFilter.things.external_source": string;
 }
 
 export interface operations {}
