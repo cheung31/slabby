@@ -21,6 +21,9 @@ const Home: NextPage = () => {
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.tsx</code>
+
+          <br/>
+          <a href="https://foursquare.com/oauth2/authenticate?client_id=FNSDWCCJZYSIZ55CIZZGEUC3XY3MYJI3LNUV4P35RDM3KXUC&response_type=code&redirect_uri=http://localhost:3000/api/oauth/foursquare_redirect">FSQ</a>
         </p>
 
         <div className={styles.grid}>

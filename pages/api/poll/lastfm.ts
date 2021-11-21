@@ -2,17 +2,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from "@supabase/supabase-js";
 import LastFm from '@toplast/lastfm'
+import { groupUpserts, utcStringToTimestampz } from "../../../utils";
 import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from "../../../types/supabase";
 
 type Error = {
     error: string
 }
-type Data = definitions['things'][] | null | PostgrestError | Error
-
-function padDigits(number: number, digits: number) {
-    return Array(Math.max(digits - String(number).length + 1, 0)).join('0') + number
-}
+type Data = definitions['things'][] | null | PostgrestError | PostgrestError[] | Error
 
 type PostQuery = {
     user?: string
@@ -35,33 +32,48 @@ async function post(
         .map<definitions['things']>((track) => {
             let timestampz
             if (track.date) {
-                const d = new Date(parseInt(track.date?.uts) * 1000)
-                timestampz = `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}T${padDigits(d.getUTCHours(), 2)}:${padDigits(d.getUTCMinutes(), 2)}:${padDigits(d.getUTCSeconds(), 2)}.000Z`
+                timestampz = utcStringToTimestampz(track.date?.uts)
             }
             const image_url = track.image[3]["#text"].replace('300x300','_')
 
             return {
                 type: "tune",
+                external_source: "Last.fm",
                 external_id: `${track.mbid || track.name}::${track.date?.uts}`,
                 external_url: track.url,
                 title: track.name,
                 description: track.artist["#text"],
                 image_url,
                 content_date: timestampz, // "2021-11-21T07:13:48.000Z"
-                external_source: "Last.fm"
             }
         })
 
-    const { data, error } = await supabase
-        .from<definitions['things']>('things')
-        .upsert(records, { onConflict: 'external_source,external_id', ignoreDuplicates: true })
+    const groupedRecords = groupUpserts(records)
+    const errors = []
+    let processed: definitions['things'][] = []
 
-    if (error) {
-        console.warn("***************************************************\n", error)
-        return res.status(500).json(error)
+    for (const k in groupedRecords) {
+        const rs = groupedRecords[k]
+
+        const { data, error } = await supabase
+            .from<definitions['things']>('things')
+            .upsert(rs, { onConflict: 'external_source,external_id', ignoreDuplicates: true })
+
+        if (error) {
+            errors.push(error)
+        }
+
+        if (data) {
+            processed = processed.concat(data)
+        }
     }
 
-    res.status(200).json(data)
+    if (errors.length) {
+        console.warn("***************************************************\n", errors)
+        return res.status(500).json(errors)
+    }
+
+    res.status(200).json(processed)
 }
 
 export default async function handler(

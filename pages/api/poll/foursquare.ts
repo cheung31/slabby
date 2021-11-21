@@ -1,0 +1,140 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { PostgrestError } from "@supabase/supabase-js";
+import { NLists, NPayload, NPhotos } from "ts-foursquare/types";
+import { groupUpserts, utcStringToTimestampz } from "../../../utils";
+import { supabase } from '../../../utils/supabaseClient'
+import { definitions } from "../../../types/supabase";
+import IPayload = NPayload.IPayload;
+import ITip = NLists.ITip;
+
+type Error = {
+    error: string
+}
+type Data =  definitions['things'][] | IPayload<any> | null | PostgrestError | PostgrestError[] | Error
+
+type PostQuery = {
+    user_id?: string
+}
+
+interface IPhoto extends NPhotos.IPhoto {
+    tip?: ITip
+}
+
+interface IPhotosResponse {
+    photos: {
+        count: number
+        items: IPhoto[]
+    }
+}
+
+
+async function post(
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) {
+    if (!process.env.FOURSQUARE_USER_ID
+        || !process.env.FOURSQUARE_ACCESS_TOKEN
+        || !process.env.FOURSQUARE_CLIENT_ID
+        || !process.env.FOURSQUARE_CLIENT_SECRET) {
+        return res.status(500).json({ error: 'Missing Foursquare Credentials' })
+    }
+
+    const query = req.query as PostQuery
+    const user_id = query.user_id || process.env.FOURSQUARE_USER_ID
+    const response = await fetch(
+        `https://api.foursquare.com/v2/users/${user_id}/photos?v=20210101&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&oauth_token=${process.env.FOURSQUARE_ACCESS_TOKEN}`
+    )
+    const api_response = await response.json() as IPayload<IPhotosResponse>
+    if (!api_response) {
+        return res.status(500).json({ error: 'Foursquare API request failed' })
+    }
+
+    const response_status = api_response.meta?.code || 500
+    if (response_status !== 200) {
+        return res.status(response_status).json(api_response)
+    }
+
+    const photos = api_response.response?.photos
+    if (!photos) {
+        return res.status(200).json({})
+    }
+
+    const records = photos.items.map((photo) => {
+        let timestampz
+        if (photo.createdAt) {
+            timestampz = utcStringToTimestampz(photo.createdAt.toString())
+        }
+
+        let title
+        let external_url
+        if (photo.tip) {
+            title = photo.tip.text
+            external_url = photo.tip.canonicalUrl
+        }
+
+        let description
+        if (photo.venue) {
+            const { city, state, country } = photo.venue.location
+            const location = city && state
+                ? `${city}, ${state}`
+                : city && country
+                    ? `${city}, ${country}`
+                    : city
+            description = `${photo.venue.name} - ${location}`
+        }
+
+        const size = '610x610'
+        const image_url = `${photo.prefix}${size}${photo.suffix}`
+
+       return {
+           type: "photo",
+           external_source: "Foursquare",
+           external_id: photo.id,
+           external_url,
+           title,
+           description,
+           image_url,
+           content_date: timestampz, // "2021-11-21T07:13:48.000Z"
+       }
+    })
+
+    const groupedRecords = groupUpserts(records)
+    const errors = []
+    let processed: definitions['things'][] = []
+
+    for (const k in groupedRecords) {
+        const rs = groupedRecords[k]
+
+        const { data, error } = await supabase
+            .from<definitions['things']>('things')
+            .upsert(rs, { onConflict: 'external_source,external_id', ignoreDuplicates: true })
+
+        if (error) {
+            errors.push(error)
+        }
+
+        if (data) {
+            processed = processed.concat(data)
+        }
+    }
+
+    if (errors.length) {
+        console.warn("***************************************************\n", errors)
+        return res.status(500).json(errors)
+    }
+
+    res.status(200).json(processed)
+}
+
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) {
+    switch (req.method) {
+        case 'POST':
+            return await post(req, res)
+        default:
+            return res.status(400).json({ error: 'Invalid method' })
+    }
+}
