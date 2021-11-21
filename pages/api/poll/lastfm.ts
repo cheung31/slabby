@@ -5,18 +5,21 @@ import LastFm from '@toplast/lastfm'
 import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from "../../../types/supabase";
 
-type Data = definitions['things'][] | null | PostgrestError
+type Error = {
+    error: string
+}
+type Data = definitions['things'][] | null | PostgrestError | Error
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
     if (req.method !== 'POST') {
-        return res.status(400)
+        return res.status(400).json({ error: 'Invalid method' })
     }
 
     if (!process.env.LASTFM_API_KEY) {
-        return res.status(500)
+        return res.status(500).json({ error: 'Missing LastFM API Key' })
     }
 
     const lastFm = new LastFm(process.env.LASTFM_API_KEY)
@@ -28,15 +31,12 @@ export default async function handler(
     const records = recentTracks.recenttracks.track
         .map<definitions['things']>((track) => {
             return {
-                id: "",
                 type: "tune",
                 external_id: `${track.mbid}::${track.date?.uts}`,
                 external_url: track.url,
                 title: track.name,
                 description: track.artist.name,
                 content_date: track.date?.uts,
-                created_at: "",
-                updated_at: ""
             }
         })
 
