@@ -14,22 +14,21 @@ function padDigits(number: number, digits: number) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join('0') + number
 }
 
-export default async function handler(
+type PostQuery = {
+    user?: string
+}
+
+async function post(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    if (req.method !== 'POST') {
-        return res.status(400).json({ error: 'Invalid method' })
-    }
-
     if (!process.env.LASTFM_API_KEY) {
         return res.status(500).json({ error: 'Missing LastFM API Key' })
     }
 
     const lastFm = new LastFm(process.env.LASTFM_API_KEY)
-    const user = req.query.user ?
-        Array.isArray(req.query.user) ? req.query.user[0] : req.query.user
-        : 'cheung31'
+    const query = req.query as PostQuery
+    const user = query.user || 'cheung31'
 
     const recentTracks = await lastFm.user.getRecentTracks({ user })
     const records = recentTracks.recenttracks.track
@@ -58,8 +57,21 @@ export default async function handler(
         .upsert(records, { onConflict: 'external_source,external_id', ignoreDuplicates: true })
 
     if (error) {
+        console.warn("***************************************************\n", error)
         return res.status(500).json(error)
     }
 
     res.status(200).json(data)
+}
+
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) {
+    switch (req.method) {
+        case 'POST':
+            return await post(req, res)
+        default:
+            return res.status(400).json({ error: 'Invalid method' })
+    }
 }
