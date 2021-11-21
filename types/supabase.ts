@@ -137,14 +137,14 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string;
+    id?: string;
     image_url?: string;
     external_url?: string;
     title?: string;
     description?: string;
     content_date?: string;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
     deleted_at?: string;
     external_id?: string;
     type: string;
