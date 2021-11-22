@@ -4,6 +4,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from '../../../utils/supabaseClient'
 import { definitions, paths } from "../../../types/supabase";
 import { utcStringToTimestampz } from "../../../utils";
+import { isThingType, ThingType } from "../../../types/things";
 
 type Error = {
     error: string
@@ -14,18 +15,10 @@ type GetPathQuery = {
 }
 type GetQuery = paths["/things"]["get"]["parameters"]["query"]
 
-const thingTypes = ['tune', 'photo'] as const;
-type ThingType = typeof thingTypes[number]
-
 const DEFAULT_PAGE_SIZE = 10
 const TYPE_PUBLISH_DELAY_MS: Record<ThingType, number> = {
     'tune': 0,
     'photo': 7 * 24 * 3600 * 1000
-}
-
-function isThingType(type: unknown): type is ThingType {
-    const foundKey = thingTypes.find((t) => t === type);
-    return !!foundKey
 }
 
 async function get(
