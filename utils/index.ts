@@ -6,7 +6,7 @@ export function padDigits(number: number, digits: number) {
 
 export function utcStringToTimestampz(utc: string) {
     const d = new Date(parseInt(utc) * 1000)
-    return `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}T${padDigits(d.getUTCHours(), 2)}:${padDigits(d.getUTCMinutes(), 2)}:${padDigits(d.getUTCSeconds(), 2)}.000Z`
+    return `${d.getUTCFullYear()}-${padDigits(d.getUTCMonth() + 1, 2)}-${padDigits(d.getUTCDate(), 2)}T${padDigits(d.getUTCHours(), 2)}:${padDigits(d.getUTCMinutes(), 2)}:${padDigits(d.getUTCSeconds(), 2)}.000Z`
 }
 
 export function groupUpserts(records: definitions['things'][]) {
