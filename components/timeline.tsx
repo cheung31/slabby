@@ -117,18 +117,18 @@ export function Timeline() {
         <div>
             {data.map((ty) =>
                 <div key={ty.year}>
-                <h1>{ty.year}</h1>
-                {ty.months.map((tm) =>
-                    <div key={`${tm.year}-${tm.month}`}>
-                        <h2>
-                            {(new Date(tm.year, tm.month-1))
-                                .toLocaleDateString('en-us', { year:"numeric", month:"short"})}
-                        </h2>
-                        {tm.items.map((item, idx) =>
-                            <PhotoThing item={item} key={`thing-${idx}`} />
-                        )}
-                    </div>
-                )}
+                    <h1 className="sticky top-0">{ty.year}</h1>
+                    {ty.months.map((tm) =>
+                        <div key={`${tm.year}-${tm.month}`}>
+                            <h2 className="sticky top-0">
+                                {(new Date(tm.year, tm.month-1))
+                                    .toLocaleDateString('en-us', { year:"numeric", month:"short"})}
+                            </h2>
+                            {tm.items.map((item, idx) =>
+                                <PhotoThing item={item} key={`thing-${idx}`} />
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
