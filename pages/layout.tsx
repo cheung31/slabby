@@ -4,7 +4,7 @@ import {Timeline} from "../components/timeline";
 const Layout: NextPage = () => {
 
     return (
-        <div>
+        <div className="bg-white dark:bg-gray-800">
             <Timeline />
         </div>
     )
