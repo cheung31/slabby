@@ -10,6 +10,7 @@ const Tingz: NextPage = () => {
             <ul>
                 {photos.map((photo) =>
                     <li key={photo.id}>
+                        <img src={photo.image_url} />
                         <h3>{photo.title}</h3>
                         <p>{photo.description}</p>
                         <p>{photo.content_date}</p>
