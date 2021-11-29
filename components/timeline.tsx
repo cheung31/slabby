@@ -149,7 +149,7 @@ export function Timeline() {
     return (
         <>
             {data && data.map((ty) =>
-                <div key={ty.year}>
+                <div key={ty.year} className="mx-auto" style={{ maxWidth: 700 }}>
                     <h1 className="font-mono p-2 dark:text-gray-300">{ty.year}</h1>
                     {ty.months.map((tm) =>
                         <div className="relative" key={`${tm.year}-${tm.month}`}>
