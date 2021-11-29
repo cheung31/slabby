@@ -154,7 +154,7 @@ export function Timeline() {
                     {ty.months.map((tm) =>
                         <div className="relative" key={`${tm.year}-${tm.month}`}>
                             <div className="absolute z-10 sticky top-0">
-                                <LabelTag className="top-0.5 left-1.5 font-mono text-md p-1.5 dark:text-gray-200 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl">
+                                <LabelTag className="top-0.5 left-1.5 font-mono text-md p-1.5 bg-white bg-opacity-20 dark:text-gray-200 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl">
                                     <span>
                                         {(new Date(tm.year, tm.month-1))
                                             .toLocaleDateString("en-us", { year:"numeric", month:"short"})}
