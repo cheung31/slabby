@@ -1,18 +1,9 @@
 import { definitions } from "../types/supabase";
 import {LabelTag} from "./labelTag";
+import {usePhotos} from "../hooks/usePhotos";
+import {TimelineData} from "../types/timeline";
 
-type TimelineMonth = {
-    year: number,
-    month: number,
-    items: definitions['things'][]
-}
-type TimelineYear = {
-    year: number,
-    months: TimelineMonth[]
-}
-type TimelineData = TimelineYear[]
-
-const data: TimelineData = [
+const testData: TimelineData = [
     {
         year: 2021,
         months: [
@@ -132,11 +123,11 @@ function PhotoThing({ item }: PhotoThingProps) {
                 <div className="absolute top-0 left-0 w-full aspect-w-1 aspect-h-1">
                     <div className="flex flex-col items-end justify-end">
                         <LabelTag vertical="bottom" horizontal="right" className="relative -right-1.5 bottom-2">
-                            <div className="text-right">
+                            {item.title && <div className="text-right">
                                 <p className="inline-block font-mono text-md text-right pl-1.5 pr-1.5 pt-0.5 pb-0.5 dark:text-gray-200 bg-white bg-opacity-25 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl">
                                     {item.title}
                                 </p>
-                            </div>
+                            </div>}
                             {item.description &&
                               <div className="text-right">
                                 <p
@@ -154,9 +145,10 @@ function PhotoThing({ item }: PhotoThingProps) {
 }
 
 export function Timeline() {
+    const { timelinePhotos: data } = usePhotos();
     return (
         <>
-            {data.map((ty) =>
+            {data && data.map((ty) =>
                 <div key={ty.year}>
                     <h1 className="font-mono p-2 dark:text-gray-300">{ty.year}</h1>
                     {ty.months.map((tm) =>
