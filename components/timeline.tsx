@@ -83,8 +83,33 @@ export function Timeline() {
                                 </LabelTag>
                             </div>
                             {tm.items.map((item, idx) => {
-                                if (monthIdx + idx + (1 * monthIdx) < aboveFoldCount) {
+                                const globalIdx = monthIdx + idx + (1 * monthIdx)
+                                if (globalIdx === 0) {
                                     return <PhotoThing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
+                                }
+                                if (globalIdx < aboveFoldCount) {
+                                    return <Plx key={`${tm.year}-${tm.month}-${idx}`}
+                                         parallaxData={[
+                                             {
+                                                 start: 'self',
+                                                 duration: 500 * (globalIdx / aboveFoldCount),
+                                                 easing: 'easeOut',
+                                                 properties: [
+                                                     {
+                                                         startValue: Math.min(1 - (globalIdx / aboveFoldCount) + .4, .95),
+                                                         endValue: 1,
+                                                         property: 'scale',
+                                                     },
+                                                     {
+                                                         startValue: Math.min(1 - (globalIdx / aboveFoldCount) + .4, .95),
+                                                         endValue: 1,
+                                                         property: 'opacity',
+                                                     },
+                                                 ],
+                                             },
+                                         ]}>
+                                        <PhotoThing item={item}/>
+                                    </Plx>
                                 }
                                 return (
                                     <Plx key={`${tm.year}-${tm.month}-${idx}`}
