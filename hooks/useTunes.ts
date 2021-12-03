@@ -6,10 +6,11 @@ import transformForTimeline from "../utils/transformForTimeline";
 export function useTunes(options = { pollIntervalMs: 2 * 60 * 1000 }) {
     const [tunes, setTunes] = useState<definitions['things'][]>([])
     const [timelineTunes, setTimelineTunes] = useState<TimelineData | null>(null);
+    const size = 25
 
     useEffect(() => {
         const pollTunes = async () => {
-            const response = await fetch('/api/things/tune')
+            const response = await fetch(`/api/things/tune?limit=${size}`)
             const tunes = await response.json() as definitions['things'][]
             setTunes(tunes);
             setTimelineTunes(transformForTimeline(tunes));
