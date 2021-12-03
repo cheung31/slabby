@@ -4,6 +4,7 @@ import {LabelTag} from "./labelTag";
 import {usePhotos} from "../hooks/usePhotos";
 import useWindowSize, {Size} from "../hooks/useWindowSize";
 import {useMemo} from "react";
+import {TimelineData} from "../types/timeline";
 
 type PhotoThingProps = {
     item: definitions['things']
@@ -42,10 +43,12 @@ function PhotoThing({ item }: PhotoThingProps) {
     )
 }
 
-export function Timeline() {
+type TimelineProps = {
+    data: TimelineData
+}
+export function Timeline({ data }: TimelineProps) {
     const maxWidth = 700
     const size: Size = useWindowSize();
-    const { timelinePhotos: data } = usePhotos();
 
     const { aboveFoldCount } = useMemo(() => {
         let width
