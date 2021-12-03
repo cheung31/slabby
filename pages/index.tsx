@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import {Timeline} from "../components/timeline";
+import {Timeline} from "../components/Timeline";
 import {usePhotos} from "../hooks/usePhotos";
 
 const Index: NextPage = () => {

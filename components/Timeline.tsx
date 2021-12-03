@@ -1,6 +1,6 @@
 import Plx from 'react-plx'
 import { definitions } from "../types/supabase";
-import {LabelTag} from "./labelTag";
+import {LabelTag} from "./LabelTag";
 import {usePhotos} from "../hooks/usePhotos";
 import useWindowSize, {Size} from "../hooks/useWindowSize";
 import {useMemo} from "react";
