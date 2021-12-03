@@ -41,6 +41,7 @@ async function get(
         .from<definitions['things']>('things')
         .select(query.select)
         .eq('type', type)
+        .is("deleted_at", null)
         .lte('content_date', contentDateOffset)
         .order('content_date', {ascending: false})
         .limit(limit)
