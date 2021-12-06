@@ -58,7 +58,7 @@ const Index: NextPage = () => {
                             ],
                         },
                     ]}>
-                      <div className="mx-auto mt-5 bg-gradient-to-b dark:from-gray-300 dark:to-gray-800"
+                      <div className="mx-auto mt-5 bg-gradient-to-b from-gray-800 to-gray-300 dark:from-gray-300 dark:to-gray-800"
                            style={{width: 2, height: "75vh"}}/>
                     </Plx>
                     <Plx parallaxData={[
@@ -80,7 +80,7 @@ const Index: NextPage = () => {
                             ],
                         },
                     ]}>
-                      <p className="mx-auto mt-5 text-center text-2xl font-mono dark:text-gray-300" style={{ maxWidth: 700 }}>
+                      <p className="mx-auto mt-5 pl-5 pr-5 text-center text-2xl font-mono dark:text-gray-300" style={{ maxWidth: 700 }}>
                           {quote}
                         <br />
                         <br />

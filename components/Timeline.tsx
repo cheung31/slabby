@@ -23,14 +23,14 @@ function PhotoThing({ item }: PhotoThingProps) {
                     <div className="flex flex-col items-end justify-end">
                         <LabelTag vertical="bottom" horizontal="right" className="relative -right-1.5 bottom-2">
                             {item.title && <div className="text-right">
-                                <p className="inline-block font-mono text-md text-right pl-1.5 pr-1.5 pt-0.5 pb-0.5 dark:text-gray-200 bg-white bg-opacity-25 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl">
+                                <p className="inline-block font-mono text-md text-right pl-1.5 pr-1.5 pt-0.5 pb-0.5 dark:text-gray-200 bg-white bg-opacity-60 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl">
                                     {item.title}
                                 </p>
                             </div>}
                             {item.description &&
                               <div className="text-right">
                                 <p
-                                  className="inline-block font-mono text-xs text-right uppercase p-1 pl-1.5 pr-1.5 dark:text-gray-200 bg-white bg-opacity-25 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl ">
+                                  className="inline-block font-mono text-xs text-right uppercase p-1 pl-1.5 pr-1.5 dark:text-gray-200 bg-white bg-opacity-60 dark:bg-gray-900 dark:bg-opacity-40 backdrop-filter backdrop-brightness-110 backdrop-blur-xl ">
                                     {item.description}
                                 </p>
                               </div>
