@@ -77,7 +77,7 @@ const Index: NextPage = () => {
                                 ],
                             },
                         ]}>
-                            <RandomQuote />
+                            <RandomQuote uniq={type} />
                         </Plx>
                     </>
                 </div>

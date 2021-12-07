@@ -1,6 +1,10 @@
 import React, {useEffect, useState } from "react"
 
-const RandomQuote = () => {
+type RandomQuoteProps = {
+   uniq?: string | string[]
+}
+
+const RandomQuote = ({ uniq }: RandomQuoteProps) => {
     const [quote, setQuote] = useState("")
     const [quoteAuthor, setQuoteAuthor] = useState("")
 
@@ -13,7 +17,7 @@ const RandomQuote = () => {
                 setQuoteAuthor(data.author)
             }
         })()
-    }, [])
+    }, [uniq])
 
     return (
         <p className="mx-auto mt-5 pl-5 pr-5 text-center text-2xl font-mono dark:text-gray-300" style={{ maxWidth: 700 }}>
