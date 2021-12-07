@@ -6,8 +6,18 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/photo',
+        destination: '/photos',
         permanent: false
+      },
+      {
+        source: '/photos',
+        destination: '/photo',
+        permanent: true
+      },
+      {
+        source: '/tunes',
+        destination: '/tune',
+        permanent: true
       }
     ]
   }
