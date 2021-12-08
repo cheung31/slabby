@@ -22,7 +22,7 @@ const Index: NextPage = () => {
         <>
             <MobileNav className="z-50 fixed bottom-0 px-3 pb-3" pathname={type} />
             <div className="container mx-auto">
-                <div className="pt-2 xs:pt-8 pb-80 sm:pb-96">
+                <div className="pt-2 xs:pt-8" style={{ paddingBottom: '47vh' }}>
                     {timeline}
                     <>
                         <Plx parallaxData={[
