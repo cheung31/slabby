@@ -10,6 +10,7 @@ const RandomQuote = ({ uniq }: RandomQuoteProps) => {
 
     useEffect(() => {
         (async () => {
+            if (quote) return
             const response = await fetch("https://api.quotable.io/random")
             const data = await response.json()
             if (response.ok) {
@@ -17,7 +18,7 @@ const RandomQuote = ({ uniq }: RandomQuoteProps) => {
                 setQuoteAuthor(data.author)
             }
         })()
-    }, [uniq])
+    }, [uniq, quote])
 
     return (
         <p className="mx-auto mt-5 pl-5 pr-5 text-center text-2xl font-mono dark:text-gray-300" style={{ maxWidth: 700 }}>
