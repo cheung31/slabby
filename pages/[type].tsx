@@ -40,7 +40,8 @@ const Index: NextPage = () => {
                                         startValue: 0,
                                         endValue: 1,
                                         property: 'scale',
-                                    },                                {
+                                    },
+                                    {
                                         startValue: 0,
                                         endValue: .6,
                                         property: 'opacity',
