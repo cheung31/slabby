@@ -13,5 +13,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
-        run: curl --request POST -url https://slabby-gh-mevnyo9oi-cheung31.vercel.app/api/poll/lastfm
+        run: curl --request POST -url https://ryancheung.com/api/poll/lastfm
 
