@@ -6,10 +6,10 @@ import useWindowSize, {Size} from "../hooks/useWindowSize";
 import {useMemo} from "react";
 import {TimelineData} from "../types/timeline";
 
-type PhotoThingProps = {
+type ThingProps = {
     item: definitions['things']
 }
-function PhotoThing({ item }: PhotoThingProps) {
+function Thing({ item }: ThingProps) {
     return (
         <div className="p-1.5 pl-3 pr-3">
             <div className="relative p-0.5">
@@ -88,7 +88,7 @@ export function Timeline({ data }: TimelineProps) {
                             {tm.items.map((item, idx) => {
                                 const globalIdx = monthIdx + idx + (1 * monthIdx)
                                 if (globalIdx === 0) {
-                                    return <PhotoThing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
+                                    return <Thing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
                                 }
                                 if (globalIdx < aboveFoldCount) {
                                     return <Plx key={`${tm.year}-${tm.month}-${idx}`}
@@ -111,7 +111,7 @@ export function Timeline({ data }: TimelineProps) {
                                                  ],
                                              },
                                          ]}>
-                                        <PhotoThing item={item}/>
+                                        <Thing item={item}/>
                                     </Plx>
                                 }
                                 return (
@@ -135,7 +135,7 @@ export function Timeline({ data }: TimelineProps) {
                                             ],
                                         },
                                     ]}>
-                                        <PhotoThing item={item}/>
+                                        <Thing item={item}/>
                                     </Plx>
                                 );
                             })}
