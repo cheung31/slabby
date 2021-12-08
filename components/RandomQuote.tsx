@@ -9,6 +9,11 @@ const RandomQuote = ({ uniq }: RandomQuoteProps) => {
     const [quoteAuthor, setQuoteAuthor] = useState("")
 
     useEffect(() => {
+        setQuote("")
+        setQuoteAuthor("")
+    }, [uniq])
+
+    useEffect(() => {
         (async () => {
             if (quote) return
             const response = await fetch("https://api.quotable.io/random")
