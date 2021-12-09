@@ -57,7 +57,7 @@ export function Timeline({ data }: TimelineProps) {
 
         let aboveFoldCount = 1
         if (size.height && width) {
-            aboveFoldCount = Math.ceil(size.height / width)
+            aboveFoldCount = Math.max(1, Math.ceil(size.height / width))
         }
 
         return {
@@ -99,12 +99,12 @@ export function Timeline({ data }: TimelineProps) {
                                                  easing: 'easeOut',
                                                  properties: [
                                                      {
-                                                         startValue: Math.min(1 - (globalIdx / aboveFoldCount) + .4, .95),
+                                                         startValue: .95 - (globalIdx * .1),
                                                          endValue: 1,
                                                          property: 'scale',
                                                      },
                                                      {
-                                                         startValue: Math.min(1 - (globalIdx / aboveFoldCount) + .4, .95),
+                                                         startValue: .95 - (globalIdx * .1),
                                                          endValue: 1,
                                                          property: 'opacity',
                                                      },
