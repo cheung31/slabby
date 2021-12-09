@@ -1,8 +1,8 @@
 import {Timeline} from "./Timeline";
-import {useTunes} from "../hooks/useTunes";
+import { useThings } from "../hooks/useThings";
 
 const TunesTimeline = () => {
-    const { timelineTunes: data } = useTunes();
+    const { queued, timelineThings: data } = useThings('tune');
 
     return (
         <>

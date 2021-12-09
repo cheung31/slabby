@@ -1,8 +1,8 @@
 import {Timeline} from "./Timeline";
-import {usePhotos} from "../hooks/usePhotos";
+import {useThings} from "../hooks/useThings";
 
 const PhotosTimeline = () => {
-    const { timelinePhotos: data } = usePhotos();
+    const { queued, timelineThings: data } = useThings('photo');
 
     return (
         <>
