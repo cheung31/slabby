@@ -13,8 +13,8 @@ function Thing({ item }: ThingProps) {
     return (
         <div className="p-1.5 pl-3 pr-3">
             <div className="relative p-0.5">
-                <div className="rounded-lg shadow-lg aspect-w-1 aspect-h-1"
-                     style={{ background: `url(${item.image_url})`, backgroundSize: 'cover' }}
+                <div className="rounded-lg shadow-lg aspect-w-1 aspect-h-1 bg-gray-400 dark:bg-gray-600"
+                     style={{ backgroundImage: `url(${item.image_url})`, backgroundSize: 'cover' }}
                 />
                 <img className="absolute hidden"
                      src={item.image_url}
