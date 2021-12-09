@@ -2,7 +2,7 @@ import {Timeline} from "./Timeline";
 import { useThings } from "../hooks/useThings";
 
 const TunesTimeline = () => {
-    const { queued, timelineThings: data } = useThings('tune');
+    const { timelineThings: data } = useThings('tune');
 
     return (
         <>

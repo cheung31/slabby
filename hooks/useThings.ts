@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {definitions} from "../types/supabase";
 import { ThingType } from "../types/things";
 import {TimelineData} from "../types/timeline";
@@ -8,29 +8,25 @@ export function useThings(
     type: ThingType,
     options = { limit: 25, pollIntervalMs: 2 * 60 * 1000 }
 ) {
+    const [fetched, setFetched] = useState<definitions['things'][]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineData | null>(null)
-    const [queued, setQueued] = useState<definitions['things'][]>([])
-    const [visibleIds, setVisibleIds] = useState<Record<string, boolean>>({})
+
+    const transform = useCallback((fetched) => {
+        return transformForTimeline(timelineThings, fetched, options.limit)
+    }, [transformForTimeline, timelineThings, options.limit])
+
+    useEffect(() => {
+        const {
+            timelineData
+        } = transform(fetched)
+        setTimelineThings(timelineData)
+    }, [fetched])
 
     useEffect(() => {
         const pollThings = async () => {
             const response = await fetch(`/api/things/${type}?limit=${options.limit}`)
             const things = await response.json() as definitions['things'][]
-
-            const visibleCount = Object.keys(visibleIds).length
-            if (!visibleCount) {
-                setVisibleIds(things.reduce((acc, t) => {
-                    if (t.id) {
-                        acc[t.id] = true
-                    }
-                    return acc
-                }, {} as Record<string, boolean>))
-                setTimelineThings(transformForTimeline(things))
-            } else if (visibleCount < options.limit) {
-                setQueued(things.filter(t => t.id && visibleIds[t.id]))
-            } else {
-                setQueued(things.filter(t => t.id && visibleIds[t.id]))
-            }
+            setFetched(things)
         };
 
         (async () => {
@@ -40,14 +36,12 @@ export function useThings(
 
         return () => {
             clearInterval(interval)
-            setVisibleIds({})
-            setQueued([])
+            setFetched([])
             setTimelineThings(null)
         };
     }, [])
 
     return {
-        queued,
         timelineThings
     };
 }

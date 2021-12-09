@@ -3,14 +3,14 @@ import Plx from 'react-plx'
 import { definitions } from "../types/supabase";
 import {LabelTag} from "./LabelTag";
 import useWindowSize, {Size} from "../hooks/useWindowSize";
-import {TimelineData} from "../types/timeline";
+import {TimelineData, TimelineItem } from "../types/timeline";
 
 type ThingProps = {
-    item: definitions['things']
+    item: TimelineItem
 }
 function Thing({ item }: ThingProps) {
     return (
-        <div className="p-1.5 pl-3 pr-3">
+        <div className={`p-1.5 pl-3 pr-3 ${item.visible ? '' : 'hidden'}`}>
             <div className="relative p-0.5">
                 <div className="rounded-lg shadow-lg aspect-w-1 aspect-h-1 bg-gray-400 dark:bg-gray-600"
                      style={{ backgroundImage: `url(${item.image_url})`, backgroundSize: 'cover' }}
@@ -43,10 +43,10 @@ function Thing({ item }: ThingProps) {
 }
 
 type TimelineProps = {
-    data: TimelineData
+    data: TimelineData,
+    maxWidth?: number
 }
-export function Timeline({ data }: TimelineProps) {
-    const maxWidth = 700
+export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
     const size: Size = useWindowSize();
 
     const { aboveFoldCount } = useMemo(() => {

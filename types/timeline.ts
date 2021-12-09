@@ -1,9 +1,11 @@
-import {definitions} from "./supabase";
+import {definitions} from "./supabase"
+
+export type TimelineItem = definitions['things'] & { visible: boolean }
 
 export type TimelineMonth = {
     year: number,
     month: number,
-    items: definitions['things'][]
+    items: TimelineItem[]
 }
 
 export type TimelineYear = {
