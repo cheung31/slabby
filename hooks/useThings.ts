@@ -21,6 +21,9 @@ export function useThings(
         return numQueued
     }, [timelineThings])
 
+    const flushQueued = useCallback(() => {
+    }, [queuedSize])
+
     const transform = useCallback((timelineItems: TimelineItem[]) => {
         return transformForTimeline(timelineItems, options.limit)
     }, [transformForTimeline, options.limit])
@@ -77,8 +80,8 @@ export function useThings(
     }, [])
 
     return {
+        timelineData,
         queuedSize,
-        timelineThings,
-        timelineData
+        flushQueued
     };
 }
