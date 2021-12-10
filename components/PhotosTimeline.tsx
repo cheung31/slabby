@@ -2,7 +2,7 @@ import {Timeline} from "./Timeline";
 import {useThings} from "../hooks/useThings";
 
 const PhotosTimeline = () => {
-    const { timelineThings: data } = useThings('photo');
+    const { timelineData: data } = useThings('photo');
 
     return (
         <>

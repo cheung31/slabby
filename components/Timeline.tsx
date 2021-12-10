@@ -65,9 +65,10 @@ export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
         }
     }, [size])
 
+    let globalIdx = -1
     return (
         <div>
-            {data && data.map((ty) =>
+            {data && data.map((ty, yearIdx) =>
                 <div key={ty.year} className="mx-auto" style={{ maxWidth }}>
                     <h1 className="font-mono p-3 text-center text-sm dark:text-gray-300"
                         style={{ letterSpacing: '.75em '}}
@@ -85,7 +86,7 @@ export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
                                 </LabelTag>
                             </div>
                             {tm.items.map((item, idx) => {
-                                const globalIdx = monthIdx + idx + (1 * monthIdx)
+                                globalIdx++
                                 if (globalIdx === 0) {
                                     return <Thing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
                                 }
