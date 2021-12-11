@@ -21,7 +21,18 @@ export function useThings(
         return numQueued
     }, [timelineThings])
 
-    const flushQueued = useCallback(() => {
+    const dequeue = useCallback(() => {
+        if (!queuedSize) return
+
+        const things = [...timelineThings]
+        things[queuedSize - 1] = {
+            ...things[queuedSize - 1],
+            visible: true,
+            queued: true
+        }
+        setTimelineThings(things)
+        const { timelineData } = transform(things)
+        setTimelineData(timelineData)
     }, [queuedSize])
 
     const transform = useCallback((timelineItems: TimelineItem[]) => {
@@ -29,32 +40,31 @@ export function useThings(
     }, [transformForTimeline, options.limit])
 
     const enqueueFetched = useCallback((fetched: definitions['things'][]): TimelineItem[] => {
-        const visible = timelineThings.filter(i => i.visible)
+        const visible = timelineThings.filter(i => i.visible && !i.queued)
         const visibleLookup = visible.reduce((acc, i) => {
             if (i.id) acc[i.id] = true
             return acc
         }, {} as Record<string, boolean>)
 
         if (!visible.length) {
-            return fetched.map(i => ({ ...i, visible: true }))
+            return fetched.map((i, idx) => {
+                // if (idx === 0) return { ...i, visible: false, queued: true }
+                return { ...i, visible: true, queued: false }
+            })
         }
 
         let enqueued = [...timelineThings]
         for (let i = fetched.length - 1; i >= 0; i--) {
             const id = fetched[i].id
             if (id && visibleLookup[id]) continue
-            enqueued.unshift({ ...fetched[i], visible: false })
+            enqueued.unshift({ ...fetched[i], visible: false, queued: true })
         }
         return enqueued
     }, [timelineThings])
 
     useEffect(() => {
         const timelineItems = enqueueFetched(fetched)
-        const {
-            visibleStartIdx,
-            visibleEndIdx,
-            timelineData
-        } = transform(timelineItems)
+        const { timelineData } = transform(timelineItems)
 
         setTimelineThings(timelineItems)
         setTimelineData(timelineData)
@@ -75,13 +85,14 @@ export function useThings(
         return () => {
             clearInterval(interval)
             setFetched([])
+            setTimelineThings([])
             setTimelineData(null)
         };
-    }, [])
+    }, [type, options.limit])
 
     return {
         timelineData,
         queuedSize,
-        flushQueued
+        dequeue
     };
 }

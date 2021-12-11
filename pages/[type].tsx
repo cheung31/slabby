@@ -4,18 +4,16 @@ import type { NextPage } from 'next'
 import {useRouter} from "next/router"
 import MobileNav from "../components/MobileNav"
 import RandomQuote from "../components/RandomQuote"
-import TunesTimeline from "../components/TunesTimeline"
-import PhotosTimeline from "../components/PhotosTimeline"
+import GenericTimeline from "../components/GenericTimeline"
+import {isThingType} from "../types/things"
 
 const Index: NextPage = () => {
     const router = useRouter()
     const { type } = router.query
 
     let timeline
-    if (type === 'tune') {
-        timeline = <TunesTimeline />
-    } else {
-        timeline = <PhotosTimeline />
+    if (isThingType(type)) {
+        timeline = <GenericTimeline type={type} />
     }
 
     return (

@@ -1,6 +1,10 @@
 import {definitions} from "./supabase"
 
-export type TimelineItem = definitions['things'] & { visible: boolean }
+type QueuedItem = definitions['things'] & { visible: false, queued: true }
+type AppearingItem = definitions['things'] & { visible: true, queued: true }
+type VisibleItem = definitions['things'] & { visible: true, queued: false }
+
+export type TimelineItem = QueuedItem | AppearingItem | VisibleItem
 
 export type TimelineMonth = {
     year: number,

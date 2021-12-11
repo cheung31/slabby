@@ -37,12 +37,8 @@ export default function transformForTimeline(
 
         return acc
     }, {
-        visibleStartIdx: null,
-        visibleEndIdx: null,
         timelineData: [] as TimelineData
     } as {
-        visibleStartIdx: number | null,
-        visibleEndIdx: number | null,
         timelineData: TimelineData
     });
 }

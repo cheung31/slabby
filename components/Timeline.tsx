@@ -1,9 +1,10 @@
-import {useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import Plx from 'react-plx'
 import { definitions } from "../types/supabase";
 import {LabelTag} from "./LabelTag";
 import useWindowSize, {Size} from "../hooks/useWindowSize";
 import {TimelineData, TimelineItem } from "../types/timeline";
+import throttle from "../utils/throttle"
 
 type ThingProps = {
     item: TimelineItem
@@ -44,9 +45,20 @@ function Thing({ item }: ThingProps) {
 
 type TimelineProps = {
     data: TimelineData,
+    queuedSize: number,
+    dequeue: Function,
+    onScrollTop?: Function,
+    onDequeueEnd?: Function,
     maxWidth?: number
 }
-export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
+export function Timeline({
+    data,
+    queuedSize,
+    dequeue,
+    onScrollTop = () => {},
+    onDequeueEnd = () => {},
+    maxWidth = 700
+}: TimelineProps) {
     const size: Size = useWindowSize();
 
     const { aboveFoldCount } = useMemo(() => {
@@ -64,6 +76,30 @@ export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
             aboveFoldCount
         }
     }, [size])
+
+    const handleScroll = throttle(
+        useCallback((e) => {
+            if (scrollY === 0) onScrollTop(data)
+        }, [data]),
+        100
+    )
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll)
+
+       return () => {
+           window.removeEventListener("scroll", handleScroll)
+       }
+    }, [handleScroll])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (queuedSize) dequeue()
+        }, 1000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [queuedSize])
 
     let globalIdx = -1
     return (
@@ -86,7 +122,12 @@ export function Timeline({ data, maxWidth = 700 }: TimelineProps) {
                                 </LabelTag>
                             </div>
                             {tm.items.map((item, idx) => {
-                                globalIdx++
+                                if (item.visible) globalIdx++
+
+                                if (item.visible && item.queued) {
+                                    onDequeueEnd()
+                                }
+
                                 if (globalIdx === 0) {
                                     return <Thing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
                                 }
