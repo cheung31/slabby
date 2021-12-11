@@ -7,9 +7,7 @@ const GenericTimeline = ({ type }: { type: ThingType }) => {
     const { queuedSize, dequeue, timelineData: data } = useThings(type);
 
     const handleScrollTop = useCallback(() => {
-        if (queuedSize) {
-            dequeue()
-        }
+        if (queuedSize) dequeue()
     }, [queuedSize, dequeue])
 
     return (

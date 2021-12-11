@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import Plx from 'react-plx'
 import { definitions } from "../types/supabase";
 import {LabelTag} from "./LabelTag";
@@ -59,6 +59,7 @@ export function Timeline({
     onDequeueEnd = () => {},
     maxWidth = 700
 }: TimelineProps) {
+    const [windowScrollY, setWindowScrollY] = useState<number>(0)
     const size: Size = useWindowSize();
 
     const { aboveFoldCount } = useMemo(() => {
@@ -79,6 +80,7 @@ export function Timeline({
 
     const handleScroll = throttle(
         useCallback((e) => {
+            setWindowScrollY(scrollY)
             if (scrollY === 0) onScrollTop(data)
         }, [data]),
         100
@@ -94,12 +96,12 @@ export function Timeline({
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (queuedSize) dequeue()
+            if (queuedSize && windowScrollY === 0) dequeue()
         }, 1000)
         return () => {
             clearInterval(interval)
         }
-    }, [queuedSize])
+    }, [queuedSize, windowScrollY])
 
     let globalIdx = -1
     return (
