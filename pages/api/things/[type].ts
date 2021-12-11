@@ -31,7 +31,7 @@ async function get(
         return res.status(400).json({ error: 'Missing type' })
     }
 
-    const limit = parseInt(query.limit || DEFAULT_PAGE_SIZE.toString())
+    const limit = Math.min(100, parseInt(query.limit || DEFAULT_PAGE_SIZE.toString()))
     const rangeFrom = parseInt(query.offset || "0")
     const rangeTo = rangeFrom + limit - 1
 
