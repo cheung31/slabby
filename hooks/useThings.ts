@@ -15,8 +15,7 @@ export function useThings(
     const queuedSize = useMemo(() => {
         let numQueued = 0
         for (let i = 0; i < timelineThings.length; i++) {
-            if (timelineThings[i].visible) break
-            numQueued++
+            if (timelineThings[i].queued && !timelineThings[i].visible) numQueued++
         }
         return numQueued
     }, [timelineThings])
