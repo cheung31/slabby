@@ -1,12 +1,16 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {definitions} from "../types/supabase";
 import { ThingType } from "../types/things";
-import {TimelineData, TimelineItem} from "../types/timeline";
+import {isQueuedItem, isVisibleItem, TimelineData, TimelineItem} from "../types/timeline";
 import transformForTimeline from "../utils/transformForTimeline";
 
+export type useThingsOptions = {
+    limit: number,
+    pollIntervalMs: number
+}
 export function useThings(
     type: ThingType,
-    options = { limit: 25, pollIntervalMs: 2 * 60 * 1000 }
+    options: useThingsOptions = { limit: 25, pollIntervalMs: 2 * 60 * 1000 }
 ) {
     const [fetched, setFetched] = useState<definitions['things'][]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineItem[]>([])
@@ -15,8 +19,9 @@ export function useThings(
     const queuedSize = useMemo(() => {
         let numQueued = 0
         for (let i = 0; i < timelineThings.length; i++) {
-            if (timelineThings[i].queued && !timelineThings[i].visible) numQueued++
+            if (isQueuedItem(timelineThings[i])) numQueued++
         }
+        // console.log("######", { numQueued })
         return numQueued
     }, [timelineThings])
 
@@ -32,15 +37,15 @@ export function useThings(
         setTimelineThings(things)
         const { timelineData } = transform(things)
         setTimelineData(timelineData)
-    }, [queuedSize])
+    }, [queuedSize, timelineThings])
 
     const transform = useCallback((timelineItems: TimelineItem[]) => {
         return transformForTimeline(timelineItems, options.limit)
     }, [transformForTimeline, options.limit])
 
     const enqueueFetched = useCallback((fetched: definitions['things'][]): TimelineItem[] => {
-        const visible = timelineThings.filter(i => i.visible && !i.queued)
-        const visibleLookup = visible.reduce((acc, i) => {
+        const visible = timelineThings.filter(i => isVisibleItem(i))
+        const itemsLookup = timelineThings.reduce((acc, i) => {
             if (i.id) acc[i.id] = true
             return acc
         }, {} as Record<string, boolean>)
@@ -55,7 +60,7 @@ export function useThings(
         let enqueued = [...timelineThings]
         for (let i = fetched.length - 1; i >= 0; i--) {
             const id = fetched[i].id
-            if (id && visibleLookup[id]) continue
+            if (id && itemsLookup[id]) continue
             enqueued.unshift({ ...fetched[i], visible: false, queued: true })
         }
         return enqueued
