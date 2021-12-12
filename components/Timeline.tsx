@@ -3,15 +3,18 @@ import Plx from 'react-plx'
 import { definitions } from "../types/supabase";
 import {LabelTag} from "./LabelTag";
 import useWindowSize, {Size} from "../hooks/useWindowSize";
-import {TimelineData, TimelineItem } from "../types/timeline";
+import {isQueuedItem, isAppearingItem, isVisibleItem, TimelineData, TimelineItem } from "../types/timeline";
 import throttle from "../utils/throttle"
 
 type ThingProps = {
-    item: TimelineItem
+    item: TimelineItem,
+    maxWidth: string | number
 }
-function Thing({ item }: ThingProps) {
+function Thing({ item, maxWidth }: ThingProps) {
     return (
-        <div className={`p-1.5 pl-3 pr-3 ${item.visible ? '' : 'hidden'}`}>
+        <div className={`p-1.5 pl-3 pr-3 transform transtion-all ease-out delay-75 duration-1000 ${!isVisibleItem(item) ? 'p-0 opacity-0 scale-0' : 'scale-100'}`}
+             style={{ maxHeight: maxWidth }}
+        >
             <div className="relative p-0.5">
                 <div className="rounded-lg shadow-lg aspect-w-1 aspect-h-1 bg-gray-400 dark:bg-gray-600"
                      style={{ backgroundImage: `url(${item.image_url})`, backgroundSize: 'cover' }}
@@ -49,7 +52,7 @@ type TimelineProps = {
     dequeue: Function,
     onScrollTop?: Function,
     onDequeueEnd?: Function,
-    maxWidth?: number
+    maxWidth?: string | number
 }
 export function Timeline({
     data,
@@ -57,7 +60,7 @@ export function Timeline({
     dequeue,
     onScrollTop = () => {},
     onDequeueEnd = () => {},
-    maxWidth = 700
+    maxWidth = '44rem'
 }: TimelineProps) {
     const [windowScrollY, setWindowScrollY] = useState<number>(0)
     const size: Size = useWindowSize();
@@ -124,42 +127,67 @@ export function Timeline({
                                 </LabelTag>
                             </div>
                             {tm.items.map((item, idx) => {
-                                if (item.visible) globalIdx++
+                                if (isVisibleItem(item) || isAppearingItem(item)) globalIdx++
 
-                                if (item.visible && item.queued) {
-                                    onDequeueEnd()
+                                if (isAppearingItem(item)) {
+                                    onDequeueEnd(item)
                                 }
 
                                 if (globalIdx === 0) {
-                                    return <Thing item={item} key={`${tm.year}-${tm.month}-${idx}`}/>
+                                    return <Plx key={item.id}
+                                                className={`transform transtion-all ease-out duration-1000`}
+                                                style={{ maxHeight: `${isVisibleItem(item) ? maxWidth : '0'}`}}
+                                                parallaxData={[
+                                                    {
+                                                        start: 'self',
+                                                        duration: 0,
+                                                        easing: 'easeOut',
+                                                        properties: [
+                                                            {
+                                                                startValue: 1,
+                                                                endValue: 1,
+                                                                property: 'scale',
+                                                            },
+                                                            {
+                                                                startValue: 1,
+                                                                endValue: 1,
+                                                                property: 'opacity',
+                                                            },
+                                                        ],
+                                                    },
+                                                ]}>
+                                        <Thing item={item} maxWidth={maxWidth} />
+                                    </Plx>
                                 }
+
                                 if (globalIdx < aboveFoldCount) {
-                                    return <Plx key={`${tm.year}-${tm.month}-${idx}`}
-                                         parallaxData={[
-                                             {
-                                                 start: 'self',
-                                                 duration: 500 * (globalIdx / aboveFoldCount),
-                                                 easing: 'easeOut',
-                                                 properties: [
-                                                     {
-                                                         startValue: .95 - (globalIdx * .1),
-                                                         endValue: 1,
-                                                         property: 'scale',
-                                                     },
-                                                     {
-                                                         startValue: .95 - (globalIdx * .1),
-                                                         endValue: 1,
-                                                         property: 'opacity',
-                                                     },
-                                                 ],
-                                             },
-                                         ]}>
-                                        <Thing item={item}/>
+                                    return <Plx key={item.id}
+                                                className={`${isQueuedItem(item) ? 'p-0 max-h-0 opacity-0' : isAppearingItem(item) ? 'opacity-0' : ''}`}
+                                                parallaxData={[
+                                                    {
+                                                        start: 'self',
+                                                        duration: 500 * (globalIdx / aboveFoldCount),
+                                                        easing: 'easeOut',
+                                                        properties: [
+                                                            {
+                                                                startValue: .95 - (globalIdx * .1),
+                                                                endValue: 1,
+                                                                property: 'scale',
+                                                            },
+                                                            {
+                                                                startValue: .95 - (globalIdx * .1),
+                                                                endValue: 1,
+                                                                property: 'opacity',
+                                                            },
+                                                        ],
+                                                    },
+                                                ]}>
+                                        <Thing item={item} maxWidth={maxWidth} />
                                     </Plx>
                                 }
                                 return (
-                                    <Plx key={`${tm.year}-${tm.month}-${idx}`}
-                                        parallaxData={[
+                                    <Plx key={item.id}
+                                         parallaxData={[
                                         {
                                             start: 'self',
                                             duration: 500,
@@ -178,7 +206,7 @@ export function Timeline({
                                             ],
                                         },
                                     ]}>
-                                        <Thing item={item}/>
+                                        <Thing item={item} maxWidth={maxWidth} />
                                     </Plx>
                                 );
                             })}

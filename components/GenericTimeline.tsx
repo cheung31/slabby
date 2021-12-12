@@ -15,7 +15,7 @@ const typeOptions: Record<ThingType, useThingsOptions> = {
 }
 
 const GenericTimeline = ({ type }: { type: ThingType }) => {
-    const { queuedSize, dequeue, timelineData: data } = useThings(type, typeOptions[type]);
+    const { queuedSize, dequeue, onDequeueEnd, timelineData: data } = useThings(type, typeOptions[type]);
 
     const handleScrollTop = useCallback(() => {
         if (queuedSize) dequeue()
@@ -28,6 +28,7 @@ const GenericTimeline = ({ type }: { type: ThingType }) => {
                 data={data}
                 queuedSize={queuedSize}
                 dequeue={dequeue}
+                onDequeueEnd={onDequeueEnd}
                 onScrollTop={handleScrollTop}
               />
             }

@@ -12,9 +12,9 @@ export default function transformForTimeline(
         const thingYear = d.getFullYear()
         const thingMonth = d.getMonth() + 1
 
-        const yearIdx = acc.timelineData.map((y) => y.year).indexOf(thingYear)
+        const yearIdx = acc.map((y) => y.year).indexOf(thingYear)
         if (yearIdx < 0) {
-            acc.timelineData.push({
+            acc.push({
                 year: thingYear,
                 months: [{
                     year: thingYear,
@@ -23,22 +23,18 @@ export default function transformForTimeline(
                 }]
             })
         } else {
-            const monthIdx = acc.timelineData[yearIdx].months.map((m) => m.month).indexOf(thingMonth)
+            const monthIdx = acc[yearIdx].months.map((m) => m.month).indexOf(thingMonth)
             if (monthIdx < 0) {
-                acc.timelineData[yearIdx].months.push({
+                acc[yearIdx].months.push({
                     year: thingYear,
                     month: thingMonth,
                     items: [t]
                 })
             } else {
-                acc.timelineData[yearIdx].months[monthIdx].items.push(t)
+                acc[yearIdx].months[monthIdx].items.push(t)
             }
         }
 
         return acc
-    }, {
-        timelineData: [] as TimelineData
-    } as {
-        timelineData: TimelineData
-    });
+    }, [] as TimelineData);
 }

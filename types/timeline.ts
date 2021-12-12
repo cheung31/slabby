@@ -25,19 +25,19 @@ function isTimelineItem(item: unknown): item is TimelineItem {
         && typeof item.queued === 'boolean'
 }
 
-type QueuedItem = definitions['things'] & { visible: false, queued: true }
+export type QueuedItem = definitions['things'] & { visible: false, queued: true }
 
 export function isQueuedItem(item: unknown): item is QueuedItem {
     return isTimelineItem(item) && !item.visible && item.queued
 }
 
-type AppearingItem = definitions['things'] & { visible: true, queued: true }
+export type AppearingItem = definitions['things'] & { visible: true, queued: true }
 
 export function isAppearingItem(item: unknown): item is AppearingItem {
     return isTimelineItem(item) && item.visible && item.queued
 }
 
-type VisibleItem = definitions['things'] & { visible: true, queued: false }
+export type VisibleItem = definitions['things'] & { visible: true, queued: false }
 
 export function isVisibleItem(item: unknown): item is VisibleItem {
     return isTimelineItem(item) && item.visible && !item.queued
