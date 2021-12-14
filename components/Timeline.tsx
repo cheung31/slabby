@@ -36,7 +36,7 @@ function Thing({ item, maxWidth }: ThingProps) {
                             {item.description &&
                               <div className="text-right">
                                 <BlurOverlay className={`inline-block bg-opacity-60 dark:bg-opacity-40 ${item.title ? "mt-0.5" : ""}`}>
-                                  <p className="inline-block font-mono text-xs text-right uppercase p-1 pl-1.5 pr-1.5">
+                                  <p className="font-mono text-xs text-right uppercase p-1 pl-1.5 pr-1.5">
                                       {item.description}
                                   </p>
                                 </BlurOverlay>
