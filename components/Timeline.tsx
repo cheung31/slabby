@@ -62,6 +62,8 @@ export function Timeline({
     onDequeueEnd = () => {},
     maxWidth = '44rem'
 }: TimelineProps) {
+    const [isFocused, setIsFocused] = useState<boolean>(true)
+    const [pollIntervalId, setPollIntervalId] = useState<number | null>(null)
     const [windowScrollY, setWindowScrollY] = useState<number>(0)
     const size: Size = useWindowSize();
 
@@ -89,6 +91,10 @@ export function Timeline({
         100
     )
 
+    const handleVisibilityChange = useCallback(() => {
+        setIsFocused(!document.hidden)
+    }, [])
+
     useEffect(() => {
         window.addEventListener("scroll", handleScroll)
 
@@ -98,13 +104,30 @@ export function Timeline({
     }, [handleScroll])
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (queuedSize && windowScrollY === 0) dequeue()
-        }, 1000)
+        window.addEventListener("visibilitychange", handleVisibilityChange)
+
         return () => {
-            clearInterval(interval)
+            window.removeEventListener("visibilitychange", handleVisibilityChange)
         }
-    }, [queuedSize, windowScrollY])
+    }, [handleVisibilityChange])
+
+    useEffect(() => {
+        if (isFocused && !pollIntervalId) {
+            const interval = window.setInterval(() => {
+                if (queuedSize && windowScrollY === 0) dequeue()
+            }, 1000)
+            setPollIntervalId(interval)
+        } else if (pollIntervalId && (!isFocused || windowScrollY > 0)) {
+            window.clearInterval(pollIntervalId)
+        }
+
+        return () => {
+            if (pollIntervalId) {
+                window.clearInterval(pollIntervalId)
+                setPollIntervalId(null)
+            }
+        }
+    }, [isFocused, pollIntervalId, queuedSize, windowScrollY])
 
     let globalIdx = -1
     return (
