@@ -12,6 +12,8 @@ export function useThings(
     type: ThingType,
     options: useThingsOptions = { limit: 25, pollIntervalMs: 2 * 60 * 1000 }
 ) {
+    const [isFocused, setIsFocused] = useState<boolean>(true)
+    const [pollIntervalId, setPollIntervalId] = useState<number | null>(null)
     const [fetched, setFetched] = useState<definitions['things'][]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineItem[]>([])
     const [timelineData, setTimelineData] = useState<TimelineData | null>(null)
@@ -79,10 +81,30 @@ export function useThings(
     }, [timelineThings])
 
     useEffect(() => {
+        if (pollIntervalId) {
+            window.clearInterval(pollIntervalId)
+        }
+        setTimelineThings([])
+        setTimelineData([])
+    }, [type])
+
+    useEffect(() => {
         const timelineItems = enqueueFetched(fetched)
         setTimelineThings(timelineItems)
         setTimelineData(transform(timelineItems))
     }, [fetched])
+
+    const handleVisibilityChange = useCallback(() => {
+        setIsFocused(!document.hidden)
+    }, [])
+
+    useEffect(() => {
+        window.addEventListener("visibilitychange", handleVisibilityChange)
+
+        return () => {
+            window.removeEventListener("visibilitychange", handleVisibilityChange)
+        }
+    }, [handleVisibilityChange])
 
     useEffect(() => {
         const pollThings = async () => {
@@ -91,18 +113,24 @@ export function useThings(
             setFetched(things)
         };
 
-        (async () => {
-            await pollThings()
-        })()
-        const interval = setInterval(async () => await pollThings(), options.pollIntervalMs)
+        if (isFocused && !pollIntervalId) {
+            (async () => {
+                await pollThings()
+            })()
+            const interval = window.setInterval(async () => await pollThings(), options.pollIntervalMs)
+            setPollIntervalId(interval)
+        } else if (!isFocused && pollIntervalId) {
+            window.clearInterval(pollIntervalId)
+        }
 
         return () => {
-            clearInterval(interval)
+            if (pollIntervalId) {
+                window.clearInterval(pollIntervalId)
+                setPollIntervalId(null)
+            }
             setFetched([])
-            setTimelineThings([])
-            setTimelineData(null)
         };
-    }, [type, options.limit])
+    }, [isFocused, pollIntervalId, type, options.limit])
 
     return {
         timelineData,
