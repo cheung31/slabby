@@ -29,6 +29,7 @@ async function post(
 
     const recentTracks = await lastFm.user.getRecentTracks({ user })
     const records = recentTracks.recenttracks.track
+        .filter(track => !!track.image)
         .map<definitions['things']>((track) => {
             let timestampz
             if (track.date) {
