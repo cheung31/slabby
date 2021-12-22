@@ -108,7 +108,7 @@ export function useThings(
 
     useEffect(() => {
         const pollThings = async () => {
-            const response = await fetch(`/api/things/${type}?limit=${options.limit}`)
+            const response = await fetch(`/api/things/types/${type}?limit=${options.limit}`)
             const things = await response.json() as definitions['things'][]
             setFetched(things)
         };

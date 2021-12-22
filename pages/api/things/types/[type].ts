@@ -1,19 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from "@supabase/supabase-js";
-import { supabase } from '../../../utils/supabaseClient'
-import { definitions, paths } from "../../../types/supabase";
-import { utcStringToTimestampz } from "../../../utils";
-import { isThingType, ThingType } from "../../../types/things";
-import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../config'
+import { supabase } from '../../../../utils/supabaseClient'
+import { definitions, paths } from "../../../../types/supabase";
+import { utcStringToTimestampz } from "../../../../utils";
+import { isThingType, ThingType } from "../../../../types/things";
+import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../../config'
 
 type Error = {
     error: string
 }
 type Data = definitions['things'][] | null | PostgrestError | Error
-type GetPathQuery = {
-    type: string
-}
 type GetQuery = paths["/things"]["get"]["parameters"]["query"]
 
 async function get(
