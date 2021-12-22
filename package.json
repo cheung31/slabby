@@ -12,6 +12,7 @@
     "swc-fix": "npm i @next/swc-darwin-x64 --no-save"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "@supabase/supabase-js": "^1.28.0",
     "@toplast/lastfm": "^0.1.5",
     "next": "^12.0.9",
