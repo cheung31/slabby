@@ -6,8 +6,6 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook",
         "typegen": "mkdir -p ./types && npx openapi-typescript https://tlccvwtogeqcnekyfyrr.supabase.co/rest/v1/?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMzYzMjQ4OCwiZXhwIjoxOTM5MjA4NDg4fQ.b-IW8GaWBUaz5Yp9gcJc6xX6qQ8MPnCrmTdMqXUeJ7U > ./types/supabase.ts",
         "swc-fix": "npm i @next/swc-darwin-x64 --no-save",
         "prepare": "husky install",
@@ -24,10 +22,6 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
-        "@storybook/addon-actions": "^6.3.12",
-        "@storybook/addon-essentials": "^6.3.12",
-        "@storybook/addon-links": "^6.3.12",
-        "@storybook/react": "^6.3.12",
         "@tailwindcss/aspect-ratio": "^0.4.0",
         "@types/node": "^16.11.12",
         "@types/react": "^17.0.37",
@@ -41,7 +35,6 @@
         "lint-staged": "^12.1.3",
         "postcss": "^8.4.5",
         "prettier": "^2.5.1",
-        "storybook": "^6.3.12",
         "tailwindcss": "^3.0.2",
         "ts-foursquare": "^1.0.12",
         "typescript": "4.5.2"
