@@ -9,7 +9,8 @@
         "typegen": "mkdir -p ./types && npx openapi-typescript https://tlccvwtogeqcnekyfyrr.supabase.co/rest/v1/?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMzYzMjQ4OCwiZXhwIjoxOTM5MjA4NDg4fQ.b-IW8GaWBUaz5Yp9gcJc6xX6qQ8MPnCrmTdMqXUeJ7U > ./types/supabase.ts",
         "swc-fix": "npm i @next/swc-darwin-x64 --no-save",
         "prepare": "husky install",
-        "pre-commit": "next lint"
+        "pre-commit": "next lint",
+        "format": "prettier --write ./components ./hooks ./pages ./types ./utils"
     },
     "dependencies": {
         "@sendgrid/mail": "^7.6.0",
