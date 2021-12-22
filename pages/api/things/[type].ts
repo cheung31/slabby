@@ -5,6 +5,7 @@ import { supabase } from '../../../utils/supabaseClient'
 import { definitions, paths } from "../../../types/supabase";
 import { utcStringToTimestampz } from "../../../utils";
 import { isThingType, ThingType } from "../../../types/things";
+import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../config'
 
 type Error = {
     error: string
@@ -14,12 +15,6 @@ type GetPathQuery = {
     type: string
 }
 type GetQuery = paths["/things"]["get"]["parameters"]["query"]
-
-const DEFAULT_PAGE_SIZE = 10
-const TYPE_PUBLISH_DELAY_MS: Record<ThingType, number> = {
-    'tune': 0,
-    'photo': 7 * 24 * 3600 * 1000
-}
 
 async function get(
     req: NextApiRequest,
