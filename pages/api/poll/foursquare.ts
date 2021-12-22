@@ -1,21 +1,27 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PostgrestError } from "@supabase/supabase-js";
-import { NLists, NPayload, NPhotos } from "ts-foursquare/types";
-import { groupUpserts, utcStringToTimestampz } from "../../../utils";
+import { PostgrestError } from '@supabase/supabase-js'
+import { NLists, NPayload, NPhotos } from 'ts-foursquare/types'
+import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
-import { definitions } from "../../../types/supabase";
-import IPayload = NPayload.IPayload;
-import ITip = NLists.ITip;
+import { definitions } from '../../../types/supabase'
+import IPayload = NPayload.IPayload
+import ITip = NLists.ITip
 
 type Error = {
     error: string
 }
-type Data =  definitions['things'][] | IPayload<any> | null | PostgrestError | PostgrestError[] | Error
+type Data =
+    | definitions['things'][]
+    | IPayload<IPhotosResponse>
+    | null
+    | PostgrestError
+    | PostgrestError[]
+    | Error
 
 type PostQuery = {
-    user_id?: string,
-    limit?: string,
+    user_id?: string
+    limit?: string
     offset?: string
 }
 
@@ -30,15 +36,13 @@ interface IPhotosResponse {
     }
 }
 
-
-async function post(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>
-) {
-    if (!process.env.FOURSQUARE_USER_ID
-        || !process.env.FOURSQUARE_ACCESS_TOKEN
-        || !process.env.FOURSQUARE_CLIENT_ID
-        || !process.env.FOURSQUARE_CLIENT_SECRET) {
+async function post(req: NextApiRequest, res: NextApiResponse<Data>) {
+    if (
+        !process.env.FOURSQUARE_USER_ID ||
+        !process.env.FOURSQUARE_ACCESS_TOKEN ||
+        !process.env.FOURSQUARE_CLIENT_ID ||
+        !process.env.FOURSQUARE_CLIENT_SECRET
+    ) {
         return res.status(500).json({ error: 'Missing Foursquare Credentials' })
     }
 
@@ -48,15 +52,18 @@ async function post(
     let offset = query.offset ? parseInt(query.offset) : 0
     const errors = []
     let processed: definitions['things'][] = []
-    while(hasMorePages) {
+    while (hasMorePages) {
         const user_id = query.user_id || process.env.FOURSQUARE_USER_ID
         let url = `https://api.foursquare.com/v2/users/${user_id}/photos?v=20210101&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&oauth_token=${process.env.FOURSQUARE_ACCESS_TOKEN}`
         url = `${url}&offset=${offset}&limit=${limit}`
 
         const response = await fetch(url)
-        const api_response = await response.json() as IPayload<IPhotosResponse>
+        const api_response =
+            (await response.json()) as IPayload<IPhotosResponse>
         if (!api_response) {
-            return res.status(500).json({ error: 'Foursquare API request failed' })
+            return res
+                .status(500)
+                .json({ error: 'Foursquare API request failed' })
         }
 
         const response_status = api_response.meta?.code || 500
@@ -85,9 +92,10 @@ async function post(
             let description
             if (photo.venue) {
                 const { city, state, country } = photo.venue.location
-                const location = city && state
-                    ? `${city}, ${state}`
-                    : city && country
+                const location =
+                    city && state
+                        ? `${city}, ${state}`
+                        : city && country
                         ? `${city}, ${country}`
                         : city
                 description = `${photo.venue.name} - ${location}`
@@ -97,8 +105,8 @@ async function post(
             const image_url = `${photo.prefix}${size}${photo.suffix}`
 
             return {
-                type: "photo",
-                external_source: "Foursquare",
+                type: 'photo',
+                external_source: 'Foursquare',
                 external_id: photo.id,
                 external_url,
                 title,
@@ -115,7 +123,10 @@ async function post(
 
             const { data, error } = await supabase
                 .from<definitions['things']>('things')
-                .upsert(rs, { onConflict: 'external_source,external_id', ignoreDuplicates: true })
+                .upsert(rs, {
+                    onConflict: 'external_source,external_id',
+                    ignoreDuplicates: true,
+                })
 
             if (error) {
                 errors.push(error)
@@ -133,7 +144,10 @@ async function post(
     }
 
     if (errors.length) {
-        console.warn("***************************************************\n", errors)
+        console.warn(
+            '***************************************************\n',
+            errors
+        )
         return res.status(500).json(errors)
     }
 
