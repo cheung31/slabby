@@ -1,21 +1,26 @@
-import {useCallback} from "react"
-import {Timeline} from "./Timeline"
-import {useThings, useThingsOptions} from "../hooks/useThings"
-import {ThingType} from "../types/things"
+import { useCallback } from 'react'
+import { Timeline } from './Timeline'
+import { useThings, useThingsOptions } from '../hooks/useThings'
+import { ThingType } from '../types/things'
 
 const typeOptions: Record<ThingType, useThingsOptions> = {
-    'tune': {
+    tune: {
         limit: 25,
-        pollIntervalMs: 30 * 1000
+        pollIntervalMs: 30 * 1000,
     },
-    'photo': {
+    photo: {
         limit: 25,
-        pollIntervalMs: 2 * 60 * 1000
-    }
+        pollIntervalMs: 2 * 60 * 1000,
+    },
 }
 
 const GenericTimeline = ({ type }: { type: ThingType }) => {
-    const { queuedSize, dequeue, onDequeueEnd, timelineData: data } = useThings(type, typeOptions[type]);
+    const {
+        queuedSize,
+        dequeue,
+        onDequeueEnd,
+        timelineData: data,
+    } = useThings(type, typeOptions[type])
 
     const handleScrollTop = useCallback(() => {
         if (queuedSize) dequeue()
@@ -23,15 +28,15 @@ const GenericTimeline = ({ type }: { type: ThingType }) => {
 
     return (
         <>
-            {data &&
-              <Timeline
-                data={data}
-                queuedSize={queuedSize}
-                dequeue={dequeue}
-                onDequeueEnd={onDequeueEnd}
-                onScrollTop={handleScrollTop}
-              />
-            }
+            {data && (
+                <Timeline
+                    data={data}
+                    queuedSize={queuedSize}
+                    dequeue={dequeue}
+                    onDequeueEnd={onDequeueEnd}
+                    onScrollTop={handleScrollTop}
+                />
+            )}
         </>
     )
 }

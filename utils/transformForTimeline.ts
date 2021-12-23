@@ -1,10 +1,6 @@
-import {definitions} from "../types/supabase";
-import {TimelineData, TimelineItem} from "../types/timeline";
+import { TimelineData, TimelineItem } from '../types/timeline'
 
-export default function transformForTimeline(
-    things: TimelineItem[],
-    size: number
-) {
+export default function transformForTimeline(things: TimelineItem[]) {
     return things.reduce((acc, t) => {
         if (!t.content_date) return acc
 
@@ -16,19 +12,23 @@ export default function transformForTimeline(
         if (yearIdx < 0) {
             acc.push({
                 year: thingYear,
-                months: [{
-                    year: thingYear,
-                    month: thingMonth,
-                    items: [t]
-                }]
+                months: [
+                    {
+                        year: thingYear,
+                        month: thingMonth,
+                        items: [t],
+                    },
+                ],
             })
         } else {
-            const monthIdx = acc[yearIdx].months.map((m) => m.month).indexOf(thingMonth)
+            const monthIdx = acc[yearIdx].months
+                .map((m) => m.month)
+                .indexOf(thingMonth)
             if (monthIdx < 0) {
                 acc[yearIdx].months.push({
                     year: thingYear,
                     month: thingMonth,
-                    items: [t]
+                    items: [t],
                 })
             } else {
                 acc[yearIdx].months[monthIdx].items.push(t)
@@ -36,5 +36,5 @@ export default function transformForTimeline(
         }
 
         return acc
-    }, [] as TimelineData);
+    }, [] as TimelineData)
 }
