@@ -38,7 +38,6 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    console.log('####', req.method)
     switch (req.method) {
         case 'DELETE':
             return await del(req, res)
