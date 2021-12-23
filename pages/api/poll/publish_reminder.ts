@@ -142,6 +142,7 @@ async function post(
             const dynamicTemplateData = {
                 daysUntilPublish,
                 publishAt,
+                cancelUrl: `https://ryancheung.com/things/${thing.id}/hide`,
                 thingTitle: thing.title,
                 thingDescription: thing.description,
                 thingImageUrl: thing.image_url,
