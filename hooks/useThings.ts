@@ -1,11 +1,18 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
-import {definitions} from "../types/supabase";
-import { ThingType } from "../types/things";
-import {isQueuedItem, isVisibleItem, VisibleItem, AppearingItem, TimelineData, TimelineItem} from "../types/timeline";
-import transformForTimeline from "../utils/transformForTimeline";
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { definitions } from '../types/supabase'
+import { ThingType } from '../types/things'
+import {
+    isQueuedItem,
+    isVisibleItem,
+    VisibleItem,
+    AppearingItem,
+    TimelineData,
+    TimelineItem,
+} from '../types/timeline'
+import transformForTimeline from '../utils/transformForTimeline'
 
 export type useThingsOptions = {
-    limit: number,
+    limit: number
     pollIntervalMs: number
 }
 export function useThings(
@@ -17,6 +24,10 @@ export function useThings(
     const [fetched, setFetched] = useState<definitions['things'][]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineItem[]>([])
     const [timelineData, setTimelineData] = useState<TimelineData | null>(null)
+
+    const transform = useCallback((timelineItems: TimelineItem[]) => {
+        return transformForTimeline(timelineItems)
+    }, [])
 
     const queuedSize = useMemo(() => {
         let numQueued = 0
@@ -34,51 +45,57 @@ export function useThings(
         things[queuedSize - 1] = {
             ...things[queuedSize - 1],
             visible: true,
-            queued: true
+            queued: true,
         }
         setTimelineThings(things)
         setTimelineData(transform(things))
-    }, [queuedSize, timelineThings])
+    }, [queuedSize, timelineThings, transform])
 
-    const onDequeueEnd = useCallback((item: AppearingItem) => {
-        const idx = timelineThings.findIndex(i => i.id === item.id)
-        const visible: VisibleItem = {
-            ...timelineThings[idx],
-            visible: true,
-            queued: false
-        }
-        timelineThings[idx] = visible
-        const updatedItems = [...timelineThings]
-        setTimelineThings(updatedItems)
-        setTimelineData(transform(updatedItems))
-    }, [timelineThings])
+    const onDequeueEnd = useCallback(
+        (item: AppearingItem) => {
+            const idx = timelineThings.findIndex((i) => i.id === item.id)
+            const visible: VisibleItem = {
+                ...timelineThings[idx],
+                visible: true,
+                queued: false,
+            }
+            timelineThings[idx] = visible
+            const updatedItems = [...timelineThings]
+            setTimelineThings(updatedItems)
+            setTimelineData(transform(updatedItems))
+        },
+        [timelineThings, transform]
+    )
 
-    const transform = useCallback((timelineItems: TimelineItem[]) => {
-        return transformForTimeline(timelineItems, options.limit)
-    }, [transformForTimeline, options.limit])
+    const enqueueFetched = useCallback(
+        (fetched: definitions['things'][]): TimelineItem[] => {
+            const visible = timelineThings.filter((i) => isVisibleItem(i))
+            const itemsLookup = timelineThings.reduce((acc, i) => {
+                if (i.id) acc[i.id] = true
+                return acc
+            }, {} as Record<string, boolean>)
 
-    const enqueueFetched = useCallback((fetched: definitions['things'][]): TimelineItem[] => {
-        const visible = timelineThings.filter(i => isVisibleItem(i))
-        const itemsLookup = timelineThings.reduce((acc, i) => {
-            if (i.id) acc[i.id] = true
-            return acc
-        }, {} as Record<string, boolean>)
+            if (!visible.length) {
+                return fetched.map((i) => {
+                    // if (idx === 0) return { ...i, visible: false, queued: true }
+                    return { ...i, visible: true, queued: false }
+                })
+            }
 
-        if (!visible.length) {
-            return fetched.map((i, idx) => {
-                // if (idx === 0) return { ...i, visible: false, queued: true }
-                return { ...i, visible: true, queued: false }
-            })
-        }
-
-        let enqueued = [...timelineThings]
-        for (let i = fetched.length - 1; i >= 0; i--) {
-            const id = fetched[i].id
-            if (id && itemsLookup[id]) continue
-            enqueued.unshift({ ...fetched[i], visible: false, queued: true })
-        }
-        return enqueued
-    }, [timelineThings])
+            const enqueued = [...timelineThings]
+            for (let i = fetched.length - 1; i >= 0; i--) {
+                const id = fetched[i].id
+                if (id && itemsLookup[id]) continue
+                enqueued.unshift({
+                    ...fetched[i],
+                    visible: false,
+                    queued: true,
+                })
+            }
+            return enqueued
+        },
+        [timelineThings]
+    )
 
     useEffect(() => {
         if (pollIntervalId) {
@@ -86,38 +103,47 @@ export function useThings(
         }
         setTimelineThings([])
         setTimelineData([])
-    }, [type])
+    }, [type, pollIntervalId])
 
     useEffect(() => {
         const timelineItems = enqueueFetched(fetched)
         setTimelineThings(timelineItems)
         setTimelineData(transform(timelineItems))
-    }, [fetched])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetched, transform])
 
     const handleVisibilityChange = useCallback(() => {
         setIsFocused(!document.hidden)
     }, [])
 
     useEffect(() => {
-        window.addEventListener("visibilitychange", handleVisibilityChange)
+        window.addEventListener('visibilitychange', handleVisibilityChange)
 
         return () => {
-            window.removeEventListener("visibilitychange", handleVisibilityChange)
+            window.removeEventListener(
+                'visibilitychange',
+                handleVisibilityChange
+            )
         }
     }, [handleVisibilityChange])
 
     useEffect(() => {
         const pollThings = async () => {
-            const response = await fetch(`/api/things/types/${type}?limit=${options.limit}`)
-            const things = await response.json() as definitions['things'][]
+            const response = await fetch(
+                `/api/things/types/${type}?limit=${options.limit}`
+            )
+            const things = (await response.json()) as definitions['things'][]
             setFetched(things)
-        };
+        }
 
         if (isFocused && !pollIntervalId) {
-            (async () => {
+            ;(async () => {
                 await pollThings()
             })()
-            const interval = window.setInterval(async () => await pollThings(), options.pollIntervalMs)
+            const interval = window.setInterval(
+                async () => await pollThings(),
+                options.pollIntervalMs
+            )
             setPollIntervalId(interval)
         } else if (!isFocused && pollIntervalId) {
             window.clearInterval(pollIntervalId)
@@ -129,13 +155,13 @@ export function useThings(
                 setPollIntervalId(null)
             }
             setFetched([])
-        };
-    }, [isFocused, pollIntervalId, type, options.limit])
+        }
+    }, [isFocused, pollIntervalId, type, options.limit, options.pollIntervalMs])
 
     return {
         timelineData,
         queuedSize,
         dequeue,
-        onDequeueEnd
-    };
+        onDequeueEnd,
+    }
 }
