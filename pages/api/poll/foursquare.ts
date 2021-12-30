@@ -8,6 +8,8 @@ import { definitions } from '../../../types/supabase'
 import IPayload = NPayload.IPayload
 import ITip = NLists.ITip
 
+const PHOTO_SIZE = '1024x1024'
+
 type Error = {
     error: string
 }
@@ -101,8 +103,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Data>) {
                 description = `${photo.venue.name} - ${location}`
             }
 
-            const size = '610x610'
-            const image_url = `${photo.prefix}${size}${photo.suffix}`
+            const image_url = `${photo.prefix}${PHOTO_SIZE}${photo.suffix}`
 
             return {
                 type: 'photo',
