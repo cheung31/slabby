@@ -161,11 +161,15 @@ export function Timeline({
             {data &&
                 data.map((ty) => (
                     <div key={ty.year} className="mx-auto" style={{ maxWidth }}>
-                        <h1
-                            className="font-mono p-3 text-center text-sm dark:text-gray-300"
-                            style={{ letterSpacing: '.75em ' }}
-                        >
-                            {ty.year}
+                        <h1 className="font-mono p-3 text-center text-sm dark:text-gray-300">
+                            <span
+                                style={{
+                                    paddingLeft: '.75em',
+                                    letterSpacing: '.75em',
+                                }}
+                            >
+                                {ty.year}
+                            </span>
                         </h1>
                         {ty.months.map((tm) => (
                             <div
