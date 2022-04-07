@@ -8,31 +8,16 @@ import { isThingType } from '../../../types/things'
 import { utcStringToTimestampz } from '../../../utils'
 import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../config'
 import { ResponseError } from '@sendgrid/helpers/classes'
-
-type Error = {
-    error: string
-}
-type EmailError = {
-    statusCode: string | number
-    message: string
-}
-type EmailErrors = {
-    data: definitions['things'][]
-    errors: EmailError[]
-}
-type Data =
-    | definitions['things'][]
-    | null
-    | PostgrestError
-    | PostgrestError[]
-    | Error
+import { Data, EmailError, EmailErrors } from '../../../types/responses'
+import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
 type GetQuery = paths['/things']['get']['parameters']['query']
 
-async function post(
-    req: NextApiRequest,
-    res: NextApiResponse<Data | EmailErrors>
-) {
+type Response =
+    | Data<definitions['things'] | definitions['things'][], PostgrestError>
+    | EmailErrors<definitions['things']>
+
+async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const query = req.query as GetQuery
     const type = query.type
     if (!type || !isThingType(type)) {
@@ -178,19 +163,7 @@ async function post(
     res.status(200).json(sentThings)
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<Data | EmailErrors>
-) {
-    const { data, error } = await supabase
-        .from<definitions['api_keys']>('api_keys')
-        .select('id')
-        .eq('id', req.headers.authorization)
-
-    if (!data?.length || error) {
-        return res.status(403).json({ error: 'Forbidden' })
-    }
-
+async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     switch (req.method) {
         case 'POST':
             return await post(req, res)
@@ -198,3 +171,5 @@ export default async function handler(
             return res.status(400).json({ error: 'Invalid method' })
     }
 }
+
+export default handlerWithAuthorization(handler)

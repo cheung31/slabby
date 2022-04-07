@@ -7,19 +7,15 @@ import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from '../../../types/supabase'
 import IPayload = NPayload.IPayload
 import ITip = NLists.ITip
+import { Data } from '../../../types/responses'
+import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
 const PHOTO_SIZE = '1024x1024'
 
-type Error = {
-    error: string
-}
-type Data =
-    | definitions['things'][]
-    | IPayload<IPhotosResponse>
-    | null
-    | PostgrestError
-    | PostgrestError[]
-    | Error
+type Response = Data<
+    definitions['things'][] | IPayload<IPhotosResponse>,
+    PostgrestError
+>
 
 type PostQuery = {
     user_id?: string
@@ -38,7 +34,7 @@ interface IPhotosResponse {
     }
 }
 
-async function post(req: NextApiRequest, res: NextApiResponse<Data>) {
+async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     if (
         !process.env.FOURSQUARE_USER_ID ||
         !process.env.FOURSQUARE_ACCESS_TOKEN ||
@@ -155,19 +151,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Data>) {
     res.status(200).json(processed)
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>
-) {
-    const { data, error } = await supabase
-        .from<definitions['api_keys']>('api_keys')
-        .select('id')
-        .eq('id', req.headers.authorization)
-
-    if (!data?.length || error) {
-        return res.status(403).json({ error: 'Forbidden' })
-    }
-
+async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     switch (req.method) {
         case 'POST':
             return await post(req, res)
@@ -175,3 +159,5 @@ export default async function handler(
             return res.status(400).json({ error: 'Invalid method' })
     }
 }
+
+export default handlerWithAuthorization(handler)
