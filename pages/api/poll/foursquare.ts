@@ -159,6 +159,15 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    const { data, error } = await supabase
+        .from<definitions['api_keys']>('api_keys')
+        .select('id')
+        .eq('id', req.headers.authorization)
+
+    if (!data?.length || error) {
+        return res.status(403).json({ error: 'Forbidden' })
+    }
+
     switch (req.method) {
         case 'POST':
             return await post(req, res)
