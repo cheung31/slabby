@@ -7,6 +7,7 @@
         "start": "next start",
         "lint": "next lint",
         "swc-fix": "npm i @next/swc-darwin-x64 --no-save",
+        "typegen": "make typegen",
         "prepare": "husky install",
         "pre-commit": "next lint",
         "format": "prettier --write ./components ./hooks ./pages ./types ./utils"
