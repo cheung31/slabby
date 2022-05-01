@@ -144,9 +144,12 @@ export function Timeline({
 
     useEffect(() => {
         if (isFocused && !pollIntervalId) {
-            const interval = window.setInterval(() => {
-                if (queuedSize && windowScrollY === 0) dequeue()
-            }, 1000)
+            const interval = window.setInterval(
+                () => {
+                    if (queuedSize && windowScrollY === 0) dequeue()
+                },
+                queuedSize > 3 ? 0 : 1000
+            )
             setPollIntervalId(interval)
         } else if (pollIntervalId && (!isFocused || windowScrollY > 0)) {
             window.clearInterval(pollIntervalId)
