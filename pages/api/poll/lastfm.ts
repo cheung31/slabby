@@ -7,6 +7,7 @@ import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from '../../../types/supabase'
 import { Data } from '../../../types/responses'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
+import { typeOptions } from '../../../config'
 
 type Response = Data<
     definitions['things'] | definitions['things'][],
@@ -15,6 +16,13 @@ type Response = Data<
 
 type PostQuery = {
     user?: string
+}
+
+type GroupedRecords = {
+    contentDateExcessive: definitions['things'][]
+    temporary: definitions['things'][]
+    subsequentPoll: definitions['things'][]
+    standard: definitions['things'][]
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
@@ -29,6 +37,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const recentTracks = await lastFm.user.getRecentTracks({ user })
     const records = recentTracks.recenttracks.track
         .filter((track) => !!track.image)
+        .filter((track) => !!track.date)
         .map<definitions['things']>((track) => {
             let timestampz
             if (track.date) {
@@ -59,16 +68,74 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             .from<definitions['things']>('things')
             .upsert(rs, {
                 onConflict: 'external_source,external_id',
-                ignoreDuplicates: true,
+                ignoreDuplicates: false,
             })
+            .not('deleted_at', 'is', null)
 
         if (error) {
             errors.push(error)
         }
 
-        if (data) {
-            processed = processed.concat(data)
+        if (!data) continue
+
+        const { contentDateExcessive, temporary, standard } = data.reduce(
+            (acc, r) => {
+                if (!r.created_at || !r.updated_at || r.deleted_at) return acc
+
+                const now = new Date()
+                const createdAt = new Date(r.created_at)
+                if (
+                    !r.content_date &&
+                    r.external_id?.endsWith('::undefined') &&
+                    now.valueOf() - createdAt.valueOf() >
+                        typeOptions.tune.pollIntervalMs
+                ) {
+                    acc.temporary.push(r)
+                }
+
+                if (!r.content_date) return acc
+
+                const contentDate = new Date(r.content_date)
+                const updatedAt = new Date(r.updated_at)
+                if (
+                    createdAt.valueOf() - contentDate.valueOf() >
+                    typeOptions.tune.pollIntervalMs * 7.5
+                ) {
+                    acc.contentDateExcessive.push(r)
+                } else if (createdAt < updatedAt) {
+                    acc.subsequentPoll.push(r)
+                } else {
+                    acc.standard.push(r)
+                }
+                return acc
+            },
+            {
+                contentDateExcessive: [],
+                temporary: [],
+                subsequentPoll: [],
+                standard: [],
+            } as GroupedRecords
+        )
+
+        if (contentDateExcessive.length || temporary.length) {
+            const { error: hideError } = await supabase
+                .from<definitions['things']>('things')
+                .update({
+                    deleted_at: `${utcStringToTimestampz(
+                        (Date.now() / 1000).toString()
+                    )}`,
+                })
+                .in(
+                    'id',
+                    contentDateExcessive.concat(temporary).map((r) => r.id)
+                )
+
+            if (hideError) {
+                errors.push(hideError)
+            }
         }
+
+        processed = processed.concat(standard)
     }
 
     if (errors.length) {

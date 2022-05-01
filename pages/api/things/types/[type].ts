@@ -36,6 +36,7 @@ async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
         .select(query.select)
         .eq('type', type)
         .is('deleted_at', null)
+        .not('image_url', 'is', null)
         .lte('content_date', contentDateOffset)
         .order('content_date', { ascending: false })
         .limit(limit)
