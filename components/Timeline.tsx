@@ -106,11 +106,16 @@ export function Timeline({
         }
     }, [size])
 
+    const handleScrollTop = useCallback(() => {
+        if (queuedSize) dequeue()
+        if (onScrollTop) onScrollTop()
+    }, [queuedSize, dequeue, onScrollTop])
+
     const handleScroll = throttle(
         useCallback(() => {
             setWindowScrollY(scrollY)
-            if (scrollY === 0) onScrollTop()
-        }, [onScrollTop]),
+            if (scrollY === 0) handleScrollTop()
+        }, [handleScrollTop]),
         100
     )
 

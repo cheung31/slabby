@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Timeline } from './Timeline'
 import { useThings } from '../hooks/useThings'
 import { ThingType } from '../types/things'
@@ -12,10 +11,6 @@ const GenericTimeline = ({ type }: { type: ThingType }) => {
         timelineData: data,
     } = useThings(type, typeOptions[type])
 
-    const handleScrollTop = useCallback(() => {
-        if (queuedSize) dequeue()
-    }, [queuedSize, dequeue])
-
     return (
         <>
             {data && (
@@ -24,7 +19,6 @@ const GenericTimeline = ({ type }: { type: ThingType }) => {
                     queuedSize={queuedSize}
                     dequeue={dequeue}
                     onDequeueEnd={onDequeueEnd}
-                    onScrollTop={handleScrollTop}
                 />
             )}
         </>
