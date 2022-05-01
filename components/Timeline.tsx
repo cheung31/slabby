@@ -77,6 +77,7 @@ type TimelineProps = {
     dequeue: () => void
     onScrollTop?: () => void
     onDequeueEnd?: (item: AppearingItem) => void
+    animateThresholdSize?: number
     maxWidth?: string | number
 }
 export function Timeline({
@@ -85,6 +86,7 @@ export function Timeline({
     dequeue,
     onScrollTop = () => {},
     onDequeueEnd = () => {},
+    animateThresholdSize = 5,
     maxWidth = '44rem',
 }: TimelineProps) {
     const [isFocused, setIsFocused] = useState<boolean>(true)
@@ -123,6 +125,19 @@ export function Timeline({
         setIsFocused(!document.hidden)
     }, [])
 
+    const nonLinearIntervals = useMemo(() => {
+        const nonLinearIntervals = []
+        for (let y = 0; y < animateThresholdSize; y++) {
+            nonLinearIntervals.push(65 * Math.pow(2, y))
+        }
+        return nonLinearIntervals
+    }, [animateThresholdSize])
+
+    const queuedSizeInterval = useMemo(() => {
+        if (queuedSize > animateThresholdSize) return 0
+        return nonLinearIntervals[animateThresholdSize - queuedSize]
+    }, [animateThresholdSize, queuedSize, nonLinearIntervals])
+
     useEffect(() => {
         window.addEventListener('scroll', handleScroll)
 
@@ -144,12 +159,9 @@ export function Timeline({
 
     useEffect(() => {
         if (isFocused && !pollIntervalId) {
-            const interval = window.setInterval(
-                () => {
-                    if (queuedSize && windowScrollY === 0) dequeue()
-                },
-                queuedSize > 3 ? 0 : 1000
-            )
+            const interval = window.setInterval(() => {
+                if (queuedSize && windowScrollY === 0) dequeue()
+            }, queuedSizeInterval)
             setPollIntervalId(interval)
         } else if (pollIntervalId && (!isFocused || windowScrollY > 0)) {
             window.clearInterval(pollIntervalId)
@@ -161,7 +173,14 @@ export function Timeline({
                 setPollIntervalId(null)
             }
         }
-    }, [isFocused, pollIntervalId, queuedSize, dequeue, windowScrollY])
+    }, [
+        isFocused,
+        pollIntervalId,
+        queuedSize,
+        queuedSizeInterval,
+        dequeue,
+        windowScrollY,
+    ])
 
     let globalIdx = -1
     return (
