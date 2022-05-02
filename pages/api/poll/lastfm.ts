@@ -19,8 +19,6 @@ type PostQuery = {
 }
 
 type GroupedRecords = {
-    contentDateExcessive: definitions['things'][]
-    temporary: definitions['things'][]
     subsequentPoll: definitions['things'][]
     standard: definitions['things'][]
 }
@@ -56,6 +54,18 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                 content_date: timestampz, // "2021-11-21T07:13:48.000Z"
             }
         })
+        .filter((r) => {
+            // content date excessive
+            if (!r.content_date) return false
+
+            const now = new Date()
+            const contentDate = new Date(r.content_date)
+
+            return (
+                now.valueOf() - contentDate.valueOf() <=
+                typeOptions.tune.pollIntervalMs * 7.5
+            )
+        })
 
     const groupedRecords = groupUpserts(records)
     const errors = []
@@ -78,31 +88,15 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
 
         if (!data) continue
 
-        const { contentDateExcessive, temporary, standard } = data.reduce(
+        const { standard } = data.reduce(
             (acc, r) => {
                 if (!r.created_at || !r.updated_at || r.deleted_at) return acc
 
-                const now = new Date()
-                const createdAt = new Date(r.created_at)
-                if (
-                    !r.content_date &&
-                    r.external_id?.endsWith('::undefined') &&
-                    now.valueOf() - createdAt.valueOf() >
-                        typeOptions.tune.pollIntervalMs
-                ) {
-                    acc.temporary.push(r)
-                }
-
                 if (!r.content_date) return acc
 
-                const contentDate = new Date(r.content_date)
+                const createdAt = new Date(r.created_at)
                 const updatedAt = new Date(r.updated_at)
-                if (
-                    createdAt.valueOf() - contentDate.valueOf() >
-                    typeOptions.tune.pollIntervalMs * 7.5
-                ) {
-                    acc.contentDateExcessive.push(r)
-                } else if (createdAt < updatedAt) {
+                if (createdAt < updatedAt) {
                     acc.subsequentPoll.push(r)
                 } else {
                     acc.standard.push(r)
@@ -110,30 +104,10 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                 return acc
             },
             {
-                contentDateExcessive: [],
-                temporary: [],
                 subsequentPoll: [],
                 standard: [],
             } as GroupedRecords
         )
-
-        if (contentDateExcessive.length || temporary.length) {
-            const { error: hideError } = await supabase
-                .from<definitions['things']>('things')
-                .update({
-                    deleted_at: `${utcStringToTimestampz(
-                        (Date.now() / 1000).toString()
-                    )}`,
-                })
-                .in(
-                    'id',
-                    contentDateExcessive.concat(temporary).map((r) => r.id)
-                )
-
-            if (hideError) {
-                errors.push(hideError)
-            }
-        }
 
         processed = processed.concat(standard)
     }
