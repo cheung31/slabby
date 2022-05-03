@@ -1,5 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios'
+import puppeteer from 'puppeteer'
 import { PostgrestError } from '@supabase/supabase-js'
 import { Client as Spotify, createRecentlyPlayed } from 'spotify-api.js'
 import { groupUpserts } from '../../../utils'
@@ -18,6 +20,8 @@ type GroupedRecords = {
     standard: definitions['things'][]
 }
 
+// https://accounts.spotify.com/authorize?client_id=bd5ea46b11314ab088ae2bd23a337f8f&redirect_uri=http://localhost:3000/api/oauth/spotify_redirect&scope=user-read-recently-played&response_type=token
+
 async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     if (
         !process.env.SPOTIFY_ACCESS_TOKEN ||
@@ -26,6 +30,36 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     ) {
         return res.status(500).json({ error: 'Missing Spotify API Key' })
     }
+
+    const response = await axios.get(
+        `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=http://localhost:3000/api/oauth/spotify_redirect&scope=user-read-recently-played&response_type=token`
+    )
+    const redirectUrl = response.request.res.responseUrl
+    // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n', {
+    //     redirectUrl,
+    // })
+
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+
+    const redirects: string[] = []
+    const cdp = await page.target().createCDPSession()
+    await cdp.send('Network.enable')
+    await cdp.on('Network.requestWillBeSent', (e) => {
+        if (e.type !== 'Document') {
+            return
+        }
+        redirects.push(e.documentURL)
+    })
+
+    await page.goto(redirectUrl)
+    await page.waitForNavigation()
+
+    console.log(
+        '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! final\n',
+        redirects
+    )
+    await browser.close()
 
     const client = new Spotify({
         token: process.env.SPOTIFY_ACCESS_TOKEN,
