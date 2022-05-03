@@ -779,6 +779,13 @@ axios@^0.21.1:
   dependencies:
     follow-redirects "^1.14.0"
 
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
+
 axios@^0.26.0:
   version "0.26.1"
   resolved "https://registry.npmjs.org/axios/-/axios-0.26.1.tgz"
@@ -1567,7 +1574,7 @@ flatted@^3.1.0:
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.2.5.tgz"
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
 
-follow-redirects@^1.14.0, follow-redirects@^1.14.8:
+follow-redirects@^1.14.0, follow-redirects@^1.14.4, follow-redirects@^1.14.8:
   version "1.14.9"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
   integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
@@ -2739,6 +2746,19 @@ source-map@^0.5.0:
   version "0.5.7"
   resolved "https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
+
+spotify-api.js@^9.0.3:
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/spotify-api.js/-/spotify-api.js-9.0.3.tgz#a11eb646b8935613c215463c0e25f69319f2d723"
+  integrity sha512-+fYOjzDsKNJyfk02Yefr/m6ujYmeyawpfSAf7nrtRhPVifkSw/fclqpIbkUUINNhgRz5C1MlP0Q+hj+GqcZFtw==
+  dependencies:
+    axios "^0.24.0"
+    spotify-types "^1.0.0"
+
+spotify-types@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/spotify-types/-/spotify-types-1.0.7.tgz#59c2e16da2ae18b8adb97e07a9e378d8567f4464"
+  integrity sha512-X2n0MYNUpgakGDU7h/vzTvqVJh2f8kAWE9SG5TkJtf3lJcorndK24/8/6+D7Uww8tqUD1VPHg5Lqv4usdVJUvg==
 
 string-argv@^0.3.1:
   version "0.3.1"
