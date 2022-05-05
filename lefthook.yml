@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    tsc:
+      tags: typescript types
+      glob: "*.{ts,tsx}"
+      run: yarn tsc --noEmit
+    eslint:
+      tags: javascript typescript lint
+      glob: "*.{js,ts,tsx}"
+      run: yarn eslint --fix {staged_files}
+    prettier:
+      tags: javascript typescript style
+      glob: "*.{js,ts,tsx,md,json}"
+      run: yarn prettier --write {staged_files}
