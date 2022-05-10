@@ -1,18 +1,28 @@
 import Plx from 'react-plx'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import MobileNav from '../components/MobileNav'
 import RandomQuote from '../components/RandomQuote'
 import GenericTimeline from '../components/GenericTimeline'
-import { isThingType } from '../types/things'
+import { isThingType, ThingType } from '../types/things'
+import { TimelineItem, VisibleItem } from '../types/timeline'
+import { supabase } from '../utils/supabaseClient'
+import { definitions } from '../types/supabase'
+import { utcStringToTimestampz } from '../utils'
+import { TYPE_PUBLISH_DELAY_MS } from '../config'
 
-const Index: NextPage = () => {
+type IndexProps = {
+    type?: ThingType
+    timelineItems?: TimelineItem[]
+}
+const Index: NextPage<IndexProps> = ({ type: t, timelineItems }) => {
     const router = useRouter()
-    const { type } = router.query
+    const { type: queryType } = router.query
+    const type = t || queryType
 
     let timeline
     if (isThingType(type)) {
-        timeline = <GenericTimeline type={type} />
+        timeline = <GenericTimeline type={type} initialItems={timelineItems} />
     }
 
     return (
@@ -94,3 +104,44 @@ const Index: NextPage = () => {
 }
 
 export default Index
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getServerSideProps: GetServerSideProps<{
+    type?: ThingType
+    timelineItems?: TimelineItem[]
+}> = async ({ params }) => {
+    const props = {}
+    const type = params?.type
+    if (!type || !isThingType(type)) return { props }
+
+    const limit = 25
+    const rangeFrom = 0
+    const rangeTo = rangeFrom + limit - 1
+    const contentDateOffset = `${utcStringToTimestampz(
+        ((Date.now() - TYPE_PUBLISH_DELAY_MS[type]) / 1000).toString()
+    )}`
+    const { data: things, error } = await supabase
+        .from<definitions['things']>('things')
+        .select()
+        .eq('type', type)
+        .is('deleted_at', null)
+        .not('image_url', 'is', null)
+        .lte('content_date', contentDateOffset)
+        .order('content_date', { ascending: false })
+        .limit(limit)
+        .range(rangeFrom, rangeTo)
+
+    if (error) return { props }
+
+    const visibleItems: VisibleItem[] = things.map((t) => ({
+        ...t,
+        visible: true,
+        queued: false,
+    }))
+    return {
+        props: {
+            type,
+            timelineItems: visibleItems,
+        },
+    }
+}

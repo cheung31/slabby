@@ -2,20 +2,26 @@ import { Timeline } from './Timeline'
 import { useThings } from '../hooks/useThings'
 import { ThingType } from '../types/things'
 import { typeOptions } from '../config'
+import { TimelineItem } from '../types/timeline'
 
-const GenericTimeline = ({ type }: { type: ThingType }) => {
-    const {
-        queuedSize,
-        dequeue,
-        onDequeueEnd,
-        timelineData: data,
-    } = useThings(type, typeOptions[type])
+type GenericTimelineProps = {
+    type: ThingType
+    initialItems?: TimelineItem[]
+}
+const GenericTimeline = ({ type, initialItems }: GenericTimelineProps) => {
+    const { queuedSize, dequeue, onDequeueEnd, timelineData } = useThings(
+        type,
+        {
+            ...typeOptions[type],
+            initialItems,
+        }
+    )
 
     return (
         <>
-            {data && (
+            {timelineData && (
                 <Timeline
-                    data={data}
+                    data={timelineData}
                     queuedSize={queuedSize}
                     dequeue={dequeue}
                     onDequeueEnd={onDequeueEnd}

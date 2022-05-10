@@ -14,15 +14,21 @@ import transformForTimeline from '../utils/transformForTimeline'
 export type useThingsOptions = {
     limit: number
     pollIntervalMs: number
+    initialItems?: TimelineItem[]
 }
 export function useThings(
     type: ThingType,
-    options: useThingsOptions = { limit: 25, pollIntervalMs: 2 * 60 * 1000 }
+    options: useThingsOptions = {
+        limit: 25,
+        pollIntervalMs: 2 * 60 * 1000,
+    }
 ) {
     const [isFocused, setIsFocused] = useState<boolean>(true)
     const [pollIntervalId, setPollIntervalId] = useState<number | null>(null)
     const [fetched, setFetched] = useState<definitions['things'][]>([])
-    const [timelineThings, setTimelineThings] = useState<TimelineItem[]>([])
+    const [timelineThings, setTimelineThings] = useState<TimelineItem[]>(
+        options.initialItems || []
+    )
     const [timelineData, setTimelineData] = useState<TimelineData | null>(null)
 
     const transform = useCallback((timelineItems: TimelineItem[]) => {
