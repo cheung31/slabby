@@ -143,6 +143,7 @@ export const getServerSideProps: GetServerSideProps<{
         visible: true,
         queued: false,
     }))
+
     return {
         props: {
             type,
