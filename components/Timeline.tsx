@@ -125,19 +125,6 @@ export function Timeline({
         setIsFocused(!document.hidden)
     }, [])
 
-    const nonLinearIntervals = useMemo(() => {
-        const nonLinearIntervals = []
-        for (let y = 0; y < animateThresholdSize; y++) {
-            nonLinearIntervals.push(65 * Math.pow(2, y))
-        }
-        return nonLinearIntervals
-    }, [animateThresholdSize])
-
-    const queuedSizeInterval = useMemo(() => {
-        if (queuedSize > animateThresholdSize) return 0
-        return nonLinearIntervals[animateThresholdSize - queuedSize]
-    }, [animateThresholdSize, queuedSize, nonLinearIntervals])
-
     useEffect(() => {
         window.addEventListener('scroll', handleScroll)
 
@@ -157,19 +144,34 @@ export function Timeline({
         }
     }, [handleVisibilityChange])
 
+    const nonLinearIntervals = useMemo(() => {
+        const nonLinearIntervals = []
+        for (let y = 0; y < animateThresholdSize; y++) {
+            nonLinearIntervals.push(65 * Math.pow(2, y))
+        }
+        return nonLinearIntervals
+    }, [animateThresholdSize])
+
+    const queuedSizeInterval = useMemo(() => {
+        if (queuedSize === 0) return 1000
+        if (queuedSize > animateThresholdSize) return 0
+        return nonLinearIntervals[animateThresholdSize - queuedSize]
+    }, [animateThresholdSize, queuedSize, nonLinearIntervals])
+
     useEffect(() => {
-        if (isFocused && !pollIntervalId) {
-            const interval = window.setInterval(() => {
-                if (queuedSize && windowScrollY === 0) dequeue()
-            }, queuedSizeInterval)
+        if (
+            pollIntervalId &&
+            (!isFocused || windowScrollY > 0 || !queuedSize)
+        ) {
+            window.clearTimeout(pollIntervalId)
+        } else if (!pollIntervalId && windowScrollY === 0 && queuedSize) {
+            const interval = window.setTimeout(dequeue, queuedSizeInterval)
             setPollIntervalId(interval)
-        } else if (pollIntervalId && (!isFocused || windowScrollY > 0)) {
-            window.clearInterval(pollIntervalId)
         }
 
         return () => {
             if (pollIntervalId) {
-                window.clearInterval(pollIntervalId)
+                window.clearTimeout(pollIntervalId)
                 setPollIntervalId(null)
             }
         }
