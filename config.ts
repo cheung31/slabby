@@ -1,5 +1,11 @@
 import { ThingType } from './types/things'
-import { useThingsOptions } from './hooks/useThings'
+
+type useThingsOptions = {
+    limit: number
+    pollIntervalMs: number
+}
+
+export const DEBUG = false
 
 export const DEFAULT_PAGE_SIZE = 10
 export const TYPE_PUBLISH_DELAY_MS: Record<ThingType, number> = {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { definitions } from '../types/supabase'
 import { ThingType } from '../types/things'
 import {
@@ -10,39 +10,66 @@ import {
     TimelineItem,
 } from '../types/timeline'
 import transformForTimeline from '../utils/transformForTimeline'
+import throttle from '../utils/throttle'
 
-export type useThingsOptions = {
-    limit: number
-    pollIntervalMs: number
-    initialItems?: TimelineItem[]
-}
+/*
+# useThings
+
+- At top of page
+  - window focused
+    - keep polling data
+    - dequeue if queue size
+  - window blurred (no-op)
+    - keep polling data
+    - dequeue if queue size
+  - tab visible
+    - keep polling data
+    - dequeue if queue size
+  - tab hidden
+    - stop polling data
+    - no dequeue
+ */
+
 export function useThings(
     type: ThingType,
-    options: useThingsOptions = {
-        limit: 25,
-        pollIntervalMs: 2 * 60 * 1000,
-    }
+    initialItems: TimelineItem[] = [],
+    observeVisibilityChange: boolean,
+    observeFocusChange: boolean,
+    limit = 25,
+    pollIntervalMs = 2 * 60 * 1000,
+    debug = false
 ) {
-    const [isFocused, setIsFocused] = useState<boolean>(true)
-    const [pollIntervalId, setPollIntervalId] = useState<number | null>(null)
+    const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
+    const [windowScrollY, setWindowScrollY] = useState<number | null>(null)
+    const pollIntervalRef = useRef<number | null>(null)
     const [fetched, setFetched] = useState<definitions['things'][]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineItem[]>(
-        options.initialItems || []
+        initialItems || []
     )
     const [timelineData, setTimelineData] = useState<TimelineData | null>(null)
+
+    const isAtTopScreen = useMemo(() => windowScrollY === 0, [windowScrollY])
+    const isFocused = useMemo(
+        () => isPageFocused && isAtTopScreen,
+        [isPageFocused, isAtTopScreen]
+    )
+
+    const setPollIntervalId = useCallback((intervalId: number) => {
+        pollIntervalRef.current = intervalId
+    }, [])
 
     const transform = useCallback((timelineItems: TimelineItem[]) => {
         return transformForTimeline(timelineItems)
     }, [])
 
     const queuedSize = useMemo(() => {
-        let numQueued = 0
-        for (let i = 0; i < timelineThings.length; i++) {
-            if (isQueuedItem(timelineThings[i])) numQueued++
-        }
-        // console.log("######", { numQueued })
+        const numQueued = timelineThings.reduce((acc, t) => {
+            if (isQueuedItem(t)) acc += 1
+            return acc
+        }, 0)
+        if (debug && numQueued > 0) console.log('######', { numQueued })
         return numQueued
-    }, [timelineThings])
+    }, [timelineThings, debug])
 
     const dequeue = useCallback(() => {
         if (!queuedSize) return
@@ -103,24 +130,44 @@ export function useThings(
         [timelineThings]
     )
 
-    useEffect(() => {
-        if (pollIntervalId) {
-            window.clearInterval(pollIntervalId)
-        }
-        setTimelineThings([])
-        setTimelineData([])
-    }, [type, pollIntervalId])
+    const handleScrollTop = useCallback(() => {
+        if (queuedSize) dequeue()
+    }, [queuedSize, dequeue])
+
+    const handleScroll = throttle(
+        useCallback(() => {
+            setWindowScrollY(scrollY)
+            if (scrollY === 0) handleScrollTop()
+        }, [handleScrollTop]),
+        100
+    )
 
     useEffect(() => {
-        const timelineItems = enqueueFetched(fetched)
-        setTimelineThings(timelineItems)
-        setTimelineData(transform(timelineItems))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetched, transform])
+        window.addEventListener('scroll', handleScroll)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [handleScroll])
 
     const handleVisibilityChange = useCallback(() => {
-        setIsFocused(!document.hidden)
-    }, [])
+        if (debug)
+            console.log('####', {
+                observeVisibilityChange,
+            })
+        if (!observeVisibilityChange) return
+        setIsPageFocused(!document.hidden)
+    }, [observeVisibilityChange, debug])
+
+    const handleFocus = useCallback(() => {
+        if (debug)
+            console.log('####', {
+                observeFocusChange,
+                event: 'focus',
+            })
+        if (!observeFocusChange) return
+        setIsPageFocused(true)
+    }, [observeFocusChange, debug])
 
     useEffect(() => {
         window.addEventListener('visibilitychange', handleVisibilityChange)
@@ -134,37 +181,55 @@ export function useThings(
     }, [handleVisibilityChange])
 
     useEffect(() => {
-        const pollThings = async () => {
-            const response = await fetch(
-                `/api/things/types/${type}?limit=${options.limit}`
-            )
-            const things = (await response.json()) as definitions['things'][]
-            setFetched(things)
-        }
-
-        if (isFocused && !pollIntervalId) {
-            ;(async () => {
-                await pollThings()
-            })()
-            const interval = window.setInterval(
-                async () => await pollThings(),
-                options.pollIntervalMs
-            )
-            setPollIntervalId(interval)
-        } else if (!isFocused && pollIntervalId) {
-            window.clearInterval(pollIntervalId)
-        }
+        window.addEventListener('focus', handleFocus)
 
         return () => {
-            if (pollIntervalId) {
-                window.clearInterval(pollIntervalId)
-                setPollIntervalId(null)
-            }
-            setFetched([])
+            window.removeEventListener('focus', handleFocus)
         }
-    }, [isFocused, pollIntervalId, type, options.limit, options.pollIntervalMs])
+    }, [handleFocus])
+
+    const fetchThings = useCallback(async () => {
+        const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
+        const things = (await response.json()) as definitions['things'][]
+        setFetched(things)
+    }, [type, limit])
+
+    useEffect(() => {
+        if (isFocused) {
+            ;(async () => {
+                await fetchThings()
+            })()
+            const interval = window.setInterval(async () => {
+                await fetchThings()
+            }, pollIntervalMs)
+            setPollIntervalId(interval)
+        } else if (!isFocused && pollIntervalRef.current) {
+            window.clearInterval(pollIntervalRef.current)
+        }
+    }, [isFocused, fetchThings, pollIntervalMs, setPollIntervalId])
+
+    useEffect(() => {
+        const timelineItems = enqueueFetched(fetched)
+        setTimelineThings(timelineItems)
+        setTimelineData(transform(timelineItems))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetched, transform])
+
+    useEffect(() => {
+        if (pollIntervalRef.current) {
+            window.clearInterval(pollIntervalRef.current)
+        }
+        setFetched([])
+        setTimelineThings([])
+        setTimelineData([])
+    }, [type])
+
+    useEffect(() => {
+        setWindowScrollY(window.scrollY)
+    }, [])
 
     return {
+        isFocused,
         timelineData,
         queuedSize,
         dequeue,

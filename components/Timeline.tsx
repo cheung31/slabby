@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Plx from 'react-plx'
 import { LabelTag } from './LabelTag'
 import BlurOverlay from './BlurOverlay'
@@ -11,7 +11,6 @@ import {
     TimelineItem,
     AppearingItem,
 } from '../types/timeline'
-import throttle from '../utils/throttle'
 
 type ThingProps = {
     item: TimelineItem
@@ -20,7 +19,7 @@ type ThingProps = {
 function Thing({ item, maxWidth }: ThingProps) {
     return (
         <div
-            className={`p-1.5 pl-3 pr-3 transform transtion-all ease-out delay-75 duration-1000 ${
+            className={`p-1.5 pl-3 pr-3 transform transition-all ease-out delay-75 duration-1000 ${
                 !isVisibleItem(item) ? 'p-0 opacity-0 scale-0' : 'scale-100'
             }`}
             style={{ maxHeight: maxWidth }}
@@ -75,8 +74,8 @@ type TimelineProps = {
     data: TimelineData
     queuedSize: number
     dequeue: () => void
-    onScrollTop?: () => void
     onDequeueEnd?: (item: AppearingItem) => void
+    isFocused: boolean
     animateThresholdSize?: number
     maxWidth?: string | number
 }
@@ -84,14 +83,14 @@ export function Timeline({
     data,
     queuedSize,
     dequeue,
-    onScrollTop = () => {},
     onDequeueEnd = () => {},
+    isFocused,
     animateThresholdSize = 5,
     maxWidth = '44rem',
 }: TimelineProps) {
-    const [isFocused, setIsFocused] = useState<boolean>(true)
-    const [pollIntervalId, setPollIntervalId] = useState<number | null>(null)
-    const [windowScrollY, setWindowScrollY] = useState<number>(0)
+    const [dequeueTimeoutId, setDequeueTimeoutId] = useState<number | null>(
+        null
+    )
     const size: Size = useWindowSize()
 
     const { aboveFoldCount } = useMemo(() => {
@@ -108,42 +107,6 @@ export function Timeline({
         }
     }, [size])
 
-    const handleScrollTop = useCallback(() => {
-        if (queuedSize) dequeue()
-        if (onScrollTop) onScrollTop()
-    }, [queuedSize, dequeue, onScrollTop])
-
-    const handleScroll = throttle(
-        useCallback(() => {
-            setWindowScrollY(scrollY)
-            if (scrollY === 0) handleScrollTop()
-        }, [handleScrollTop]),
-        100
-    )
-
-    const handleVisibilityChange = useCallback(() => {
-        setIsFocused(!document.hidden)
-    }, [])
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll)
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [handleScroll])
-
-    useEffect(() => {
-        window.addEventListener('visibilitychange', handleVisibilityChange)
-
-        return () => {
-            window.removeEventListener(
-                'visibilitychange',
-                handleVisibilityChange
-            )
-        }
-    }, [handleVisibilityChange])
-
     const nonLinearIntervals = useMemo(() => {
         const nonLinearIntervals = []
         for (let y = 0; y < animateThresholdSize; y++) {
@@ -159,30 +122,20 @@ export function Timeline({
     }, [animateThresholdSize, queuedSize, nonLinearIntervals])
 
     useEffect(() => {
-        if (
-            pollIntervalId &&
-            (!isFocused || windowScrollY > 0 || !queuedSize)
-        ) {
-            window.clearTimeout(pollIntervalId)
-        } else if (!pollIntervalId && windowScrollY === 0 && queuedSize) {
-            const interval = window.setTimeout(dequeue, queuedSizeInterval)
-            setPollIntervalId(interval)
+        if (!dequeueTimeoutId && isFocused && queuedSize) {
+            const timeoutId = window.setTimeout(dequeue, queuedSizeInterval)
+            setDequeueTimeoutId(timeoutId)
+        } else if (dequeueTimeoutId && (!isFocused || !queuedSize)) {
+            window.clearTimeout(dequeueTimeoutId)
         }
 
         return () => {
-            if (pollIntervalId) {
-                window.clearTimeout(pollIntervalId)
-                setPollIntervalId(null)
+            if (dequeueTimeoutId) {
+                window.clearTimeout(dequeueTimeoutId)
+                setDequeueTimeoutId(null)
             }
         }
-    }, [
-        isFocused,
-        pollIntervalId,
-        queuedSize,
-        queuedSizeInterval,
-        dequeue,
-        windowScrollY,
-    ])
+    }, [isFocused, dequeueTimeoutId, queuedSize, queuedSizeInterval, dequeue])
 
     let globalIdx = -1
     return (
@@ -235,7 +188,7 @@ export function Timeline({
                                         return (
                                             <Plx
                                                 key={item.id}
-                                                className={`transform transtion-all ease-out duration-1000`}
+                                                className={`transform transition-all ease-out duration-1000`}
                                                 style={{
                                                     maxHeight: `${
                                                         isVisibleItem(item)
