@@ -39,6 +39,7 @@ export function useThings(
     pollIntervalMs = 2 * 60 * 1000,
     debug = false
 ) {
+    const [thingType, setThingType] = useState<ThingType>(type)
     const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
     const [windowScrollY, setWindowScrollY] = useState<number | null>(null)
     const pollIntervalRef = useRef<number | null>(null)
@@ -108,26 +109,27 @@ export function useThings(
                 return acc
             }, {} as Record<string, boolean>)
 
+            const fetchedFiltered = fetched.filter((t) => t.type === thingType)
+
             if (!visible.length) {
-                return fetched.map((i) => {
-                    // if (idx === 0) return { ...i, visible: false, queued: true }
+                return fetchedFiltered.map((i) => {
                     return { ...i, visible: true, queued: false }
                 })
             }
 
-            const enqueued = [...timelineThings]
-            for (let i = fetched.length - 1; i >= 0; i--) {
-                const id = fetched[i].id
+            const enqueued = timelineThings.filter((i) => i.type === thingType)
+            for (let i = fetchedFiltered.length - 1; i >= 0; i--) {
+                const id = fetchedFiltered[i].id
                 if (id && itemsLookup[id]) continue
                 enqueued.unshift({
-                    ...fetched[i],
+                    ...fetchedFiltered[i],
                     visible: false,
                     queued: true,
                 })
             }
             return enqueued
         },
-        [timelineThings]
+        [thingType, timelineThings]
     )
 
     const handleScrollTop = useCallback(() => {
@@ -189,10 +191,17 @@ export function useThings(
     }, [handleFocus])
 
     const fetchThings = useCallback(async () => {
-        const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
+        const response = await fetch(
+            `/api/things/types/${thingType}?limit=${limit}`
+        )
         const things = (await response.json()) as definitions['things'][]
-        setFetched(things)
-    }, [type, limit])
+        const filtered = things.filter((t) => t.type !== thingType)
+        if (filtered.length && filtered[0].type !== thingType) {
+            setThingType(type)
+            return
+        }
+        setFetched(things.filter((t) => t.type === thingType))
+    }, [type, thingType, limit])
 
     useEffect(() => {
         if (isFocused) {
@@ -222,6 +231,10 @@ export function useThings(
         setFetched([])
         setTimelineThings([])
         setTimelineData([])
+    }, [thingType])
+
+    useEffect(() => {
+        setThingType(type)
     }, [type])
 
     useEffect(() => {
