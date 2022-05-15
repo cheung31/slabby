@@ -1,6 +1,7 @@
 import { ThingType } from './types/things'
 
 type useThingsOptions = {
+    plural: string
     limit: number
     pollIntervalMs: number
 }
@@ -15,10 +16,12 @@ export const TYPE_PUBLISH_DELAY_MS: Record<ThingType, number> = {
 
 export const typeOptions: Record<ThingType, useThingsOptions> = {
     tune: {
+        plural: 'tunes',
         limit: 25,
         pollIntervalMs: 30 * 1000,
     },
     photo: {
+        plural: 'photos',
         limit: 25,
         pollIntervalMs: 2 * 60 * 1000,
     },
