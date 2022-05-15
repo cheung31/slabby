@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import type { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Plx from 'react-plx'
+import { Helmet } from 'react-helmet'
 import MobileNav from '../components/MobileNav'
 import RandomQuote from '../components/RandomQuote'
 import GenericTimeline from '../components/GenericTimeline'
@@ -10,7 +11,7 @@ import { TimelineItem, VisibleItem } from '../types/timeline'
 import { supabase } from '../utils/supabaseClient'
 import { definitions } from '../types/supabase'
 import { utcStringToTimestampz } from '../utils'
-import { TYPE_PUBLISH_DELAY_MS } from '../config'
+import { TYPE_PUBLISH_DELAY_MS, typeOptions } from '../config'
 
 type IndexProps = {
     thingType?: ThingType
@@ -21,15 +22,25 @@ const Index: NextPage<IndexProps> = ({ thingType: t, timelineItems }) => {
 
     const thingType = useMemo(() => {
         const { type: queryType } = router.query
-        return t || queryType
+        const someType = t || queryType
+        if (isThingType(someType)) {
+            return someType
+        }
     }, [t, router])
 
-    const timeline = isThingType(thingType) ? (
+    const timeline = thingType ? (
         <GenericTimeline type={thingType} initialItems={timelineItems} />
     ) : null
 
+    if (!thingType) {
+        return null
+    }
+
     return (
         <>
+            <Helmet>
+                <title>{typeOptions[thingType].plural}</title>
+            </Helmet>
             <MobileNav
                 className="z-50 fixed bottom-0 px-3 pb-3"
                 pathname={thingType}
