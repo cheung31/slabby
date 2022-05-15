@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Plx from 'react-plx'
 import { LabelTag } from './LabelTag'
 import BlurOverlay from './BlurOverlay'
@@ -11,6 +11,7 @@ import {
     TimelineItem,
     AppearingItem,
 } from '../types/timeline'
+import Focusable from './Focusable'
 
 type ThingProps = {
     item: TimelineItem
@@ -138,8 +139,9 @@ export function Timeline({
     }, [isFocused, dequeueTimeoutId, queuedSize, queuedSizeInterval, dequeue])
 
     let globalIdx = -1
+    const tabIndex = 0
     return (
-        <div>
+        <div tabIndex={2}>
             {data &&
                 data.map((ty) => (
                     <div key={ty.year} className="mx-auto" style={{ maxWidth }}>
@@ -177,8 +179,10 @@ export function Timeline({
                                     if (
                                         isVisibleItem(item) ||
                                         isAppearingItem(item)
-                                    )
+                                    ) {
                                         globalIdx++
+                                        // tabIndex++
+                                    }
 
                                     if (isAppearingItem(item)) {
                                         onDequeueEnd(item)
@@ -186,80 +190,125 @@ export function Timeline({
 
                                     if (globalIdx === 0) {
                                         return (
-                                            <Plx
+                                            <Focusable
+                                                tabIndex={tabIndex}
                                                 key={item.id}
-                                                className={`transform transition-all ease-out duration-1000`}
-                                                style={{
-                                                    maxHeight: `${
-                                                        isVisibleItem(item)
-                                                            ? maxWidth
-                                                            : '0'
-                                                    }`,
-                                                }}
-                                                parallaxData={[
-                                                    {
-                                                        start: 'self',
-                                                        duration: 0,
-                                                        easing: 'easeOut',
-                                                        properties: [
-                                                            {
-                                                                startValue: 1,
-                                                                endValue: 1,
-                                                                property:
-                                                                    'scale',
-                                                            },
-                                                            {
-                                                                startValue: 1,
-                                                                endValue: 1,
-                                                                property:
-                                                                    'opacity',
-                                                            },
-                                                        ],
-                                                    },
-                                                ]}
                                             >
-                                                <Thing
-                                                    item={item}
-                                                    maxWidth={maxWidth}
-                                                />
-                                            </Plx>
+                                                <Plx
+                                                    className={`transform transition-all ease-out duration-1000`}
+                                                    style={{
+                                                        maxHeight: `${
+                                                            isVisibleItem(item)
+                                                                ? maxWidth
+                                                                : '0'
+                                                        }`,
+                                                    }}
+                                                    parallaxData={[
+                                                        {
+                                                            start: 'self',
+                                                            duration: 0,
+                                                            easing: 'easeOut',
+                                                            properties: [
+                                                                {
+                                                                    startValue: 1,
+                                                                    endValue: 1,
+                                                                    property:
+                                                                        'scale',
+                                                                },
+                                                                {
+                                                                    startValue: 1,
+                                                                    endValue: 1,
+                                                                    property:
+                                                                        'opacity',
+                                                                },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Thing
+                                                        item={item}
+                                                        maxWidth={maxWidth}
+                                                    />
+                                                </Plx>
+                                            </Focusable>
                                         )
                                     }
 
                                     if (globalIdx < aboveFoldCount) {
                                         return (
-                                            <Plx
+                                            <Focusable
+                                                tabIndex={tabIndex}
                                                 key={item.id}
-                                                className={`${
-                                                    isQueuedItem(item)
-                                                        ? 'p-0 max-h-0 opacity-0'
-                                                        : isAppearingItem(item)
-                                                        ? 'opacity-0'
-                                                        : ''
-                                                }`}
+                                            >
+                                                <Plx
+                                                    className={`${
+                                                        isQueuedItem(item)
+                                                            ? 'p-0 max-h-0 opacity-0'
+                                                            : isAppearingItem(
+                                                                  item
+                                                              )
+                                                            ? 'opacity-0'
+                                                            : ''
+                                                    }`}
+                                                    parallaxData={[
+                                                        {
+                                                            start: 'self',
+                                                            duration:
+                                                                500 *
+                                                                (globalIdx /
+                                                                    aboveFoldCount),
+                                                            easing: 'easeOut',
+                                                            properties: [
+                                                                {
+                                                                    startValue:
+                                                                        0.95 -
+                                                                        globalIdx *
+                                                                            0.1,
+                                                                    endValue: 1,
+                                                                    property:
+                                                                        'scale',
+                                                                },
+                                                                {
+                                                                    startValue:
+                                                                        0.95 -
+                                                                        globalIdx *
+                                                                            0.1,
+                                                                    endValue: 1,
+                                                                    property:
+                                                                        'opacity',
+                                                                },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Thing
+                                                        item={item}
+                                                        maxWidth={maxWidth}
+                                                    />
+                                                </Plx>
+                                            </Focusable>
+                                        )
+                                    }
+                                    return (
+                                        <Focusable
+                                            tabIndex={tabIndex}
+                                            key={item.id}
+                                        >
+                                            <Plx
                                                 parallaxData={[
                                                     {
                                                         start: 'self',
-                                                        duration:
-                                                            500 *
-                                                            (globalIdx /
-                                                                aboveFoldCount),
+                                                        duration: 500,
                                                         easing: 'easeOut',
                                                         properties: [
                                                             {
-                                                                startValue:
-                                                                    0.95 -
-                                                                    globalIdx *
-                                                                        0.1,
+                                                                startValue: 0.7,
                                                                 endValue: 1,
                                                                 property:
                                                                     'scale',
                                                             },
                                                             {
-                                                                startValue:
-                                                                    0.95 -
-                                                                    globalIdx *
-                                                                        0.1,
+                                                                startValue: 0.3,
                                                                 endValue: 1,
                                                                 property:
                                                                     'opacity',
@@ -273,36 +322,7 @@ export function Timeline({
                                                     maxWidth={maxWidth}
                                                 />
                                             </Plx>
-                                        )
-                                    }
-                                    return (
-                                        <Plx
-                                            key={item.id}
-                                            parallaxData={[
-                                                {
-                                                    start: 'self',
-                                                    duration: 500,
-                                                    easing: 'easeOut',
-                                                    properties: [
-                                                        {
-                                                            startValue: 0.7,
-                                                            endValue: 1,
-                                                            property: 'scale',
-                                                        },
-                                                        {
-                                                            startValue: 0.3,
-                                                            endValue: 1,
-                                                            property: 'opacity',
-                                                        },
-                                                    ],
-                                                },
-                                            ]}
-                                        >
-                                            <Thing
-                                                item={item}
-                                                maxWidth={maxWidth}
-                                            />
-                                        </Plx>
+                                        </Focusable>
                                     )
                                 })}
                             </div>

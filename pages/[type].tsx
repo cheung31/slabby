@@ -12,6 +12,8 @@ import { supabase } from '../utils/supabaseClient'
 import { definitions } from '../types/supabase'
 import { utcStringToTimestampz } from '../utils'
 import { TYPE_PUBLISH_DELAY_MS, typeOptions } from '../config'
+import { FocusScope } from 'react-aria'
+import Focusable from '../components/Focusable'
 
 type IndexProps = {
     thingType?: ThingType
@@ -41,80 +43,87 @@ const Index: NextPage<IndexProps> = ({ thingType: t, timelineItems }) => {
             <Helmet>
                 <title>{typeOptions[thingType].plural}</title>
             </Helmet>
-            <MobileNav
-                className="z-50 fixed bottom-0 px-3 pb-3"
-                pathname={thingType}
-            />
-            <div className="container mx-auto">
-                <div className="pt-2 xs:pt-8" style={{ paddingBottom: '47vh' }}>
-                    {timeline}
-                    <>
-                        <Plx
-                            parallaxData={[
-                                {
-                                    start: 'self',
-                                    duration: 700,
-                                    easing: 'easeOut',
-                                    properties: [
-                                        {
-                                            startValue: 200,
-                                            endValue: 0,
-                                            property: 'translateY',
-                                        },
-                                        {
-                                            startValue: 0,
-                                            endValue: 1,
-                                            property: 'scale',
-                                        },
-                                        {
-                                            startValue: 0,
-                                            endValue: 0.6,
-                                            property: 'opacity',
-                                        },
-                                    ],
-                                },
-                            ]}
-                        >
-                            <div
-                                className="mx-auto mt-5 bg-gradient-to-b from-gray-800 to-gray-300 dark:from-gray-300 dark:to-gray-800"
-                                style={{ width: 2, height: '75vh' }}
-                            />
-                        </Plx>
-                        {timeline && (
+            <FocusScope contain>
+                <MobileNav
+                    className="z-50 fixed bottom-0 px-3 pb-3"
+                    pathname={thingType}
+                />
+                <main className="container mx-auto">
+                    <div
+                        className="pt-2 xs:pt-8"
+                        style={{ paddingBottom: '47vh' }}
+                    >
+                        {timeline}
+                        <>
                             <Plx
                                 parallaxData={[
-                                    {
-                                        start: 'self',
-                                        duration: 150,
-                                        easing: 'easeOut',
-                                        properties: [
-                                            {
-                                                startValue: 400,
-                                                endValue: 0,
-                                                property: 'translateY',
-                                            },
-                                        ],
-                                    },
                                     {
                                         start: 'self',
                                         duration: 700,
                                         easing: 'easeOut',
                                         properties: [
                                             {
+                                                startValue: 200,
+                                                endValue: 0,
+                                                property: 'translateY',
+                                            },
+                                            {
                                                 startValue: 0,
                                                 endValue: 1,
+                                                property: 'scale',
+                                            },
+                                            {
+                                                startValue: 0,
+                                                endValue: 0.6,
                                                 property: 'opacity',
                                             },
                                         ],
                                     },
                                 ]}
                             >
-                                <RandomQuote uniq={thingType} />
+                                <div
+                                    className="mx-auto mt-5 bg-gradient-to-b from-gray-800 to-gray-300 dark:from-gray-300 dark:to-gray-800"
+                                    style={{ width: 2, height: '75vh' }}
+                                />
                             </Plx>
-                        )}
-                    </>
-                </div>
-            </div>
+                            {timeline && (
+                                <Plx
+                                    parallaxData={[
+                                        {
+                                            start: 'self',
+                                            duration: 150,
+                                            easing: 'easeOut',
+                                            properties: [
+                                                {
+                                                    startValue: 400,
+                                                    endValue: 0,
+                                                    property: 'translateY',
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            start: 'self',
+                                            duration: 700,
+                                            easing: 'easeOut',
+                                            properties: [
+                                                {
+                                                    startValue: 0,
+                                                    endValue: 1,
+                                                    property: 'opacity',
+                                                },
+                                            ],
+                                        },
+                                    ]}
+                                >
+                                    <Focusable tabIndex={1000}>
+                                        <RandomQuote uniq={thingType} />
+                                    </Focusable>
+                                </Plx>
+                            )}
+                        </>
+                    </div>
+                </main>
+            </FocusScope>
         </>
     )
 }
