@@ -130,7 +130,7 @@ export const getServerSideProps: GetServerSideProps<{
     const type = params?.type
     if (!type || !isThingType(type)) return { props }
 
-    const limit = 25
+    const limit = 2
     const rangeFrom = 0
     const rangeTo = rangeFrom + limit - 1
     const contentDateOffset = `${utcStringToTimestampz(
@@ -149,11 +149,17 @@ export const getServerSideProps: GetServerSideProps<{
 
     if (error) return { props }
 
-    const visibleItems: VisibleItem[] = things.map((t) => ({
-        ...t,
-        visible: true,
-        queued: false,
-    }))
+    const visibleItems: VisibleItem[] = things
+        .sort(
+            (a, b) =>
+                new Date(b.content_date ?? '').getTime() -
+                new Date(a.content_date ?? '').getTime()
+        )
+        .map((t) => ({
+            ...t,
+            visible: true,
+            queued: false,
+        }))
 
     return {
         props: {

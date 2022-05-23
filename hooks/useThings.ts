@@ -110,12 +110,43 @@ export function useThings(
                 })
             }
 
-            const enqueued = timelineThings.filter((i) => i.type === type)
-            for (let i = fetched.length - 1; i >= 0; i--) {
-                const id = fetched[i].id
-                if (id && itemsLookup[id]) continue
+            let enqueued = timelineThings.filter(
+                (i) => i.type === type && i.content_date
+            )
+            const latestItem = enqueued[0]
+
+            const fetchedStale = fetched
+                .filter(
+                    (i) =>
+                        new Date(i.content_date ?? '').getTime() <=
+                        new Date(latestItem.content_date ?? '').getTime()
+                )
+                .filter((i) => i.id && !itemsLookup[i.id])
+            const fetchedNew = fetched
+                .filter(
+                    (i) =>
+                        new Date(i.content_date ?? '').getTime() >
+                        new Date(latestItem.content_date ?? '').getTime()
+                )
+                .filter((i) => i.id && !itemsLookup[i.id])
+
+            enqueued = enqueued
+                .concat(
+                    fetchedStale.map((i) => ({
+                        ...i,
+                        visible: true,
+                        queued: false,
+                    }))
+                )
+                .sort(
+                    (a, b) =>
+                        new Date(b.content_date ?? '').getTime() -
+                        new Date(a.content_date ?? '').getTime()
+                )
+
+            for (let i = fetchedNew.length - 1; i >= 0; i--) {
                 enqueued.unshift({
-                    ...fetched[i],
+                    ...fetchedNew[i],
                     visible: false,
                     queued: true,
                 })
