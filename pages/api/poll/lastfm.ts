@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import fetch from 'node-fetch'
 import { PostgrestError } from '@supabase/supabase-js'
 import LastFm from '@toplast/lastfm'
+import { decode } from 'html-entities'
 import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from '../../../types/supabase'
@@ -36,13 +37,14 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const profilePageResponse = await fetch(
         `https://last.fm/user/${user}/library?date_preset=LAST_7_DAYS`
     )
-    const profilePageBody = await profilePageResponse.text()
+    const profilePageBody = decode(await profilePageResponse.text())
 
     const recentTracks = await lastFm.user.getRecentTracks({ user })
-    const records = recentTracks.recenttracks.track
+    const filtered = recentTracks.recenttracks.track
         .filter((track) => profilePageBody.includes(track.name))
         .filter((track) => !!track.image)
         .filter((track) => !!track.date)
+    const records = filtered
         .map<definitions['things']>((track) => {
             let timestampz
             if (track.date) {
