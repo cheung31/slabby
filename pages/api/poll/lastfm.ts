@@ -9,7 +9,6 @@ import { supabase } from '../../../utils/supabaseClient'
 import { definitions } from '../../../types/supabase'
 import { Data } from '../../../types/responses'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
-import { typeOptions } from '../../../config'
 
 type Response = Data<
     definitions['things'] | definitions['things'][],
@@ -40,6 +39,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const profilePageBody = decode(await profilePageResponse.text())
 
     const recentTracks = await lastFm.user.getRecentTracks({ user })
+
     const filtered = recentTracks.recenttracks.track
         .filter((track) => profilePageBody.includes(track.name))
         .filter((track) => !!track.image)
@@ -70,10 +70,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             const now = new Date()
             const contentDate = new Date(r.content_date)
 
-            return (
-                now.valueOf() - contentDate.valueOf() <=
-                typeOptions.tune.pollIntervalMs * 7.5
-            )
+            return now.valueOf() - contentDate.valueOf() <= 5 * 60 * 1000
         })
 
     const groupedRecords = groupUpserts(records)
