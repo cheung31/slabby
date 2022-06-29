@@ -186,9 +186,9 @@ export function Timeline({
 
                                     if (globalIdx === 0) {
                                         return (
-                                            <Plx
+                                            <div
                                                 key={item.id}
-                                                className={`transform transition-all ease-out duration-1000`}
+                                                className="transform transition-all ease-out duration-1000"
                                                 style={{
                                                     maxHeight: `${
                                                         isVisibleItem(item)
@@ -196,33 +196,12 @@ export function Timeline({
                                                             : '0'
                                                     }`,
                                                 }}
-                                                parallaxData={[
-                                                    {
-                                                        start: 'self',
-                                                        duration: 0,
-                                                        easing: 'easeOut',
-                                                        properties: [
-                                                            {
-                                                                startValue: 1,
-                                                                endValue: 1,
-                                                                property:
-                                                                    'scale',
-                                                            },
-                                                            {
-                                                                startValue: 1,
-                                                                endValue: 1,
-                                                                property:
-                                                                    'opacity',
-                                                            },
-                                                        ],
-                                                    },
-                                                ]}
                                             >
                                                 <Thing
                                                     item={item}
                                                     maxWidth={maxWidth}
                                                 />
-                                            </Plx>
+                                            </div>
                                         )
                                     }
 
