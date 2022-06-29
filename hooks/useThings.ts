@@ -98,6 +98,8 @@ export function useThings(
 
     const enqueueFetched = useCallback(
         (fetched: definitions['things'][]): TimelineItem[] => {
+            if (!fetched.length) return []
+
             const visible = timelineThings.filter((i) => isVisibleItem(i))
             const itemsLookup = timelineThings.reduce((acc, i) => {
                 if (i.id) acc[i.id] = true
@@ -113,22 +115,26 @@ export function useThings(
             let enqueued = timelineThings.filter(
                 (i) => i.type === type && i.content_date
             )
-            const latestItem = enqueued[0]
+            const latestItem = enqueued.length ? enqueued[0] : null
 
-            const fetchedStale = fetched
-                .filter(
-                    (i) =>
-                        new Date(i.content_date ?? '').getTime() <=
-                        new Date(latestItem.content_date ?? '').getTime()
-                )
-                .filter((i) => i.id && !itemsLookup[i.id])
-            const fetchedNew = fetched
-                .filter(
-                    (i) =>
-                        new Date(i.content_date ?? '').getTime() >
-                        new Date(latestItem.content_date ?? '').getTime()
-                )
-                .filter((i) => i.id && !itemsLookup[i.id])
+            const fetchedStale = latestItem
+                ? fetched
+                      .filter(
+                          (i) =>
+                              new Date(i.content_date ?? '').getTime() <=
+                              new Date(latestItem.content_date ?? '').getTime()
+                      )
+                      .filter((i) => i.id && !itemsLookup[i.id])
+                : []
+            const fetchedNew = latestItem
+                ? fetched
+                      .filter(
+                          (i) =>
+                              new Date(i.content_date ?? '').getTime() >
+                              new Date(latestItem.content_date ?? '').getTime()
+                      )
+                      .filter((i) => i.id && !itemsLookup[i.id])
+                : []
 
             enqueued = enqueued
                 .concat(
