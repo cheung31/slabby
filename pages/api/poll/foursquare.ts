@@ -10,7 +10,7 @@ import ITip = NLists.ITip
 import { Data } from '../../../types/responses'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
-const PHOTO_SIZE = '1024x1024'
+export const PHOTO_SIZE = '1024x1024'
 
 type Response = Data<
     definitions['things'][] | IPayload<IPhotosResponse>,

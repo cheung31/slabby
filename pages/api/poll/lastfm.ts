@@ -10,6 +10,8 @@ import { definitions } from '../../../types/supabase'
 import { Data } from '../../../types/responses'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
+export const PHOTO_SIZE = '1024x1024'
+
 type Response = Data<
     definitions['things'] | definitions['things'][],
     PostgrestError
@@ -50,7 +52,10 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             if (track.date) {
                 timestampz = utcStringToTimestampz(track.date?.uts)
             }
-            const image_url = track.image[3]['#text'].replace('300x300', '_')
+            const image_url = track.image[3]['#text'].replace(
+                '300x300',
+                PHOTO_SIZE
+            )
 
             return {
                 type: 'tune',
