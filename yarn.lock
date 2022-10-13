@@ -2798,9 +2798,9 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
 
-"ts-foursquare@git+http://github.com/arnaud-zg/ts-foursquare#0919c37":
+"ts-foursquare@git+http://github.com/arnaud-zg/ts-foursquare#renovate/isomorphic-fetch-3.x":
   version "1.0.12"
-  resolved "git+http://github.com/arnaud-zg/ts-foursquare#0919c3717bf3e579faa77cb2e4fbbe8dd1b4058d"
+  resolved "git+http://github.com/arnaud-zg/ts-foursquare#61fa05bd3920aeb70f195ef0be8ac5acb63a32f1"
   dependencies:
     http-response-status "1.0.20"
     isomorphic-fetch "3.0.0"

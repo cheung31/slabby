@@ -23,7 +23,7 @@
         "react-dom": "18.2.0",
         "react-helmet": "^6.1.0",
         "react-plx": "^2.0.1",
-        "ts-foursquare": "git+http://github.com/arnaud-zg/ts-foursquare#0919c37"
+        "ts-foursquare": "git+http://github.com/arnaud-zg/ts-foursquare#renovate/isomorphic-fetch-3.x"
     },
     "devDependencies": {
         "@arkweid/lefthook": "^0.7.7",
