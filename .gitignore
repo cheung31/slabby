@@ -36,4 +36,7 @@ yarn-error.log*
 # IntelliJ
 .idea
 
+# supabase
+/supabase
+
 Makefile
