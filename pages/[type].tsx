@@ -27,7 +27,9 @@ const Index: NextPage<IndexProps> = ({ thingType: t, timelineItems }) => {
 
     const timeline = thingType ? (
         <GenericTimeline type={thingType} initialItems={timelineItems} />
-    ) : null
+    ) : (
+        <div style={{ height: '100vh' }} />
+    )
 
     if (!thingType) {
         return null
