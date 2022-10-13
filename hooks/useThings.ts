@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { definitions } from '../types/supabase'
 import { ThingType } from '../types/things'
 import {
     isQueuedItem,
@@ -11,6 +10,7 @@ import {
 } from '../types/timeline'
 import transformForTimeline from '../utils/transformForTimeline'
 import throttle from '../utils/throttle'
+import { Database } from '../types/database'
 
 /*
 # useThings
@@ -30,6 +30,8 @@ import throttle from '../utils/throttle'
     - no dequeue
  */
 
+type ThingRow = Database['public']['Tables']['things']['Row']
+
 export function useThings(
     type: ThingType,
     initialItems: TimelineItem[] = [],
@@ -42,7 +44,7 @@ export function useThings(
     const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
     const [windowScrollY, setWindowScrollY] = useState<number | null>(null)
     const pollIntervalRef = useRef<number | null>(null)
-    const [fetched, setFetched] = useState<definitions['things'][]>([])
+    const [fetched, setFetched] = useState<ThingRow[]>([])
     const [timelineThings, setTimelineThings] = useState<TimelineItem[]>(
         initialItems || []
     )
@@ -97,7 +99,7 @@ export function useThings(
     )
 
     const enqueueFetched = useCallback(
-        (fetched: definitions['things'][]): TimelineItem[] => {
+        (fetched: ThingRow[]): TimelineItem[] => {
             if (!fetched.length) return []
 
             const visible = timelineThings.filter((i) => isVisibleItem(i))
@@ -225,7 +227,7 @@ export function useThings(
 
     const fetchThings = useCallback(async () => {
         const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
-        const things = (await response.json()) as definitions['things'][]
+        const things = (await response.json()) as ThingRow[]
         const filtered = things.filter((t) => t.type === type)
         setFetched(filtered)
     }, [type, limit])

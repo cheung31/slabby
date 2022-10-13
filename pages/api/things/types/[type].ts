@@ -2,7 +2,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
 import { supabase } from '../../../../utils/supabaseClient'
-import { definitions, paths } from '../../../../types/supabase'
+import { Database } from '../../../../types/database'
+import { paths } from '../../../../types/api'
 import { utcStringToTimestampz } from '../../../../utils'
 import { isThingType } from '../../../../types/things'
 import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../../config'
@@ -10,7 +11,8 @@ import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../../config'
 type Error = {
     error: string
 }
-type Data = definitions['things'][] | null | PostgrestError | Error
+type ThingRow = Database['public']['Tables']['things']['Row']
+type Data = ThingRow[] | null | PostgrestError | Error
 type GetQuery = paths['/things']['get']['parameters']['query']
 
 async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -32,8 +34,8 @@ async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
     )}`
 
     const { data, error } = await supabase
-        .from<definitions['things']>('things')
-        .select(query.select)
+        .from('things')
+        .select()
         .eq('type', type)
         .is('deleted_at', null)
         .not('image_url', 'is', null)

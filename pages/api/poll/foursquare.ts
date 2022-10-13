@@ -4,18 +4,16 @@ import { PostgrestError } from '@supabase/supabase-js'
 import { NLists, NPayload, NPhotos } from 'ts-foursquare/types'
 import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
-import { definitions } from '../../../types/supabase'
 import IPayload = NPayload.IPayload
 import ITip = NLists.ITip
 import { Data } from '../../../types/responses'
+import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
 export const PHOTO_SIZE = '1024x1024'
 
-type Response = Data<
-    definitions['things'][] | IPayload<IPhotosResponse>,
-    PostgrestError
->
+type ThingRow = Database['public']['Tables']['things']['Row']
+type Response = Data<ThingRow[] | IPayload<IPhotosResponse>, PostgrestError>
 
 type PostQuery = {
     user_id?: string
@@ -49,7 +47,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const limit = query.limit ? parseInt(query.limit) : 200
     let offset = query.offset ? parseInt(query.offset) : 0
     const errors = []
-    let processed: definitions['things'][] = []
+    let processed: ThingRow[] = []
     while (hasMorePages) {
         const user_id = query.user_id || process.env.FOURSQUARE_USER_ID
         let url = `https://api.foursquare.com/v2/users/${user_id}/photos?v=20210101&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&oauth_token=${process.env.FOURSQUARE_ACCESS_TOKEN}`
@@ -110,7 +108,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                 description,
                 image_url,
                 content_date: timestampz, // "2021-11-21T07:13:48.000Z"
-            }
+            } as ThingRow
         })
 
         const groupedRecords = groupUpserts(records)
@@ -119,11 +117,12 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             const rs = groupedRecords[k]
 
             const { data, error } = await supabase
-                .from<definitions['things']>('things')
+                .from('things')
                 .upsert(rs, {
                     onConflict: 'external_source,external_id',
                     ignoreDuplicates: true,
                 })
+                .select()
 
             if (error) {
                 errors.push(error)

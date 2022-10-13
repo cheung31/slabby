@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "@sendgrid/mail": "^7.7.0",
-        "@supabase/supabase-js": "^1.35.4",
+        "@supabase/supabase-js": "^2.2.1",
         "@toplast/lastfm": "^0.1.5",
         "html-entities": "^2.3.3",
         "next": "^13.0.7",

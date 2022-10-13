@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from './supabaseClient'
-import { definitions } from '../types/supabase'
 
 type Handler<T> = (
     req: NextApiRequest,
@@ -9,7 +8,7 @@ type Handler<T> = (
 export function handlerWithAuthorization<T>(handler: Handler<T>): Handler<T> {
     return async (req, res) => {
         const { data, error } = await supabase
-            .from<definitions['api_keys']>('api_keys')
+            .from('api_keys')
             .select('id')
             .eq('id', req.headers.authorization)
             .is('deleted_at', null)

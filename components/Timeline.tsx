@@ -32,7 +32,10 @@ function Thing({ item, maxWidth }: ThingProps) {
                         backgroundSize: 'cover',
                     }}
                 />
-                <img className="absolute hidden" src={item.image_url} />
+                <img
+                    className="absolute hidden"
+                    src={item.image_url ?? undefined}
+                />
                 <div className="absolute top-0 left-0 w-full aspect-w-1 aspect-h-1">
                     <div className="flex flex-col items-end justify-end">
                         <LabelTag

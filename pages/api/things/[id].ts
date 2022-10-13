@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { definitions, paths } from '../../../types/supabase'
+import { paths } from '../../../types/api'
+import { Database } from '../../../types/database'
 import { supabase } from '../../../utils/supabaseClient'
 import { PostgrestError } from '@supabase/supabase-js'
 import { utcStringToTimestampz } from '../../../utils'
@@ -7,7 +8,8 @@ import { utcStringToTimestampz } from '../../../utils'
 type Error = {
     error: string
 }
-type Data = definitions['things'][] | null | PostgrestError | Error
+type ThingRow = Database['public']['Tables']['things']['Row']
+type Data = ThingRow[] | null | PostgrestError | Error
 type DeleteQuery = paths['/things']['delete']['parameters']['query']
 
 async function del(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -15,7 +17,7 @@ async function del(req: NextApiRequest, res: NextApiResponse<Data>) {
     const id = query.id
 
     const { error } = await supabase
-        .from<definitions['things']>('things')
+        .from('things')
         .update({
             deleted_at: `${utcStringToTimestampz(
                 (Date.now() / 1000).toString()

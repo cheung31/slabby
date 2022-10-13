@@ -3,19 +3,21 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import sendgrid from '@sendgrid/mail'
 import { PostgrestError } from '@supabase/supabase-js'
 import { supabase } from '../../../utils/supabaseClient'
-import { definitions, paths } from '../../../types/supabase'
+import { paths } from '../../../types/api'
 import { isThingType } from '../../../types/things'
 import { utcStringToTimestampz } from '../../../utils'
 import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../config'
 import { ResponseError } from '@sendgrid/helpers/classes'
 import { Data, EmailError, EmailErrors } from '../../../types/responses'
+import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
 type GetQuery = paths['/things']['get']['parameters']['query']
 
+type ThingRow = Database['public']['Tables']['things']['Row']
 type Response =
-    | Data<definitions['things'] | definitions['things'][], PostgrestError>
-    | EmailErrors<definitions['things']>
+    | Data<ThingRow | ThingRow[], PostgrestError>
+    | EmailErrors<ThingRow>
 
 async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const query = req.query as GetQuery
@@ -37,8 +39,8 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     )}`
 
     const { data, error } = await supabase
-        .from<definitions['things']>('things')
-        .select(query.select)
+        .from('things')
+        .select()
         .eq('type', type)
         .is('deleted_at', null)
         .gt('content_date', contentDateOffset)
@@ -90,7 +92,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     }
 
     const emailErrors: EmailError[] = []
-    const sentThings: definitions['things'][] = []
+    const sentThings: ThingRow[] = []
     if (data) {
         sendgrid.setApiKey(process.env.SENDGRID_API_KEY)
 

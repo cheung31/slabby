@@ -1,4 +1,6 @@
-import { definitions } from '../types/supabase'
+import { Database } from '../types/database'
+
+type ThingRow = Database['public']['Tables']['things']['Row']
 
 export function padDigits(number: number, digits: number) {
     return (
@@ -21,11 +23,11 @@ export function utcStringToTimestampz(utc: string) {
     )}.000Z`
 }
 
-export function groupUpserts(records: definitions['things'][]) {
+export function groupUpserts(records: ThingRow[]) {
     return records.reduce((acc, record) => {
         const keys: string[] = []
         for (const k in record) {
-            const key = k as keyof definitions['things']
+            const key = k as keyof ThingRow
             if (record[key]) {
                 keys.push(key)
             }
@@ -37,5 +39,5 @@ export function groupUpserts(records: definitions['things'][]) {
         acc[groupKey].push(record)
 
         return acc
-    }, {} as Record<string, definitions['things'][]>)
+    }, {} as Record<string, ThingRow[]>)
 }

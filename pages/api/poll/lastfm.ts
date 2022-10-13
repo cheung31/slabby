@@ -6,24 +6,22 @@ import LastFm from '@toplast/lastfm'
 import { decode } from 'html-entities'
 import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
-import { definitions } from '../../../types/supabase'
 import { Data } from '../../../types/responses'
+import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 
 export const PHOTO_SIZE = '1024x1024'
 
-type Response = Data<
-    definitions['things'] | definitions['things'][],
-    PostgrestError
->
+type ThingRow = Database['public']['Tables']['things']['Row']
+type Response = Data<ThingRow | ThingRow[], PostgrestError>
 
 type PostQuery = {
     user?: string
 }
 
 type GroupedRecords = {
-    subsequentPoll: definitions['things'][]
-    standard: definitions['things'][]
+    subsequentPoll: ThingRow[]
+    standard: ThingRow[]
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
@@ -47,7 +45,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
         .filter((track) => !!track.image)
         .filter((track) => !!track.date)
     const records = filtered
-        .map<definitions['things']>((track) => {
+        .map<ThingRow>((track) => {
             let timestampz
             if (track.date) {
                 timestampz = utcStringToTimestampz(track.date?.uts)
@@ -66,7 +64,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                 description: track.artist['#text'],
                 image_url,
                 content_date: timestampz, // "2021-11-21T07:13:48.000Z"
-            }
+            } as ThingRow
         })
         .filter((r) => {
             // content date excessive
@@ -80,18 +78,19 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
 
     const groupedRecords = groupUpserts(records)
     const errors = []
-    let processed: definitions['things'][] = []
+    let processed: ThingRow[] = []
 
     for (const k in groupedRecords) {
         const rs = groupedRecords[k]
 
         const { data, error } = await supabase
-            .from<definitions['things']>('things')
+            .from('things')
             .upsert(rs, {
                 onConflict: 'external_source,external_id',
                 ignoreDuplicates: false,
             })
             .not('deleted_at', 'is', null)
+            .select()
 
         if (error) {
             errors.push(error)

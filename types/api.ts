@@ -234,6 +234,26 @@ export interface paths {
             }
         }
     }
+    '/rpc/is_api_key': {
+        post: {
+            parameters: {
+                body: {
+                    args: {
+                        /** Format: character varying */
+                        api_key: string
+                    }
+                }
+                header: {
+                    /** Preference */
+                    Prefer?: parameters['preferParams']
+                }
+            }
+            responses: {
+                /** OK */
+                200: unknown
+            }
+        }
+    }
 }
 
 export interface definitions {
@@ -261,20 +281,39 @@ export interface definitions {
     }
     things: {
         /**
-         * Note:
+         * Format: uuid
+         * @description Note:
          * This is a Primary Key.<pk/>
+         * @default extensions.uuid_generate_v4()
          */
         id?: string
+        /** Format: character varying */
         image_url?: string
+        /** Format: character varying */
         external_url?: string
+        /** Format: character varying */
         title?: string
+        /** Format: text */
         description?: string
+        /** Format: timestamp with time zone */
         content_date?: string
+        /**
+         * Format: timestamp with time zone
+         * @default now()
+         */
         created_at?: string
+        /**
+         * Format: timestamp with time zone
+         * @default now()
+         */
         updated_at?: string
+        /** Format: timestamp with time zone */
         deleted_at?: string
+        /** Format: text */
         external_id?: string
+        /** Format: text */
         type: string
+        /** Format: text */
         external_source: string
     }
 }

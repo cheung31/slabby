@@ -1,4 +1,4 @@
-import { definitions } from './supabase'
+import { Database } from './database'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function hasOwnProperty<X extends {}, Y extends PropertyKey>(
@@ -8,7 +8,9 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(
     return obj.hasOwnProperty(prop)
 }
 
-function isThing(item: unknown): item is definitions['things'] {
+type ThingRow = Database['public']['Tables']['things']['Row']
+
+function isThing(item: unknown): item is ThingRow {
     return (
         typeof item === 'object' &&
         item !== null &&
@@ -32,7 +34,7 @@ function isTimelineItem(item: unknown): item is TimelineItem {
     )
 }
 
-export type QueuedItem = definitions['things'] & {
+export type QueuedItem = ThingRow & {
     visible: false
     queued: true
 }
@@ -41,7 +43,7 @@ export function isQueuedItem(item: unknown): item is QueuedItem {
     return isTimelineItem(item) && !item.visible && item.queued
 }
 
-export type AppearingItem = definitions['things'] & {
+export type AppearingItem = ThingRow & {
     visible: true
     queued: true
 }
@@ -50,7 +52,7 @@ export function isAppearingItem(item: unknown): item is AppearingItem {
     return isTimelineItem(item) && item.visible && item.queued
 }
 
-export type VisibleItem = definitions['things'] & {
+export type VisibleItem = ThingRow & {
     visible: true
     queued: false
 }
