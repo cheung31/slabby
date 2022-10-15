@@ -39,8 +39,6 @@ export function useThings(
     pollIntervalMs = 2 * 60 * 1000,
     debug = false
 ) {
-    const abortController = useRef(new AbortController())
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
     const [windowScrollY, setWindowScrollY] = useState<number | null>(null)
     const pollIntervalRef = useRef<number | null>(null)
@@ -226,15 +224,10 @@ export function useThings(
     }, [])
 
     const fetchThings = useCallback(async () => {
-        setIsLoading(true)
-        const response = await fetch(
-            `/api/things/types/${type}?limit=${limit}`,
-            { signal: abortController.current.signal }
-        )
+        const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
         const things = (await response.json()) as definitions['things'][]
         const filtered = things.filter((t) => t.type === type)
         setFetched(filtered)
-        setIsLoading(false)
     }, [type, limit])
 
     useEffect(() => {
@@ -246,12 +239,6 @@ export function useThings(
         if (pollIntervalRef.current) {
             window.clearInterval(pollIntervalRef.current)
             pollIntervalRef.current = null
-        }
-
-        return () => {
-            if (isLoading) {
-                abortController.current.abort()
-            }
         }
     }, [type, limit])
 
