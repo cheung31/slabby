@@ -39,6 +39,8 @@ export function useThings(
     pollIntervalMs = 2 * 60 * 1000,
     debug = false
 ) {
+    const abortController = useRef(new AbortController())
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
     const [windowScrollY, setWindowScrollY] = useState<number | null>(null)
     const pollIntervalRef = useRef<number | null>(null)
@@ -112,9 +114,7 @@ export function useThings(
                 })
             }
 
-            let enqueued = timelineThings.filter(
-                (i) => i.type === type && i.content_date
-            )
+            let enqueued = timelineThings.filter((i) => i.content_date)
             const latestItem = enqueued.length ? enqueued[0] : null
 
             const fetchedStale = latestItem
@@ -159,7 +159,7 @@ export function useThings(
             }
             return enqueued
         },
-        [type, timelineThings]
+        [timelineThings]
     )
 
     const handleScrollTop = useCallback(() => {
@@ -221,6 +221,25 @@ export function useThings(
     }, [handleFocus])
 
     useEffect(() => {
+        window.scrollTo(0, 0)
+        setWindowScrollY(window.scrollY)
+    }, [])
+
+    const fetchThings = useCallback(async () => {
+        setIsLoading(true)
+        const response = await fetch(
+            `/api/things/types/${type}?limit=${limit}`,
+            { signal: abortController.current.signal }
+        )
+        const things = (await response.json()) as definitions['things'][]
+        const filtered = things.filter((t) => t.type === type)
+        setFetched(filtered)
+        setIsLoading(false)
+    }, [type, limit])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+        setWindowScrollY(window.scrollY)
         setFetched([])
         setTimelineThings([])
         setTimelineData([])
@@ -228,17 +247,22 @@ export function useThings(
             window.clearInterval(pollIntervalRef.current)
             pollIntervalRef.current = null
         }
+
+        return () => {
+            if (isLoading) {
+                abortController.current.abort()
+            }
+        }
     }, [type, limit])
 
     useEffect(() => {
-        setWindowScrollY(window.scrollY)
-    }, [])
-
-    const fetchThings = useCallback(async () => {
-        const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
-        const things = (await response.json()) as definitions['things'][]
-        setFetched(things.filter((t) => t.type === type))
-    }, [type, limit])
+        const timelineItems = enqueueFetched(fetched).filter(
+            (i) => i.type === type
+        )
+        setTimelineThings(timelineItems)
+        setTimelineData(transform(timelineItems))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetched, transform])
 
     useEffect(() => {
         if (isFocused && !pollIntervalRef.current) {
@@ -254,13 +278,6 @@ export function useThings(
             pollIntervalRef.current = null
         }
     }, [isFocused, fetchThings, pollIntervalMs])
-
-    useEffect(() => {
-        const timelineItems = enqueueFetched(fetched)
-        setTimelineThings(timelineItems)
-        setTimelineData(transform(timelineItems))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetched, transform])
 
     return {
         isFocused,
