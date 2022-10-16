@@ -29,7 +29,7 @@
         "@arkweid/lefthook": "^0.7.7",
         "@babel/core": "^7.19.3",
         "@tailwindcss/aspect-ratio": "^0.4.2",
-        "@types/node": "^18.8.5",
+        "@types/node": "^18.11.0",
         "@types/react": "^18.0.21",
         "@types/react-helmet": "^6.1.5",
         "@typescript-eslint/eslint-plugin": "^5.40.0",
