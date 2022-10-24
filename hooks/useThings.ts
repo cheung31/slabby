@@ -8,9 +8,11 @@ import {
     AppearingItem,
     TimelineData,
     TimelineItem,
+    VirtualizedData,
 } from '../types/timeline'
 import transformForTimeline from '../utils/transformForTimeline'
 import throttle from '../utils/throttle'
+import transformForVirtualizedTimeline from '../utils/transformForVirtualizedTimeline'
 
 /*
 # useThings
@@ -37,6 +39,7 @@ export function useThings(
     observeFocusChange: boolean,
     limit = 25,
     pollIntervalMs = 2 * 60 * 1000,
+    virtualized = false,
     debug = false
 ) {
     const [isPageFocused, setIsPageFocused] = useState<boolean>(true)
@@ -47,6 +50,8 @@ export function useThings(
         initialItems || []
     )
     const [timelineData, setTimelineData] = useState<TimelineData | null>(null)
+    const [timelineVirtualizedData, setTimelineVirtualizedData] =
+        useState<VirtualizedData | null>(null)
 
     const isAtTopScreen = useMemo(() => windowScrollY === 0, [windowScrollY])
     const isFocused = useMemo(
@@ -54,9 +59,34 @@ export function useThings(
         [isPageFocused, isAtTopScreen]
     )
 
-    const transform = useCallback((timelineItems: TimelineItem[]) => {
-        return transformForTimeline(timelineItems)
-    }, [])
+    const transformToTimelineData = useCallback(
+        (timelineItems: TimelineItem[]) => {
+            return transformForTimeline(timelineItems)
+        },
+        []
+    )
+
+    const transformToTimelineVirtualizedData = useCallback(
+        (timelineItems: TimelineItem[]) => {
+            return transformForVirtualizedTimeline(timelineItems)
+        },
+        []
+    )
+
+    const transformAndSet = useCallback(
+        (timelineItems: TimelineItem[]) => {
+            return virtualized
+                ? setTimelineVirtualizedData(
+                      transformToTimelineVirtualizedData(timelineItems)
+                  )
+                : setTimelineData(transformToTimelineData(timelineItems))
+        },
+        [
+            virtualized,
+            transformToTimelineData,
+            transformToTimelineVirtualizedData,
+        ]
+    )
 
     const queuedSize = useMemo(() => {
         const numQueued = timelineThings.reduce((acc, t) => {
@@ -77,8 +107,8 @@ export function useThings(
             queued: true,
         }
         setTimelineThings(things)
-        setTimelineData(transform(things))
-    }, [queuedSize, timelineThings, transform])
+        transformAndSet(things)
+    }, [queuedSize, timelineThings, transformAndSet])
 
     const onDequeueEnd = useCallback(
         (item: AppearingItem) => {
@@ -91,9 +121,9 @@ export function useThings(
             timelineThings[idx] = visible
             const updatedItems = [...timelineThings]
             setTimelineThings(updatedItems)
-            setTimelineData(transform(updatedItems))
+            transformAndSet(updatedItems)
         },
-        [timelineThings, transform]
+        [timelineThings, transformAndSet]
     )
 
     const enqueueFetched = useCallback(
@@ -247,9 +277,9 @@ export function useThings(
             (i) => i.type === type
         )
         setTimelineThings(timelineItems)
-        setTimelineData(transform(timelineItems))
+        transformAndSet(timelineItems)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetched, transform])
+    }, [fetched, transformAndSet])
 
     useEffect(() => {
         if (isFocused && !pollIntervalRef.current) {
@@ -269,6 +299,7 @@ export function useThings(
     return {
         isFocused,
         timelineData,
+        timelineVirtualizedData,
         queuedSize,
         dequeue,
         onDequeueEnd,

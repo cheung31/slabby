@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 type RandomQuoteProps = {
-    uniq?: string | string[]
+    quote: string
+    author: string
 }
 
-const RandomQuote = ({ uniq }: RandomQuoteProps) => {
-    const [quote, setQuote] = useState('')
-    const [quoteAuthor, setQuoteAuthor] = useState('')
-
-    useEffect(() => {
-        setQuote('')
-        setQuoteAuthor('')
-    }, [uniq])
-
-    useEffect(() => {
-        ;(async () => {
-            if (quote) return
-            const response = await fetch('https://api.quotable.io/random')
-            const data = await response.json()
-            if (response.ok) {
-                setQuote(data.content)
-                setQuoteAuthor(data.author)
-            }
-        })()
-    }, [uniq, quote])
-
+const RandomQuote = ({ quote, author }: RandomQuoteProps) => {
     return (
         <p
             className="mx-auto mt-5 pl-5 pr-5 text-center text-2xl font-mono dark:text-gray-300"
-            style={{ maxWidth: 700 }}
+            style={{ maxWidth: 700, minHeight: '50vh' }}
         >
             {quote}
             <br />
             <br />
-            <span className="uppercase text-sm">- {quoteAuthor}</span>
+            <span className="uppercase text-sm">- {author}</span>
         </p>
     )
 }

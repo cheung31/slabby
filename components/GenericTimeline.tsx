@@ -1,8 +1,8 @@
-import { Timeline } from './Timeline'
 import { useThings } from '../hooks/useThings'
 import { ThingType } from '../types/things'
 import { typeOptions, DEBUG } from '../config'
 import { TimelineItem } from '../types/timeline'
+import { VirtualizedTimeline } from './VirtualizedTimeline'
 
 type GenericTimelineProps = {
     type: ThingType
@@ -18,22 +18,29 @@ const GenericTimeline = ({
     observeFocusChange = true,
     debug = DEBUG,
 }: GenericTimelineProps) => {
-    const { isFocused, queuedSize, dequeue, onDequeueEnd, timelineData } =
-        useThings(
-            type,
-            initialItems,
-            observeVisibilityChange,
-            observeFocusChange,
-            typeOptions[type].limit,
-            typeOptions[type].pollIntervalMs,
-            debug
-        )
+    const {
+        isFocused,
+        queuedSize,
+        dequeue,
+        onDequeueEnd,
+        timelineVirtualizedData: data,
+    } = useThings(
+        type,
+        initialItems,
+        observeVisibilityChange,
+        observeFocusChange,
+        typeOptions[type].limit,
+        typeOptions[type].pollIntervalMs,
+        true,
+        debug
+    )
 
     return (
         <>
-            {timelineData && (
-                <Timeline
-                    data={timelineData}
+            {data && (
+                <VirtualizedTimeline
+                    type={type}
+                    data={data}
                     queuedSize={queuedSize}
                     dequeue={dequeue}
                     onDequeueEnd={onDequeueEnd}

@@ -73,3 +73,31 @@ export type TimelineYear = {
 }
 
 export type TimelineData = TimelineYear[]
+
+export type TimelineYearRow = {
+    type: 'year'
+    year: number
+}
+
+export type TimelineMonthRow = {
+    type: 'month'
+    month: number
+    year: number
+    count: number
+}
+
+export type TimelineItemRow = {
+    type: 'item'
+    month: number
+    year: number
+    item: TimelineItem
+    globalIdx: number
+}
+
+export type TimelineRow = TimelineYearRow | TimelineItemRow
+export type TimelineGroup = TimelineYearRow | TimelineMonthRow
+
+export type VirtualizedData = {
+    rows: TimelineRow[]
+    groups: TimelineGroup[]
+}
