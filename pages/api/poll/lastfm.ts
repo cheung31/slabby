@@ -36,7 +36,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const user = query.user || 'cheung31'
 
     const profilePageResponse = await fetch(
-        `https://last.fm/user/${user}/library?date_preset=LAST_7_DAYS`
+        `https://last.fm/user/${user}/library`
     )
     const profilePageBody = decode(await profilePageResponse.text())
 
