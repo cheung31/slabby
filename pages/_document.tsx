@@ -15,7 +15,9 @@ class MyDocument extends Document {
     render() {
         return (
             <Html>
-                <Head />
+                <Head>
+                    <script src="/snow.js" defer></script>
+                </Head>
                 <body className="bg-gray-300 dark:bg-gray-800">
                     <Main />
                     <NextScript />
