@@ -37,6 +37,12 @@
     border-bottom: 8px solid transparent;
 }
 
+@media only screen and (min-width: 600px) {
+    .tab {
+        padding: 0.75em;
+    }
+}
+
 @media (prefers-color-scheme: dark) {
     .tab {
         color: theme(colors.gray.300);
