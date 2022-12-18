@@ -41,7 +41,7 @@ const Index: NextPage<IndexProps> = ({ thingType: t, timelineItems }) => {
                 <title>{typeOptions[thingType].plural}</title>
             </Helmet>
             <MobileNav
-                className="z-50 fixed bottom-0 px-3 pb-3"
+                className="z-50 fixed bottom-0 px-3 pb-4"
                 pathname={thingType}
             />
             <div className="container mx-auto">
