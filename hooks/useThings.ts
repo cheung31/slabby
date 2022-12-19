@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ThingType } from '../types/things'
 import {
+    AppearingItem,
     isQueuedItem,
     isVisibleItem,
-    VisibleItem,
-    AppearingItem,
     TimelineData,
     TimelineItem,
+    VisibleItem,
 } from '../types/timeline'
-import transformForTimeline from '../utils/transformForTimeline'
+import { transformForTimeline } from '../utils/timeline'
 import throttle from '../utils/throttle'
 import { Database } from '../types/database'
 
@@ -258,10 +258,9 @@ export function useThings(
             ;(async () => {
                 await fetchThings()
             })()
-            const interval = window.setInterval(async () => {
+            pollIntervalRef.current = window.setInterval(async () => {
                 await fetchThings()
             }, pollIntervalMs)
-            pollIntervalRef.current = interval
         } else if (!isFocused && pollIntervalRef.current) {
             window.clearInterval(pollIntervalRef.current)
             pollIntervalRef.current = null

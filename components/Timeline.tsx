@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Plx from 'react-plx'
 import { LabelTag } from './LabelTag'
 import BlurOverlay from './BlurOverlay'
@@ -11,14 +11,52 @@ import {
     TimelineItem,
     AppearingItem,
 } from '../types/timeline'
+import { timelineLength } from '../utils/timeline'
+
+const LOAD_INTERVAL_MS = 2500
+const LOAD_INTERVAL_SIZE = 3
 
 type ThingProps = {
     item: TimelineItem
     maxWidth: string | number
+    lazyLoad?: boolean
 }
-function Thing({ item, maxWidth }: ThingProps) {
+function Thing({ item, maxWidth, lazyLoad = true }: ThingProps) {
+    const thingRef = useRef<HTMLDivElement>(null)
+    const [visible, setVisible] = useState<boolean>(!lazyLoad)
+
+    useEffect(() => {
+        if (!lazyLoad) {
+            setVisible(true)
+            return
+        }
+
+        let lazyBackgroundObserver: IntersectionObserver
+        if (lazyLoad && 'IntersectionObserver' in window && thingRef.current) {
+            lazyBackgroundObserver = new IntersectionObserver(function (
+                entries
+            ) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        setVisible(true)
+                        lazyBackgroundObserver.unobserve(entry.target)
+                    }
+                })
+            })
+
+            lazyBackgroundObserver.observe(thingRef.current)
+        }
+
+        return () => {
+            if (lazyBackgroundObserver && thingRef.current) {
+                lazyBackgroundObserver.unobserve(thingRef.current)
+            }
+        }
+    }, [lazyLoad])
+
     return (
         <div
+            ref={thingRef}
             className={`p-1.5 pl-3 pr-3 transform transition-all ease-out delay-75 duration-1000 ${
                 !isVisibleItem(item) ? 'p-0 opacity-0 scale-0' : 'scale-100'
             }`}
@@ -28,13 +66,12 @@ function Thing({ item, maxWidth }: ThingProps) {
                 <div
                     className="rounded-lg shadow-lg aspect-w-1 aspect-h-1 bg-gray-400 dark:bg-gray-600"
                     style={{
-                        backgroundImage: `url(${item.image_url})`,
+                        backgroundImage:
+                            visible && item.image_url
+                                ? `url(${item.image_url})`
+                                : undefined,
                         backgroundSize: 'cover',
                     }}
-                />
-                <img
-                    className="absolute hidden"
-                    src={item.image_url ?? undefined}
                 />
                 <div className="absolute top-0 left-0 w-full aspect-w-1 aspect-h-1">
                     <div className="flex flex-col items-end justify-end">
@@ -91,6 +128,9 @@ export function Timeline({
     animateThresholdSize = 5,
     maxWidth = '44rem',
 }: TimelineProps) {
+    const loadIntervalRef = useRef<number | null>(null)
+    const [loadedIndex, setLoadedIndex] = useState(0)
+    const length = useMemo(() => timelineLength(data), [data])
     const [dequeueTimeoutId, setDequeueTimeoutId] = useState<number | null>(
         null
     )
@@ -103,6 +143,8 @@ export function Timeline({
         if (size.height && width) {
             aboveFoldCount = Math.max(1, Math.ceil(size.height / width))
         }
+
+        setLoadedIndex(aboveFoldCount - 1)
 
         return {
             itemWidth: width,
@@ -140,7 +182,29 @@ export function Timeline({
         }
     }, [isFocused, dequeueTimeoutId, queuedSize, queuedSizeInterval, dequeue])
 
+    useEffect(() => {
+        if (!aboveFoldCount) return
+        let loadedIdx = 0
+        loadIntervalRef.current = window.setInterval(() => {
+            loadedIdx += LOAD_INTERVAL_SIZE
+            setLoadedIndex(loadedIdx)
+            if (loadedIdx >= length - 1) {
+                if (loadIntervalRef.current) {
+                    window.clearInterval(loadIntervalRef.current)
+                }
+                return
+            }
+        }, LOAD_INTERVAL_MS)
+
+        return () => {
+            if (loadIntervalRef.current) {
+                window.clearInterval(loadIntervalRef.current)
+            }
+        }
+    }, [aboveFoldCount, length, LOAD_INTERVAL_SIZE])
+
     let globalIdx = -1
+
     return (
         <div>
             {data &&
@@ -203,6 +267,7 @@ export function Timeline({
                                                 <Thing
                                                     item={item}
                                                     maxWidth={maxWidth}
+                                                    lazyLoad={false}
                                                 />
                                             </div>
                                         )
@@ -253,6 +318,7 @@ export function Timeline({
                                                 <Thing
                                                     item={item}
                                                     maxWidth={maxWidth}
+                                                    lazyLoad={false}
                                                 />
                                             </Plx>
                                         )
@@ -283,6 +349,15 @@ export function Timeline({
                                             <Thing
                                                 item={item}
                                                 maxWidth={maxWidth}
+                                                lazyLoad={
+                                                    aboveFoldCount < 0
+                                                        ? true
+                                                        : loadedIndex <
+                                                          aboveFoldCount
+                                                        ? true
+                                                        : globalIdx >
+                                                          loadedIndex
+                                                }
                                             />
                                         </Plx>
                                     )

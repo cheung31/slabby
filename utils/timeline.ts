@@ -1,6 +1,17 @@
 import { TimelineData, TimelineItem } from '../types/timeline'
 
-export default function transformForTimeline(things: TimelineItem[]) {
+export function timelineLength(data: TimelineData) {
+    return data.reduce((sum, year) => {
+        return (
+            sum +
+            year.months.reduce((acc, month) => {
+                return acc + month.items.length
+            }, 0)
+        )
+    }, 0)
+}
+
+export function transformForTimeline(things: TimelineItem[]) {
     return things.reduce((acc, t) => {
         if (!t.content_date) return acc
 
