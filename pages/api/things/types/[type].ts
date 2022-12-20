@@ -29,8 +29,10 @@ async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
     const rangeFrom = parseInt(query.offset || '0')
     const rangeTo = rangeFrom + limit - 1
 
-    const contentDateOffset = `${utcStringToTimestampz(
-        ((Date.now() - TYPE_PUBLISH_DELAY_MS[type]) / 1000).toString()
+    const now = Date.now()
+    const nowTsz = `${utcStringToTimestampz((now / 1000).toString())}`
+    const contentDateOffsetTsz = `${utcStringToTimestampz(
+        ((now - TYPE_PUBLISH_DELAY_MS[type]) / 1000).toString()
     )}`
 
     const { data, error } = await supabase
@@ -39,7 +41,8 @@ async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
         .eq('type', type)
         .is('deleted_at', null)
         .not('image_url', 'is', null)
-        .lte('content_date', contentDateOffset)
+        .or(`posted_at.lte.${nowTsz},content_date.lte.${contentDateOffsetTsz}`)
+        .order('posted_at', { ascending: false })
         .order('content_date', { ascending: false })
         .limit(limit)
         .range(rangeFrom, rangeTo)
