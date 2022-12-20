@@ -13,26 +13,26 @@ export interface Database {
                 Row: {
                     description: string | null
                     redirect_url: string | null
-                    created_at: string | null
                     updated_at: string | null
                     deleted_at: string | null
                     id: string
+                    created_at: string | null
                 }
                 Insert: {
                     description?: string | null
                     redirect_url?: string | null
-                    created_at?: string | null
                     updated_at?: string | null
                     deleted_at?: string | null
-                    id: string
+                    id?: string
+                    created_at?: string | null
                 }
                 Update: {
                     description?: string | null
                     redirect_url?: string | null
-                    created_at?: string | null
                     updated_at?: string | null
                     deleted_at?: string | null
                     id?: string
+                    created_at?: string | null
                 }
             }
             things: {
@@ -42,13 +42,14 @@ export interface Database {
                     title: string | null
                     description: string | null
                     content_date: string | null
-                    created_at: string | null
-                    updated_at: string | null
                     deleted_at: string | null
                     external_id: string | null
-                    type: string | null
-                    external_source: string | null
+                    type: string
+                    external_source: string
                     id: string
+                    created_at: string
+                    updated_at: string
+                    posted_at: string | null
                 }
                 Insert: {
                     image_url?: string | null
@@ -56,13 +57,14 @@ export interface Database {
                     title?: string | null
                     description?: string | null
                     content_date?: string | null
-                    created_at?: string | null
-                    updated_at?: string | null
                     deleted_at?: string | null
                     external_id?: string | null
-                    type?: string | null
-                    external_source?: string | null
-                    id: string
+                    type: string
+                    external_source: string
+                    id?: string
+                    created_at?: string
+                    updated_at?: string
+                    posted_at?: string | null
                 }
                 Update: {
                     image_url?: string | null
@@ -70,13 +72,14 @@ export interface Database {
                     title?: string | null
                     description?: string | null
                     content_date?: string | null
-                    created_at?: string | null
-                    updated_at?: string | null
                     deleted_at?: string | null
                     external_id?: string | null
-                    type?: string | null
-                    external_source?: string | null
+                    type?: string
+                    external_source?: string
                     id?: string
+                    created_at?: string
+                    updated_at?: string
+                    posted_at?: string | null
                 }
             }
         }

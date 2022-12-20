@@ -12,6 +12,129 @@ export interface paths {
             }
         }
     }
+    '/things': {
+        get: {
+            parameters: {
+                query: {
+                    id?: parameters['rowFilter.things.id']
+                    image_url?: parameters['rowFilter.things.image_url']
+                    external_url?: parameters['rowFilter.things.external_url']
+                    title?: parameters['rowFilter.things.title']
+                    description?: parameters['rowFilter.things.description']
+                    content_date?: parameters['rowFilter.things.content_date']
+                    created_at?: parameters['rowFilter.things.created_at']
+                    updated_at?: parameters['rowFilter.things.updated_at']
+                    deleted_at?: parameters['rowFilter.things.deleted_at']
+                    external_id?: parameters['rowFilter.things.external_id']
+                    type?: parameters['rowFilter.things.type']
+                    external_source?: parameters['rowFilter.things.external_source']
+                    posted_at?: parameters['rowFilter.things.posted_at']
+                    /** Filtering Columns */
+                    select?: parameters['select']
+                    /** Ordering */
+                    order?: parameters['order']
+                    /** Limiting and Pagination */
+                    offset?: parameters['offset']
+                    /** Limiting and Pagination */
+                    limit?: parameters['limit']
+                }
+                header: {
+                    /** Limiting and Pagination */
+                    Range?: parameters['range']
+                    /** Limiting and Pagination */
+                    'Range-Unit'?: parameters['rangeUnit']
+                    /** Preference */
+                    Prefer?: parameters['preferCount']
+                }
+            }
+            responses: {
+                /** OK */
+                200: {
+                    schema: definitions['things'][]
+                }
+                /** Partial Content */
+                206: unknown
+            }
+        }
+        post: {
+            parameters: {
+                body: {
+                    /** things */
+                    things?: definitions['things']
+                }
+                query: {
+                    /** Filtering Columns */
+                    select?: parameters['select']
+                }
+                header: {
+                    /** Preference */
+                    Prefer?: parameters['preferReturn']
+                }
+            }
+            responses: {
+                /** Created */
+                201: unknown
+            }
+        }
+        delete: {
+            parameters: {
+                query: {
+                    id?: parameters['rowFilter.things.id']
+                    image_url?: parameters['rowFilter.things.image_url']
+                    external_url?: parameters['rowFilter.things.external_url']
+                    title?: parameters['rowFilter.things.title']
+                    description?: parameters['rowFilter.things.description']
+                    content_date?: parameters['rowFilter.things.content_date']
+                    created_at?: parameters['rowFilter.things.created_at']
+                    updated_at?: parameters['rowFilter.things.updated_at']
+                    deleted_at?: parameters['rowFilter.things.deleted_at']
+                    external_id?: parameters['rowFilter.things.external_id']
+                    type?: parameters['rowFilter.things.type']
+                    external_source?: parameters['rowFilter.things.external_source']
+                    posted_at?: parameters['rowFilter.things.posted_at']
+                }
+                header: {
+                    /** Preference */
+                    Prefer?: parameters['preferReturn']
+                }
+            }
+            responses: {
+                /** No Content */
+                204: never
+            }
+        }
+        patch: {
+            parameters: {
+                query: {
+                    id?: parameters['rowFilter.things.id']
+                    image_url?: parameters['rowFilter.things.image_url']
+                    external_url?: parameters['rowFilter.things.external_url']
+                    title?: parameters['rowFilter.things.title']
+                    description?: parameters['rowFilter.things.description']
+                    content_date?: parameters['rowFilter.things.content_date']
+                    created_at?: parameters['rowFilter.things.created_at']
+                    updated_at?: parameters['rowFilter.things.updated_at']
+                    deleted_at?: parameters['rowFilter.things.deleted_at']
+                    external_id?: parameters['rowFilter.things.external_id']
+                    type?: parameters['rowFilter.things.type']
+                    external_source?: parameters['rowFilter.things.external_source']
+                    posted_at?: parameters['rowFilter.things.posted_at']
+                }
+                body: {
+                    /** things */
+                    things?: definitions['things']
+                }
+                header: {
+                    /** Preference */
+                    Prefer?: parameters['preferReturn']
+                }
+            }
+            responses: {
+                /** No Content */
+                204: never
+            }
+        }
+    }
     '/api_keys': {
         get: {
             parameters: {
@@ -114,155 +237,54 @@ export interface paths {
             }
         }
     }
-    '/things': {
-        get: {
-            parameters: {
-                query: {
-                    id?: parameters['rowFilter.things.id']
-                    image_url?: parameters['rowFilter.things.image_url']
-                    external_url?: parameters['rowFilter.things.external_url']
-                    title?: parameters['rowFilter.things.title']
-                    description?: parameters['rowFilter.things.description']
-                    content_date?: parameters['rowFilter.things.content_date']
-                    created_at?: parameters['rowFilter.things.created_at']
-                    updated_at?: parameters['rowFilter.things.updated_at']
-                    deleted_at?: parameters['rowFilter.things.deleted_at']
-                    external_id?: parameters['rowFilter.things.external_id']
-                    type?: parameters['rowFilter.things.type']
-                    external_source?: parameters['rowFilter.things.external_source']
-                    /** Filtering Columns */
-                    select?: parameters['select']
-                    /** Ordering */
-                    order?: parameters['order']
-                    /** Limiting and Pagination */
-                    offset?: parameters['offset']
-                    /** Limiting and Pagination */
-                    limit?: parameters['limit']
-                }
-                header: {
-                    /** Limiting and Pagination */
-                    Range?: parameters['range']
-                    /** Limiting and Pagination */
-                    'Range-Unit'?: parameters['rangeUnit']
-                    /** Preference */
-                    Prefer?: parameters['preferCount']
-                }
-            }
-            responses: {
-                /** OK */
-                200: {
-                    schema: definitions['things'][]
-                }
-                /** Partial Content */
-                206: unknown
-            }
-        }
-        post: {
-            parameters: {
-                body: {
-                    /** things */
-                    things?: definitions['things']
-                }
-                query: {
-                    /** Filtering Columns */
-                    select?: parameters['select']
-                }
-                header: {
-                    /** Preference */
-                    Prefer?: parameters['preferReturn']
-                }
-            }
-            responses: {
-                /** Created */
-                201: unknown
-            }
-        }
-        delete: {
-            parameters: {
-                query: {
-                    id?: parameters['rowFilter.things.id']
-                    image_url?: parameters['rowFilter.things.image_url']
-                    external_url?: parameters['rowFilter.things.external_url']
-                    title?: parameters['rowFilter.things.title']
-                    description?: parameters['rowFilter.things.description']
-                    content_date?: parameters['rowFilter.things.content_date']
-                    created_at?: parameters['rowFilter.things.created_at']
-                    updated_at?: parameters['rowFilter.things.updated_at']
-                    deleted_at?: parameters['rowFilter.things.deleted_at']
-                    external_id?: parameters['rowFilter.things.external_id']
-                    type?: parameters['rowFilter.things.type']
-                    external_source?: parameters['rowFilter.things.external_source']
-                }
-                header: {
-                    /** Preference */
-                    Prefer?: parameters['preferReturn']
-                }
-            }
-            responses: {
-                /** No Content */
-                204: never
-            }
-        }
-        patch: {
-            parameters: {
-                query: {
-                    id?: parameters['rowFilter.things.id']
-                    image_url?: parameters['rowFilter.things.image_url']
-                    external_url?: parameters['rowFilter.things.external_url']
-                    title?: parameters['rowFilter.things.title']
-                    description?: parameters['rowFilter.things.description']
-                    content_date?: parameters['rowFilter.things.content_date']
-                    created_at?: parameters['rowFilter.things.created_at']
-                    updated_at?: parameters['rowFilter.things.updated_at']
-                    deleted_at?: parameters['rowFilter.things.deleted_at']
-                    external_id?: parameters['rowFilter.things.external_id']
-                    type?: parameters['rowFilter.things.type']
-                    external_source?: parameters['rowFilter.things.external_source']
-                }
-                body: {
-                    /** things */
-                    things?: definitions['things']
-                }
-                header: {
-                    /** Preference */
-                    Prefer?: parameters['preferReturn']
-                }
-            }
-            responses: {
-                /** No Content */
-                204: never
-            }
-        }
-    }
-    '/rpc/is_api_key': {
-        post: {
-            parameters: {
-                body: {
-                    args: {
-                        /** Format: character varying */
-                        api_key: string
-                    }
-                }
-                header: {
-                    /** Preference */
-                    Prefer?: parameters['preferParams']
-                }
-            }
-            responses: {
-                /** OK */
-                200: unknown
-            }
-        }
-    }
 }
 
 export interface definitions {
+    things: {
+        /**
+         * Format: uuid
+         * @description Note:
+         * This is a Primary Key.<pk/>
+         * @default uuid_generate_v4()
+         */
+        id: string
+        /** Format: character varying */
+        image_url?: string
+        /** Format: character varying */
+        external_url?: string
+        /** Format: character varying */
+        title?: string
+        /** Format: text */
+        description?: string
+        /** Format: timestamp with time zone */
+        content_date?: string
+        /**
+         * Format: timestamp with time zone
+         * @default now()
+         */
+        created_at: string
+        /**
+         * Format: timestamp with time zone
+         * @default now()
+         */
+        updated_at: string
+        /** Format: timestamp with time zone */
+        deleted_at?: string
+        /** Format: text */
+        external_id?: string
+        /** Format: text */
+        type: string
+        /** Format: text */
+        external_source: string
+        /** Format: timestamp with time zone */
+        posted_at?: string
+    }
     api_keys: {
         /**
          * Format: uuid
          * @description Note:
          * This is a Primary Key.<pk/>
-         * @default extensions.uuid_generate_v4()
+         * @default uuid_generate_v4()
          */
         id: string
         /** Format: character varying */
@@ -278,43 +300,6 @@ export interface definitions {
         updated_at?: string
         /** Format: timestamp with time zone */
         deleted_at?: string
-    }
-    things: {
-        /**
-         * Format: uuid
-         * @description Note:
-         * This is a Primary Key.<pk/>
-         * @default extensions.uuid_generate_v4()
-         */
-        id?: string
-        /** Format: character varying */
-        image_url?: string
-        /** Format: character varying */
-        external_url?: string
-        /** Format: character varying */
-        title?: string
-        /** Format: text */
-        description?: string
-        /** Format: timestamp with time zone */
-        content_date?: string
-        /**
-         * Format: timestamp with time zone
-         * @default now()
-         */
-        created_at?: string
-        /**
-         * Format: timestamp with time zone
-         * @default now()
-         */
-        updated_at?: string
-        /** Format: timestamp with time zone */
-        deleted_at?: string
-        /** Format: text */
-        external_id?: string
-        /** Format: text */
-        type: string
-        /** Format: text */
-        external_source: string
     }
 }
 
@@ -351,20 +336,6 @@ export interface parameters {
     offset: string
     /** @description Limiting and Pagination */
     limit: string
-    /** @description api_keys */
-    'body.api_keys': definitions['api_keys']
-    /** Format: uuid */
-    'rowFilter.api_keys.id': string
-    /** Format: character varying */
-    'rowFilter.api_keys.description': string
-    /** Format: character varying */
-    'rowFilter.api_keys.redirect_url': string
-    /** Format: timestamp with time zone */
-    'rowFilter.api_keys.created_at': string
-    /** Format: timestamp with time zone */
-    'rowFilter.api_keys.updated_at': string
-    /** Format: timestamp with time zone */
-    'rowFilter.api_keys.deleted_at': string
     /** @description things */
     'body.things': definitions['things']
     /** Format: uuid */
@@ -391,10 +362,24 @@ export interface parameters {
     'rowFilter.things.type': string
     /** Format: text */
     'rowFilter.things.external_source': string
+    /** Format: timestamp with time zone */
+    'rowFilter.things.posted_at': string
+    /** @description api_keys */
+    'body.api_keys': definitions['api_keys']
+    /** Format: uuid */
+    'rowFilter.api_keys.id': string
+    /** Format: character varying */
+    'rowFilter.api_keys.description': string
+    /** Format: character varying */
+    'rowFilter.api_keys.redirect_url': string
+    /** Format: timestamp with time zone */
+    'rowFilter.api_keys.created_at': string
+    /** Format: timestamp with time zone */
+    'rowFilter.api_keys.updated_at': string
+    /** Format: timestamp with time zone */
+    'rowFilter.api_keys.deleted_at': string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface operations {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface external {}
