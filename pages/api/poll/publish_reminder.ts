@@ -127,7 +127,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             const dynamicTemplateData = {
                 daysUntilPublish,
                 publishAt,
-                cancelUrl: `https://ryancheung.com/things/${thing.id}/hide`,
+                cancelUrl: `https://app.supabase.com/project/puvxftdjjsajrrxrubtc/editor/32806?sort=content_date%3Adesc&filter=type%3Aeq%3Aphoto`,
                 thingTitle: thing.title,
                 thingDescription: thing.description,
                 thingImageUrl: thing.image_url,
