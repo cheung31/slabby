@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ThingType } from '../types/things'
+import { ThingRow, ThingType } from '../types/things'
 import {
     isQueuedItem,
     isVisibleItem,
@@ -10,7 +10,7 @@ import {
 } from '../types/timeline'
 import transformForTimeline from '../utils/transformForTimeline'
 import throttle from '../utils/throttle'
-import { Database } from '../types/database'
+import { sortThingsCompare } from '../utils/sortThings'
 
 /*
 # useThings
@@ -29,8 +29,6 @@ import { Database } from '../types/database'
     - stop polling data
     - no dequeue
  */
-
-type ThingRow = Database['public']['Tables']['things']['Row']
 
 export function useThings(
     type: ThingType,
@@ -144,11 +142,7 @@ export function useThings(
                         queued: false,
                     }))
                 )
-                .sort(
-                    (a, b) =>
-                        new Date(b.content_date ?? '').getTime() -
-                        new Date(a.content_date ?? '').getTime()
-                )
+                .sort(sortThingsCompare)
 
             for (let i = fetchedNew.length - 1; i >= 0; i--) {
                 enqueued.unshift({

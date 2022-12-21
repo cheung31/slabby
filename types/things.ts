@@ -1,3 +1,7 @@
+import { Database } from './database'
+
+export type ThingRow = Database['public']['Tables']['things']['Row']
+
 const thingTypes = ['tune', 'photo'] as const
 
 export type ThingType = typeof thingTypes[number]
