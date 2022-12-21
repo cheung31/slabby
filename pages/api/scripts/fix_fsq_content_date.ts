@@ -2,19 +2,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
 import { NPayload } from 'ts-foursquare/types'
-import { groupUpserts, utcStringToTimestampz } from '../../../utils'
+import { utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
 import IPayload = NPayload.IPayload
 
 import { Data } from '../../../types/responses'
-import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 import { IPhotosResponse } from '../../../types/foursquare'
 
-export const PHOTO_SIZE = '1024x1024'
-
-type ThingRow = Database['public']['Tables']['things']['Row']
-type Response = Data<ThingRow[] | IPayload<IPhotosResponse>, PostgrestError>
+type Response = Data<string[] | IPayload<IPhotosResponse>, PostgrestError>
 
 type PostQuery = {
     user_id?: string
@@ -36,10 +32,10 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const query = req.query as PostQuery
     const limit = query.limit ? parseInt(query.limit) : 200
     let offset = query.offset ? parseInt(query.offset) : 0
-    const errors = []
-    let processed: ThingRow[] = []
+    const errors: PostgrestError[] = []
+    let processed: string[] = []
     while (hasMorePages) {
-        const user_id = query.user_id || process.env.FOURSQUARE_USER_ID
+        const user_id = process.env.FOURSQUARE_USER_ID
         let url = `https://api.foursquare.com/v2/users/${user_id}/photos?v=20210101&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&oauth_token=${process.env.FOURSQUARE_ACCESS_TOKEN}`
         url = `${url}&offset=${offset}&limit=${limit}`
 
@@ -62,66 +58,33 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             return res.status(200).json({})
         }
 
-        const records = photos.items.map((photo) => {
+        const updated_ids = photos.items.map(async (photo) => {
             let timestampz
             if (photo.createdAt) {
                 timestampz = utcStringToTimestampz(photo.createdAt.toString())
             }
 
-            let title
-            let external_url
-            if (photo.tip) {
-                title = photo.tip.text
-                external_url = photo.tip.canonicalUrl
+            if (timestampz) {
+                const { error } = await supabase
+                    .from('things')
+                    .update({ content_date: timestampz })
+                    .eq('external_id', photo.id)
+
+                if (error) {
+                    errors.push(error)
+                } else {
+                    console.log(
+                        `Updated ${photo.id} content_date to ${timestampz}`
+                    )
+                    return photo.id
+                }
             }
 
-            let description
-            if (photo.venue) {
-                const { city, state, country } = photo.venue.location
-                const location =
-                    city && state
-                        ? `${city}, ${state}`
-                        : city && country
-                        ? `${city}, ${country}`
-                        : city
-                description = `${photo.venue.name} - ${location}`
-            }
-
-            const image_url = `${photo.prefix}${PHOTO_SIZE}${photo.suffix}`
-
-            return {
-                type: 'photo',
-                external_source: 'Foursquare',
-                external_id: photo.id,
-                external_url,
-                title,
-                description,
-                image_url,
-                content_date: timestampz, // "2021-11-21T07:13:48.000Z"
-            } as ThingRow
+            return ''
         })
 
-        const groupedRecords = groupUpserts(records)
-
-        for (const k in groupedRecords) {
-            const rs = groupedRecords[k]
-
-            const { data, error } = await supabase
-                .from('things')
-                .upsert(rs, {
-                    onConflict: 'external_source,external_id',
-                    ignoreDuplicates: true,
-                })
-                .select()
-
-            if (error) {
-                errors.push(error)
-            }
-
-            if (data) {
-                processed = processed.concat(data)
-            }
-        }
+        const results = await Promise.all(updated_ids)
+        processed = processed.concat(results)
 
         hasMorePages = offset + photos.items.length < photos.count
         if (hasMorePages) {
@@ -129,13 +92,18 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
         }
     }
 
-    if (errors.length) {
+    if (!processed.length && errors.length) {
         console.warn(
             '***************************************************\n',
             errors
         )
         return res.status(500).json(errors)
     }
+
+    console.log(
+        '*************************** COMPLETED - Processed: ',
+        processed.length
+    )
 
     res.status(200).json(processed)
 }
