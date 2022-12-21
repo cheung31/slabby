@@ -1,4 +1,4 @@
-import { Database } from './database'
+import { ThingRow } from './things'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function hasOwnProperty<X extends {}, Y extends PropertyKey>(
@@ -7,8 +7,6 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 ): obj is X & Record<Y, unknown> {
     return obj.hasOwnProperty(prop)
 }
-
-type ThingRow = Database['public']['Tables']['things']['Row']
 
 function isThing(item: unknown): item is ThingRow {
     return (

@@ -1,6 +1,4 @@
-import { Database } from '../types/database'
-
-type ThingRow = Database['public']['Tables']['things']['Row']
+import { ThingRow } from '../types/things'
 
 export function padDigits(number: number, digits: number) {
     return (

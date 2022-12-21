@@ -7,13 +7,12 @@ import { supabase } from '../../../utils/supabaseClient'
 import IPayload = NPayload.IPayload
 
 import { Data } from '../../../types/responses'
-import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
 import { IPhotosResponse } from '../../../types/foursquare'
+import { ThingRow } from '../../../types/things'
 
 export const PHOTO_SIZE = '1024x1024'
 
-type ThingRow = Database['public']['Tables']['things']['Row']
 type Response = Data<ThingRow[] | IPayload<IPhotosResponse>, PostgrestError>
 
 type PostQuery = {

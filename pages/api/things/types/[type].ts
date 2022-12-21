@@ -2,17 +2,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
 import { supabase } from '../../../../utils/supabaseClient'
-import { Database } from '../../../../types/database'
 import { paths } from '../../../../types/api'
 import { utcStringToTimestampz } from '../../../../utils'
-import { isThingType } from '../../../../types/things'
+import { isThingType, ThingRow } from '../../../../types/things'
 import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../../config'
 import sortThings from '../../../../utils/sortThings'
 
 type Error = {
     error: string
 }
-type ThingRow = Database['public']['Tables']['things']['Row']
 type Data = ThingRow[] | null | PostgrestError | Error
 type GetQuery = paths['/things']['get']['parameters']['query']
 

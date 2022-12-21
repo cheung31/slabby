@@ -1,14 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { paths } from '../../../types/api'
-import { Database } from '../../../types/database'
 import { supabase } from '../../../utils/supabaseClient'
 import { PostgrestError } from '@supabase/supabase-js'
 import { utcStringToTimestampz } from '../../../utils'
+import { ThingRow } from '../../../types/things'
 
 type Error = {
     error: string
 }
-type ThingRow = Database['public']['Tables']['things']['Row']
 type Data = ThingRow[] | null | PostgrestError | Error
 type DeleteQuery = paths['/things']['delete']['parameters']['query']
 

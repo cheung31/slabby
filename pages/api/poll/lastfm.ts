@@ -7,12 +7,11 @@ import { decode } from 'html-entities'
 import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
 import { Data } from '../../../types/responses'
-import { Database } from '../../../types/database'
 import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
+import { ThingRow } from '../../../types/things'
 
 export const PHOTO_SIZE = '1024x1024'
 
-type ThingRow = Database['public']['Tables']['things']['Row']
 type Response = Data<ThingRow | ThingRow[], PostgrestError>
 
 type PostQuery = {
