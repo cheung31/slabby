@@ -46,7 +46,7 @@ function Thing({ item, maxWidth }: ThingProps) {
                             {item.title && (
                                 <div className="text-right">
                                     <BlurOverlay className="inline-block bg-opacity-60 dark:bg-opacity-40">
-                                        <p className="inline-block font-mono text-md text-right pl-1.5 pr-1.5 pt-0.5 pb-0.5">
+                                        <p className="inline-block align-middle font-mono text-md text-right pl-1.5 pr-1.5 pt-0.5 pb-0.5">
                                             {item.title}
                                         </p>
                                     </BlurOverlay>
@@ -59,7 +59,7 @@ function Thing({ item, maxWidth }: ThingProps) {
                                     }`}
                                 >
                                     <BlurOverlay className="inline-block bg-opacity-60 dark:bg-opacity-40">
-                                        <p className="font-mono text-xs text-right uppercase p-1 pl-1.5 pr-1.5">
+                                        <p className="font-mono align-middle text-xs text-right uppercase p-1 pl-1.5 pr-1.5">
                                             {item.description}
                                         </p>
                                     </BlurOverlay>
