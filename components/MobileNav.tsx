@@ -21,6 +21,13 @@ const NavButton = (props: NavButtonProps) => {
     return (
         <BlurOverlay
             className={`flex bg-opacity-50 dark:bg-opacity-50 hover:bg-opacity-40 dark:hover:bg-opacity-70 ${className}`}
+            style={
+                isActive
+                    ? {
+                          borderTop: undefined,
+                      }
+                    : {}
+            }
         >
             <button
                 className={`flex-1 ${isActive ? styles.active : styles.tab}`}
@@ -35,22 +42,33 @@ const NavButton = (props: NavButtonProps) => {
 type MobileNavProps = {
     pathname?: string | string[]
     className?: string
+    rounded?: boolean
 }
-const MobileNav = ({ pathname = '', className = '' }: MobileNavProps) => {
+const MobileNav = ({
+    pathname = '',
+    className = '',
+    rounded = false,
+}: MobileNavProps) => {
     return (
         <nav
-            className={`flex font-mono shadow-lg dark:text-gray-300 w-screen ${className}`}
+            className={`font-mono shadow-lg dark:text-gray-300 w-screen ${className}`}
         >
-            <NavButton className="flex-1" isActive={pathname === 'photo'}>
-                <NextLink href="/photo" passHref>
-                    <div className="cursor-pointer p-3 pt-2">photos</div>
-                </NextLink>
-            </NavButton>
-            <NavButton className="flex-1" isActive={pathname === 'tune'}>
-                <NextLink href="/tune" passHref>
-                    <div className="cursor-pointer p-3 pt-2">tunes</div>
-                </NextLink>
-            </NavButton>
+            <div
+                className={`flex ${
+                    rounded ? 'rounded-lg overflow-hidden' : ''
+                }`}
+            >
+                <NavButton className="flex-1" isActive={pathname === 'photo'}>
+                    <NextLink href="/photo" passHref>
+                        <div className="cursor-pointer p-3 pt-2">photos</div>
+                    </NextLink>
+                </NavButton>
+                <NavButton className="flex-1" isActive={pathname === 'tune'}>
+                    <NextLink href="/tune" passHref>
+                        <div className="cursor-pointer p-3 pt-2">tunes</div>
+                    </NextLink>
+                </NavButton>
+            </div>
         </nav>
     )
 }

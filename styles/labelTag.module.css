@@ -14,7 +14,7 @@
 .labelTagBottomRight::after {
     content: "";
     position: absolute;
-    top: -8px;
+    top: -9px;
     right: 0;
     width: 8px;
     height: 8px;
