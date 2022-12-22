@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Plx from 'react-plx'
 import { LabelTag } from './LabelTag'
 import BlurOverlay from './BlurOverlay'
-import useWindowSize, { Size } from '../hooks/useWindowSize'
+import useWindowSize, { Size } from 'hooks/useWindowSize'
 import {
     isQueuedItem,
     isAppearingItem,
@@ -10,7 +10,7 @@ import {
     TimelineData,
     TimelineItem,
     AppearingItem,
-} from '../types/timeline'
+} from 'types/timeline'
 
 type ThingProps = {
     item: TimelineItem

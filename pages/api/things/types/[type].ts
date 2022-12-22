@@ -1,12 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
-import { supabase } from '../../../../utils/supabaseClient'
-import { paths } from '../../../../types/api'
-import { utcStringToTimestampz } from '../../../../utils'
-import { isThingType, ThingRow } from '../../../../types/things'
-import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../../config'
-import sortThings from '../../../../utils/sortThings'
+import { supabase } from 'utils/supabaseClient'
+import { paths } from 'types/api'
+import { utcStringToTimestampz } from 'utils'
+import { isThingType, ThingRow } from 'types/things'
+import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from 'config'
+import sortThings from 'utils/sortThings'
 
 type Error = {
     error: string

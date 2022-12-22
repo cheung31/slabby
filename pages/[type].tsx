@@ -3,12 +3,12 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Plx from 'react-plx'
 import { Helmet } from 'react-helmet'
-import MobileNav from '../components/MobileNav'
-import RandomQuote from '../components/RandomQuote'
-import GenericTimeline from '../components/GenericTimeline'
-import { isThingType, ThingType } from '../types/things'
-import { TimelineItem } from '../types/timeline'
-import { typeOptions } from '../config'
+import MobileNav from 'components/MobileNav'
+import RandomQuote from 'components/RandomQuote'
+import GenericTimeline from 'components/GenericTimeline'
+import { isThingType, ThingType } from 'types/things'
+import { TimelineItem } from 'types/timeline'
+import { typeOptions } from 'config'
 
 type IndexProps = {
     thingType?: ThingType

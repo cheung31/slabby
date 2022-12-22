@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { paths } from '../../../types/api'
-import { supabase } from '../../../utils/supabaseClient'
 import { PostgrestError } from '@supabase/supabase-js'
-import { utcStringToTimestampz } from '../../../utils'
-import { ThingRow } from '../../../types/things'
+import { paths } from 'types/api'
+import { ThingRow } from 'types/things'
+import { supabase } from 'utils/supabaseClient'
+import { utcStringToTimestampz } from 'utils'
 
 type Error = {
     error: string

@@ -6,10 +6,10 @@ import { groupUpserts, utcStringToTimestampz } from '../../../utils'
 import { supabase } from '../../../utils/supabaseClient'
 import IPayload = NPayload.IPayload
 
-import { Data } from '../../../types/responses'
-import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
-import { IPhotosResponse } from '../../../types/foursquare'
-import { ThingRow } from '../../../types/things'
+import { Data } from 'types/responses'
+import { handlerWithAuthorization } from 'utils/handlerWithAuthorization'
+import { IPhotosResponse } from 'types/foursquare'
+import { ThingRow } from 'types/things'
 
 export const PHOTO_SIZE = '1024x1024'
 

@@ -1,4 +1,4 @@
-import { ThingRow } from '../types/things'
+import { ThingRow } from 'types/things'
 
 export function padDigits(number: number, digits: number) {
     return (

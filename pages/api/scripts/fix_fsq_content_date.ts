@@ -2,13 +2,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
 import { NPayload } from 'ts-foursquare/types'
-import { utcStringToTimestampz } from '../../../utils'
-import { supabase } from '../../../utils/supabaseClient'
 import IPayload = NPayload.IPayload
+import { Data } from 'types/responses'
+import { IPhotosResponse } from 'types/foursquare'
 
-import { Data } from '../../../types/responses'
-import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
-import { IPhotosResponse } from '../../../types/foursquare'
+import { utcStringToTimestampz } from 'utils'
+import { supabase } from 'utils/supabaseClient'
+import { handlerWithAuthorization } from 'utils/handlerWithAuthorization'
 
 type Response = Data<string[] | IPayload<IPhotosResponse>, PostgrestError>
 

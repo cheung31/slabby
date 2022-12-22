@@ -1,4 +1,4 @@
-import { TimelineData, TimelineItem } from '../types/timeline'
+import { TimelineData, TimelineItem } from 'types/timeline'
 
 export default function transformForTimeline(things: TimelineItem[]) {
     return things.reduce((acc, t) => {

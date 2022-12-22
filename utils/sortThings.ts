@@ -1,4 +1,4 @@
-import { ThingRow } from '../types/things'
+import { ThingRow } from 'types/things'
 
 export function sortThingsCompare(a: ThingRow, b: ThingRow) {
     const aPostedAt = a.posted_at ? new Date(a.posted_at) : null

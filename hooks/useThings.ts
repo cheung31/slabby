@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ThingRow, ThingType } from '../types/things'
+import { ThingRow, ThingType } from 'types/things'
 import {
     isQueuedItem,
     isVisibleItem,
@@ -7,10 +7,10 @@ import {
     AppearingItem,
     TimelineData,
     TimelineItem,
-} from '../types/timeline'
-import transformForTimeline from '../utils/transformForTimeline'
-import throttle from '../utils/throttle'
-import { sortThingsCompare } from '../utils/sortThings'
+} from 'types/timeline'
+import transformForTimeline from 'utils/transformForTimeline'
+import throttle from 'utils/throttle'
+import { sortThingsCompare } from 'utils/sortThings'
 
 /*
 # useThings

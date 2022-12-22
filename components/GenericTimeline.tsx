@@ -1,8 +1,8 @@
 import { Timeline } from './Timeline'
-import { useThings } from '../hooks/useThings'
-import { ThingType } from '../types/things'
-import { typeOptions, DEBUG } from '../config'
-import { TimelineItem } from '../types/timeline'
+import { useThings } from 'hooks/useThings'
+import { ThingType } from 'types/things'
+import { typeOptions, DEBUG } from 'config'
+import { TimelineItem } from 'types/timeline'
 
 type GenericTimelineProps = {
     type: ThingType

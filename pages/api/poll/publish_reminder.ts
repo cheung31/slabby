@@ -2,14 +2,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sendgrid from '@sendgrid/mail'
 import { PostgrestError } from '@supabase/supabase-js'
-import { supabase } from '../../../utils/supabaseClient'
-import { paths } from '../../../types/api'
-import { isThingType, ThingRow } from '../../../types/things'
-import { utcStringToTimestampz } from '../../../utils'
-import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from '../../../config'
+import { supabase } from 'utils/supabaseClient'
+import { paths } from 'types/api'
+import { isThingType, ThingRow } from 'types/things'
+import { utcStringToTimestampz } from 'utils'
+import { DEFAULT_PAGE_SIZE, TYPE_PUBLISH_DELAY_MS } from 'config'
 import { ResponseError } from '@sendgrid/helpers/classes'
-import { Data, EmailError, EmailErrors } from '../../../types/responses'
-import { handlerWithAuthorization } from '../../../utils/handlerWithAuthorization'
+import { Data, EmailError, EmailErrors } from 'types/responses'
+import { handlerWithAuthorization } from 'utils/handlerWithAuthorization'
 
 type GetQuery = paths['/things']['get']['parameters']['query']
 

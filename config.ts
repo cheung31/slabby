@@ -1,4 +1,4 @@
-import { ThingType } from './types/things'
+import { ThingType } from 'types/things'
 
 type useThingsOptions = {
     plural: string
