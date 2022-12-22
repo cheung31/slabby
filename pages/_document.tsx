@@ -16,7 +16,7 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <script src="/snow.js" defer></script>
+                    <script src="/fireworks.js" defer></script>
                 </Head>
                 <body className="bg-gray-300 dark:bg-gray-800">
                     <Main />
