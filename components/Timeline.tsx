@@ -101,7 +101,7 @@ export function Timeline({
 
         let aboveFoldCount = 1
         if (size.height && width) {
-            aboveFoldCount = Math.max(1, Math.ceil(size.height / width))
+            aboveFoldCount += Math.max(1, Math.ceil(size.height / width))
         }
 
         return {
@@ -230,7 +230,7 @@ export function Timeline({
                                                         properties: [
                                                             {
                                                                 startValue:
-                                                                    0.95 -
+                                                                    0.9 -
                                                                     globalIdx *
                                                                         0.1,
                                                                 endValue: 1,
