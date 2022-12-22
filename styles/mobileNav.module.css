@@ -22,7 +22,7 @@
 
 .active {
     text-align: center;
-    border-top: 3px solid theme(colors.gray.600)
+    border-top: 3px solid theme(colors.gray.600);
 }
 .active::after {
     /*content: "";*/
@@ -38,7 +38,8 @@
 }
 
 @media only screen and (min-width: 600px) {
-    .tab {
+    .tab > * {
+        display: block;
         padding: 0.75em;
     }
 }
