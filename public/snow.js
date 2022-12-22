@@ -3,7 +3,14 @@ const snowSize = 7
 let embedimSnow = document.getElementById('embedim--snow')
 let windowWidth
 
-if (!embedimSnow) {
+function isXmas() {
+    const now = new Date()
+    const nowMonth = now.getMonth() + 1
+    const nowDate = now.getDate()
+    return nowMonth === 12 && nowDate >= 15 && nowDate <= 31
+}
+
+if (isXmas() && !embedimSnow) {
     windowWidth = window.innerWidth
     function embRand(a, b) {
         return Math.floor(Math.random() * (b - a + 1)) + a
