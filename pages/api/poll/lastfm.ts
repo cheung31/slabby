@@ -10,6 +10,8 @@ import { Data } from 'types/responses'
 import { handlerWithAuthorization } from 'utils/handlerWithAuthorization'
 import { ThingRow } from 'types/things'
 
+const MAX_SCROBBLED_SINCE_MINS = 10
+
 export const PHOTO_SIZE = '1024x1024'
 
 type Response = Data<ThingRow | ThingRow[], PostgrestError>
@@ -40,7 +42,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
     const recentTracks = await lastFm.user.getRecentTracks({ user })
 
     const filtered = recentTracks.recenttracks.track
-        .filter((track) => profilePageBody.includes(track.name))
+        .filter((track) => profilePageBody.includes(track.name.slice(0, 30)))
         .filter((track) => !!track.image)
         .filter((track) => !!track.date)
     const records = filtered
@@ -72,7 +74,10 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             const now = new Date()
             const contentDate = new Date(r.content_date)
 
-            return now.valueOf() - contentDate.valueOf() <= 5 * 60 * 1000
+            return (
+                now.valueOf() - contentDate.valueOf() <=
+                MAX_SCROBBLED_SINCE_MINS * 60 * 1000
+            )
         })
 
     const groupedRecords = groupUpserts(records)
