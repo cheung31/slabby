@@ -54,9 +54,8 @@ function Thing({ item, maxWidth }: ThingProps) {
                             )}
                             {item.description && (
                                 <div
-                                    className={`text-right ${
-                                        item.title ? '' : '-mt-0.5'
-                                    }`}
+                                    className="text-right"
+                                    style={{ marginTop: item.title ? '' : -1 }}
                                 >
                                     <BlurOverlay className="inline-block bg-opacity-60 dark:bg-opacity-40">
                                         <p className="font-mono align-middle text-xs text-right uppercase p-1 pl-1.5 pr-1.5">
