@@ -4,7 +4,7 @@ export default function transformForTimeline(things: TimelineItem[]) {
     return things.reduce((acc, t) => {
         if (!t.content_date) return acc
 
-        const d = new Date(t.content_date)
+        const d = new Date(t.posted_at || t.content_date)
         const thingYear = d.getFullYear()
         const thingMonth = d.getMonth() + 1
 
