@@ -78,7 +78,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
             if (photo.venue) {
                 const { city, state, country } = photo.venue.location
                 const location =
-                    city && state
+                    city && state && city !== state
                         ? `${city}, ${state}`
                         : city && country
                         ? `${city}, ${country}`
