@@ -15,6 +15,10 @@ async function del(req: NextApiRequest, res: NextApiResponse<Data>) {
     const query = req.query as DeleteQuery
     const id = query.id
 
+    if (!id) {
+        return res.status(404).json({ error: 'Not found' })
+    }
+
     const { error } = await supabase
         .from('things')
         .update({
