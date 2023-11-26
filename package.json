@@ -17,7 +17,7 @@
         "@supabase/supabase-js": "^2.24.0",
         "@toplast/lastfm": "^0.1.5",
         "html-entities": "^2.4.0",
-        "next": "^13.4.5",
+        "next": "^14.0.3",
         "node-fetch": "^3.3.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
