@@ -101,10 +101,13 @@ export function useThings(
             if (!fetched.length) return []
 
             const visible = timelineThings.filter((i) => isVisibleItem(i))
-            const itemsLookup = timelineThings.reduce((acc, i) => {
-                if (i.id) acc[i.id] = true
-                return acc
-            }, {} as Record<string, boolean>)
+            const itemsLookup = timelineThings.reduce(
+                (acc, i) => {
+                    if (i.id) acc[i.id] = true
+                    return acc
+                },
+                {} as Record<string, boolean>
+            )
 
             if (!visible.length) {
                 return fetched.map((i) => {

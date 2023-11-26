@@ -215,8 +215,8 @@ export function Timeline({
                                                     isQueuedItem(item)
                                                         ? 'p-0 max-h-0 opacity-0'
                                                         : isAppearingItem(item)
-                                                        ? 'opacity-0'
-                                                        : ''
+                                                          ? 'opacity-0'
+                                                          : ''
                                                 }`}
                                                 parallaxData={[
                                                     {

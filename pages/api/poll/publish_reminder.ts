@@ -110,8 +110,8 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                 daysUntilPublishCount > 1
                     ? `in ${daysUntilPublishCount} days`
                     : daysUntilPublishCount === 1
-                    ? 'tomorrow'
-                    : ''
+                      ? 'tomorrow'
+                      : ''
             }`
             const publishAt = publishDate.toLocaleString('en-US', {
                 weekday: 'short', // long, short, narrow

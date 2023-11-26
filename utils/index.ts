@@ -22,20 +22,23 @@ export function utcStringToTimestampz(utc: string) {
 }
 
 export function groupUpserts(records: ThingRow[]) {
-    return records.reduce((acc, record) => {
-        const keys: string[] = []
-        for (const k in record) {
-            const key = k as keyof ThingRow
-            if (record[key]) {
-                keys.push(key)
+    return records.reduce(
+        (acc, record) => {
+            const keys: string[] = []
+            for (const k in record) {
+                const key = k as keyof ThingRow
+                if (record[key]) {
+                    keys.push(key)
+                }
             }
-        }
-        const groupKey = keys.join(',')
-        if (!acc[groupKey]) {
-            acc[groupKey] = []
-        }
-        acc[groupKey].push(record)
+            const groupKey = keys.join(',')
+            if (!acc[groupKey]) {
+                acc[groupKey] = []
+            }
+            acc[groupKey].push(record)
 
-        return acc
-    }, {} as Record<string, ThingRow[]>)
+            return acc
+        },
+        {} as Record<string, ThingRow[]>
+    )
 }

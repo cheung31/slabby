@@ -81,8 +81,8 @@ async function post(req: NextApiRequest, res: NextApiResponse<Response>) {
                     city && state && city !== state
                         ? `${city}, ${state}`
                         : city && country
-                        ? `${city}, ${country}`
-                        : city
+                          ? `${city}, ${country}`
+                          : city
                 description = `${photo.venue.name} - ${location}`
             }
 
