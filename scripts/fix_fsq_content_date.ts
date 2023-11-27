@@ -1,10 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PostgrestError } from '@supabase/supabase-js'
-import { NPayload } from 'ts-foursquare/types'
-import IPayload = NPayload.IPayload
 import { Data } from 'types/responses'
-import { IPhotosResponse } from 'types/foursquare'
+import type { IPhotosResponse, IPayload } from 'types/foursquare'
 
 import { utcStringToTimestampz } from 'utils'
 import { supabase } from 'utils/supabaseClient'

@@ -1,5 +1,7 @@
-import { NLists, NPhotos } from 'ts-foursquare/types'
+import { NLists, NPhotos, NPayload } from 'ts-foursquare/types'
 import ITip = NLists.ITip
+
+export type IPayload<T> = NPayload.IPayload<T>
 
 export interface IPhotosResponse {
     photos: {
