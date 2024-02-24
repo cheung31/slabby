@@ -224,7 +224,10 @@ export function useThings(
 
     const fetchThings = useCallback(async () => {
         const response = await fetch(`/api/things/types/${type}?limit=${limit}`)
-        const things = (await response.json()) as ThingRow[]
+        const responseJson = await response.json()
+        const things = typeof Array.isArray(responseJson)
+            ? (responseJson as ThingRow[])
+            : []
         const filtered = things.filter((t) => t.type === type)
         setFetched(filtered)
     }, [type, limit])
