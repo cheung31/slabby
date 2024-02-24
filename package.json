@@ -13,7 +13,7 @@
         "format": "prettier --write ./components ./hooks ./pages ./types ./utils"
     },
     "dependencies": {
-        "@sendgrid/mail": "^7.7.0",
+        "@sendgrid/mail": "^8.1.1",
         "@supabase/supabase-js": "^2.38.5",
         "@toplast/lastfm": "^0.1.5",
         "html-entities": "^2.4.0",
