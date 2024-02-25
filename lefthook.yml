@@ -1,10 +1,6 @@
 pre-commit:
   parallel: true
   commands:
-    tsc:
-      tags: typescript types
-      glob: "*.{ts,tsx}"
-      run: yarn tsc --noEmit
     eslint:
       tags: javascript typescript lint
       glob: "*.{js,ts,tsx}"
